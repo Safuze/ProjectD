@@ -1,7 +1,91 @@
 @use 'helpers' as *;
-
 body {
     font-family: var(--font-family-base);
     @include fluid-text(32, 24);
     letter-spacing: 0.03em;
+    overflow: hidden;
+    color: var(--color-light);
+    #root {
+        div {
+            .background {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                z-index: -1; // Фон будет позади контента
+                background-color: var(--color-blue);
+                &__image {
+                    opacity: 0.35;
+
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background-size: cover;
+                    background-position: center;
+            
+                    &--front{
+                        background-image: url('../assets/background1.jpg');
+                        z-index: 2; // Первая картинка поверх второй
+                    }
+            
+                    &--back {
+                        background-image: url('../assets/background2.jpg');
+                        z-index: 1; // Вторая картинка позади первой
+                        transform: rotate(180deg); // Переворачиваем на 180 градусов
+                    }
+                }
+            }
+            .grid-container {
+
+                display: grid;
+                grid-template-rows: auto 1fr; // Первая строка занимает свою высоту, вторая — оставшееся пространство
+                grid-template-columns: 1fr 1fr; // Два столбца равной ширины
+                gap: 16px; // Расстояние между элементами
+                height: 100vh; // Высота контейнера на весь экран (по желанию)
+                
+                &__item {
+                    padding: 16px;
+                }      
+
+                .navbar {
+                    grid-column: 1 / -1; // Занимает всю ширину (все столбцы)
+                    position: relative;
+                    top: 0;
+                    left: 0;
+                    opacity: 0.8;
+                    background-color: var(--color-dark-blue);
+                    width: rem(1920);
+                    height: rem(65);
+                }
+                header {
+                    @include flex-center(false, true);
+                    h1 {
+                        font-weight: 100;
+                    }
+                    ul {
+                        li {
+                            font-family: var(--font-family-accent);
+                        }
+                    }
+
+    
+                }
+                .form {
+                    @include flex-center(false, true);
+                    width: rem(680);
+                    height: rem(823);
+                    background-color: var(--color-dark-blue);
+                    opacity: 0.8;
+                    border-radius: rem(105) rem(26);
+                    box-shadow: 0 0 rem(15) var(--color-orange);
+                }
+            }
+            
+        }
+    }
 }
+
+

@@ -1,14 +1,16 @@
-function Header() {
-  return (
-    <header>
-      <h1>Документы на основе<br>готовых шаблонов</br></h1>
-    </header>
-  )
-}
+import Background from './components/Background.jsx'
+import Navbar from './components/Navbar.jsx'
+import Header from './components/header.jsx'
+import Login from './components/Login.jsx'
 function App() {
   return (
     <div>
-      <Header/>
+      <Background />
+      <div class="grid-container">
+        <Navbar class="grid-container__item"/>
+        <Header class="grid-container__item"/>
+        <Login class="grid-container__item"/>
+      </div>
     </div>
   )
 }

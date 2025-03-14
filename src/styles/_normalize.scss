@@ -41,6 +41,7 @@
    dl
  ):where([class]) {
    margin-block: 0;
+   color: var(--color-light);
  }
  
  :where(dd[class]) {

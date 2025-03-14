@@ -15,11 +15,16 @@
     visibility: visible;
 }
 
-@mixin flex-center($isInline: false) {
+@mixin flex-center($isInline: false, $direction: false) {
     @if $isInline {
       display: inline-flex;
     } @else  {
       display: flex;
+    }
+    @if $direction {
+      flex-direction: column;
+    } @else {
+      flex-direction: row;
     }
   
     justify-content: center;
