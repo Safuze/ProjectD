@@ -1,11 +1,10 @@
 @use 'helpers' as *;
-
 .login-container {
     @include flex-center(false, true);
     .form {
         @include flex-center(false, true);
-        width: rem(600);
-        height: rem(750);
+        width: fluid(600, 350);
+        height: fluid(775, 417);
         background-color: var(--color-dark-blue);
         opacity: 0.8;
         border-radius: rem(100) rem(25);
@@ -34,11 +33,6 @@
             display: flex;
             flex-direction: column;
             margin-bottom: 70px;
-            button {
-                border-radius: 40px;
-                background-color: var(--color-orange);
-                color: var(--color-light);
-            }
         }
         &__down {
             display: flex;
@@ -50,16 +44,16 @@
 
 .form__img-line {
     position: relative;
-    width: rem(431);
-    height: rem(73.6);
+    width: fluid(431, 251.4);
+    height: fluid(73.6, 42.9);
     background-image: url('../assets/orange-line.png');
     transform: rotate(162deg) translate(rem(125), rem(35));
 }
 
 .form__img-notebook {
     position: absolute;
-    width: rem(203);
-    height: rem(147);
+    width: fluid(203, 118.4);
+    height: fluid(147, 85.7);
     background-image: url('../assets/doc.png');
     transform: rotate(5deg) translate(rem(199), rem(-33));
     

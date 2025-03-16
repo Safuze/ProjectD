@@ -1,0 +1,14 @@
+@use '../../styles/helpers' as *;
+
+.input, .btn {
+    width: fluid(512, 298);
+    height: fluid(64, 37);
+    margin: rem(10);
+}
+.btn {
+    border-radius: 40px;
+    background-color: var(--color-orange);
+    color: var(--color-light);
+    @include fluid-text(32, 24);
+
+}

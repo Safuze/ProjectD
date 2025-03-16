@@ -6,10 +6,10 @@ function App() {
   return (
     <div>
       <Background />
-      <div class="grid-container">
-        <Navbar class="grid-container__item"/>
-        <Header class="grid-container__item"/>
-        <Login class="grid-container__item"/>
+      <div className="grid-container">
+        <Navbar className="grid-container__item"/>
+        <Header className="grid-container__item"/>
+        <Login className="grid-container__item"/>
       </div>
     </div>
   )

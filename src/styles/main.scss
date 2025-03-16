@@ -3,4 +3,6 @@
 @use 'variables' as *;
 @use 'utils';
 @use 'globals'; 
-@use 'login'
+@use 'login';
+@use '../components/Button/Button.scss';
+@use '../components/Input/Input.scss';

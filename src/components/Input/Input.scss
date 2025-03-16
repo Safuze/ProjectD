@@ -1,0 +1,8 @@
+@use '../../styles/helpers' as *;
+
+.input {
+    border: none;
+    text-indent: rem(20);
+    border-radius: 20px;
+    background-color: var(--color-light-grey);
+}

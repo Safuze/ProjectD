@@ -1,7 +1,7 @@
 export default function Navbar() {
     return (
-        <nav class="navbar">
-            <div class='navbar__inside'> </div>
+        <nav className="navbar">
+            <div className='navbar__inside'> </div>
         </nav>
     )
 }
