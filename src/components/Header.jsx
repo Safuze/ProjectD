@@ -19,7 +19,7 @@ export function Description(props) {
     return (
         <li>
             <p>
-                {props.option}
+                {props.option.toUpperCase()}
             </p>
         </li>
     )

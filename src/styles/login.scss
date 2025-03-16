@@ -1,0 +1,73 @@
+@use 'helpers' as *;
+
+.login-container {
+    @include flex-center(false, true);
+    .form {
+        @include flex-center(false, true);
+        width: rem(600);
+        height: rem(750);
+        background-color: var(--color-dark-blue);
+        opacity: 0.8;
+        border-radius: rem(100) rem(25);
+        box-shadow: 0 0 rem(15) var(--color-orange);
+        &__top {
+            border-radius: rem(100) rem(25);
+            display: flex;
+            justify-content: space-around;
+            overflow: hidden;
+            margin: 0;
+            height: 100vh;
+            width: 100%;
+        }
+
+        &__welcome {
+            margin-bottom: 30px;
+            h2 {
+                font-weight: 100;
+                font-family: var(--font-family-accent);
+                text-align: center;
+                margin: 0 0 15px 0;
+                letter-spacing: rem(4);
+            }
+        }
+        &__main {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 70px;
+            button {
+                border-radius: 40px;
+                background-color: var(--color-orange);
+                color: var(--color-light);
+            }
+        }
+        &__down {
+            display: flex;
+            justify-content: space-between;
+            margin: 30px 10px;
+        }
+    }
+}
+
+.form__img-line {
+    position: relative;
+    width: rem(431);
+    height: rem(73.6);
+    background-image: url('../assets/orange-line.png');
+    transform: rotate(162deg) translate(rem(125), rem(35));
+}
+
+.form__img-notebook {
+    position: absolute;
+    width: rem(203);
+    height: rem(147);
+    background-image: url('../assets/doc.png');
+    transform: rotate(5deg) translate(rem(199), rem(-33));
+    
+}
+
+#forget_password, #registration {
+    background-color: var(--color-dark-blue);
+    color: var(--color-light);
+    @include fluid-text(22, 9.4);
+
+}

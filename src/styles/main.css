@@ -40,7 +40,6 @@ ul,
 ol,
 dl):where([class]) {
   margin-block: 0;
-  color: var(--color-light);
 }
 
 :where(dd[class]) {
@@ -148,6 +147,7 @@ a:where([class]) {
  */
 button,
 label {
+  border: none;
   cursor: pointer;
 }
 
@@ -274,6 +274,7 @@ body {
   font-family: var(--font-family-base);
   font-size: clamp(1.5rem, 1.3725490196rem + 0.522875817vw, 2rem);
   letter-spacing: 0.03em;
+  font-weight: 100;
   overflow: hidden;
   color: var(--color-light);
 }
@@ -309,7 +310,6 @@ body #root div .grid-container {
   display: grid;
   grid-template-rows: auto 1fr;
   grid-template-columns: 1fr 1fr;
-  gap: 16px;
   height: 100vh;
 }
 body #root div .grid-container__item {
@@ -332,22 +332,111 @@ body #root div .grid-container header {
   align-items: center;
 }
 body #root div .grid-container header h1 {
+  font-size: clamp(1.7125rem, 1.1294117647rem + 2.3921568627vw, 4rem);
   font-weight: 100;
 }
 body #root div .grid-container header ul li {
+  position: relative;
+  letter-spacing: 0.1875rem;
   font-family: var(--font-family-accent);
+  font-weight: 100;
+  line-height: 2;
+  left: -7.8125rem;
+  font-size: clamp(0.75rem, 0.4950980392rem + 1.045751634vw, 1.75rem);
 }
-body #root div .grid-container .form {
+body #root div .grid-container header ul li::marker {
+  font-size: 0.5em;
+}
+
+.input, .btn {
+  width: 32rem;
+  height: 4rem;
+  margin: 0.625rem;
+}
+
+.btn {
+  border-radius: 40px;
+}
+
+.input {
+  text-indent: 1.25rem;
+  border-radius: 20px;
+  background-color: var(--color-light-grey);
+}
+
+.login-container {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 42.5rem;
-  height: 51.4375rem;
+}
+.login-container .form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 37.5rem;
+  height: 46.875rem;
   background-color: var(--color-dark-blue);
   opacity: 0.8;
-  border-radius: 6.5625rem 1.625rem;
+  border-radius: 6.25rem 1.5625rem;
   box-shadow: 0 0 0.9375rem var(--color-orange);
+}
+.login-container .form__top {
+  border-radius: 6.25rem 1.5625rem;
+  display: flex;
+  justify-content: space-around;
+  overflow: hidden;
+  margin: 0;
+  height: 100vh;
+  width: 100%;
+}
+.login-container .form__welcome {
+  margin-bottom: 30px;
+}
+.login-container .form__welcome h2 {
+  font-weight: 100;
+  font-family: var(--font-family-accent);
+  text-align: center;
+  margin: 0 0 15px 0;
+  letter-spacing: 0.25rem;
+}
+.login-container .form__main {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 70px;
+}
+.login-container .form__main button {
+  border-radius: 40px;
+  background-color: var(--color-orange);
+  color: var(--color-light);
+}
+.login-container .form__down {
+  display: flex;
+  justify-content: space-between;
+  margin: 30px 10px;
+}
+
+.form__img-line {
+  position: relative;
+  width: 26.9375rem;
+  height: 4.6rem;
+  background-image: url("../assets/orange-line.png");
+  transform: rotate(162deg) translate(7.8125rem, 2.1875rem);
+}
+
+.form__img-notebook {
+  position: absolute;
+  width: 12.6875rem;
+  height: 9.1875rem;
+  background-image: url("../assets/doc.png");
+  transform: rotate(5deg) translate(12.4375rem, -2.0625rem);
+}
+
+#forget_password, #registration {
+  background-color: var(--color-dark-blue);
+  color: var(--color-light);
+  font-size: clamp(0.5875rem, 0.3867647059rem + 0.8235294118vw, 1.375rem);
 }
 
 /*# sourceMappingURL=main.css.map */

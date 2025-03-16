@@ -41,7 +41,7 @@
    dl
  ):where([class]) {
    margin-block: 0;
-   color: var(--color-light);
+   
  }
  
  :where(dd[class]) {
@@ -151,6 +151,7 @@
   */
  button,
  label {
+   border: none;
    cursor: pointer;
  }
  
@@ -192,6 +193,8 @@
    border-collapse: collapse;
    border-color: currentColor;
  }
+
+ 
  
  /**
    Удаляем все анимации и переходы для людей,

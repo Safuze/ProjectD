@@ -3,6 +3,7 @@ body {
     font-family: var(--font-family-base);
     @include fluid-text(32, 24);
     letter-spacing: 0.03em;
+    font-weight: 100;
     overflow: hidden;
     color: var(--color-light);
     #root {
@@ -17,7 +18,6 @@ body {
                 background-color: var(--color-blue);
                 &__image {
                     opacity: 0.35;
-
                     position: absolute;
                     top: 0;
                     left: 0;
@@ -43,7 +43,6 @@ body {
                 display: grid;
                 grid-template-rows: auto 1fr; // Первая строка занимает свою высоту, вторая — оставшееся пространство
                 grid-template-columns: 1fr 1fr; // Два столбца равной ширины
-                gap: 16px; // Расстояние между элементами
                 height: 100vh; // Высота контейнера на весь экран (по желанию)
                 
                 &__item {
@@ -62,30 +61,46 @@ body {
                 }
                 header {
                     @include flex-center(false, true);
+
                     h1 {
+                        @include fluid-text(64, 27.4);
                         font-weight: 100;
                     }
                     ul {
                         li {
+                            position: relative;
+                            letter-spacing: rem(3);
                             font-family: var(--font-family-accent);
+                            font-weight: 100;
+                            line-height: 2;
+                            left: rem(-125);
+                            &::marker {
+                                font-size: 0.5em;
+                            }
+                            @include fluid-text(28, 12);
                         }
+
                     }
 
     
                 }
-                .form {
-                    @include flex-center(false, true);
-                    width: rem(680);
-                    height: rem(823);
-                    background-color: var(--color-dark-blue);
-                    opacity: 0.8;
-                    border-radius: rem(105) rem(26);
-                    box-shadow: 0 0 rem(15) var(--color-orange);
-                }
+                
             }
             
         }
     }
 }
 
-
+.input, .btn {
+    width: rem(512);
+    height: rem(64);
+    margin: rem(10);
+}
+.btn {
+    border-radius: 40px;
+}
+.input {
+    text-indent: rem(20);
+    border-radius: 20px;
+    background-color: var(--color-light-grey);
+}
