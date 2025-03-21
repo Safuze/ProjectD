@@ -3,8 +3,7 @@ import Input from '../components/Input/Input';
 
 export default function Login() {
     return (
-        <div className="login-container">
-            <div className="form">
+        <div className="form">
                 <div className="form__top">
                     <div className="form__img-line"></div>
                     <div className="form__img-notebook"></div>
@@ -21,8 +20,7 @@ export default function Login() {
                         <button id="registration">Регистрация</button>
                     </div>
                 </div>
-            </div>
-        </div>
+            </div>    
     )
 }
 

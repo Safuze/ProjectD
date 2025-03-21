@@ -1,16 +1,16 @@
 @use 'helpers' as *;
-.login-container {
-    @include flex-center(false, true);
     .form {
+        position: relative;
+
         @include flex-center(false, true);
-        width: fluid(600, 350);
-        height: fluid(775, 417);
+        width: fluid(600, 300);
+        height: fluid(775, 387.5);
         background-color: var(--color-dark-blue);
         opacity: 0.8;
-        border-radius: rem(100) rem(25);
-        box-shadow: 0 0 rem(15) var(--color-orange);
+        border-radius: fluid(100, 50) fluid(25, 12.5);
+        box-shadow: 0 0 fluid(15, 7.5) var(--color-orange);
         &__top {
-            border-radius: rem(100) rem(25);
+            border-radius: fluid(100, 50) fluid(25, 12.5);
             display: flex;
             justify-content: space-around;
             overflow: hidden;
@@ -20,48 +20,51 @@
         }
 
         &__welcome {
-            margin-bottom: 30px;
+            margin-bottom: fluid(30,15);
             h2 {
                 font-weight: 100;
                 font-family: var(--font-family-accent);
                 text-align: center;
-                margin: 0 0 15px 0;
-                letter-spacing: rem(4);
+                margin: 0 0 fluid(15, 7.5) 0;
+                letter-spacing: fluid(4, 2);
             }
         }
         &__main {
             display: flex;
             flex-direction: column;
-            margin-bottom: 70px;
+            margin-bottom: fluid(70, 35);
         }
         &__down {
             display: flex;
             justify-content: space-between;
-            margin: 30px 10px;
+            margin: fluid(30, 15) fluid(10, 5);
         }
     }
-}
+
 
 .form__img-line {
     position: relative;
-    width: fluid(431, 251.4);
-    height: fluid(73.6, 42.9);
+    width: fluid(431, 215.5);
+    height: fluid(73.6, 36.8);
     background-image: url('../assets/orange-line.png');
-    transform: rotate(162deg) translate(rem(125), rem(35));
+    transform: rotate(162deg) translate(fluid(150,75), fluid(50, 25));
 }
 
 .form__img-notebook {
     position: absolute;
-    width: fluid(203, 118.4);
-    height: fluid(147, 85.7);
+    width: fluid(203, 101.5);
+    height: fluid(147, 73.5);
     background-image: url('../assets/doc.png');
-    transform: rotate(5deg) translate(rem(199), rem(-33));
-    
+    background-size: contain; // Масштабирует изображение, чтобы оно поместилось в контейнер
+    background-repeat: no-repeat; // Отключает повторение изображения
+    background-position: center; // Центрирует изображение
+    transform: rotate(3deg) translate(fluid(199, 99.5), fluid(-31, -15.5));
+ 
 }
 
 #forget_password, #registration {
     background-color: var(--color-dark-blue);
     color: var(--color-light);
-    @include fluid-text(22, 9.4);
+    @include fluid-text(22, 11);
 
 }

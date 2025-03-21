@@ -7,9 +7,11 @@ function App() {
     <div>
       <Background />
       <div className="grid-container">
-        <Navbar className="grid-container__item"/>
-        <Header className="grid-container__item"/>
-        <Login className="grid-container__item"/>
+        <Navbar />
+        <div className='grid-container__content'>
+          <Header />
+          <Login />
+        </div>
       </div>
     </div>
   )

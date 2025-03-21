@@ -3,6 +3,6 @@
 .input {
     border: none;
     text-indent: rem(20);
-    border-radius: 20px;
+    border-radius: fluid(20, 10);
     background-color: var(--color-light-grey);
 }

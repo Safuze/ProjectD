@@ -1,14 +1,14 @@
 @use '../../styles/helpers' as *;
 
 .input, .btn {
-    width: fluid(512, 298);
-    height: fluid(64, 37);
-    margin: rem(10);
+    width: fluid(512, 256);
+    height: fluid(64, 32);
+    margin: fluid(10, 5);
 }
 .btn {
-    border-radius: 40px;
+    border-radius: fluid(40, 80);
     background-color: var(--color-orange);
     color: var(--color-light);
-    @include fluid-text(32, 24);
+    @include fluid-text(32, 16);
 
 }
