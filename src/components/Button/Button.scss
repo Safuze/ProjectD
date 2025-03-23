@@ -6,7 +6,7 @@
     margin: fluid(10, 5);
 }
 .btn {
-    border-radius: fluid(40, 80);
+    border-radius: fluid(40, 20);
     background-color: var(--color-orange);
     color: var(--color-light);
     @include fluid-text(32, 16);

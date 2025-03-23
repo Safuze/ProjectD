@@ -472,10 +472,10 @@ h3 {
   height: 100vh;
   width: 100%;
 }
-.form__welcome {
+.form__text {
   margin-bottom: clamp(0.9375rem, 0.6985294118rem + 0.9803921569vw, 1.875rem);
 }
-.form__welcome h2 {
+.form__text h2 {
   font-weight: 100;
   font-family: var(--font-family-accent);
   text-align: center;
@@ -512,10 +512,21 @@ h3 {
   transform: rotate(3deg) translate(clamp(6.21875rem, 4.6335784314rem + 6.5032679739vw, 12.4375rem), clamp(-0.96875rem, -0.7218137255rem + -1.0130718954vw, -1.9375rem));
 }
 
-#forget_password, #registration {
+.forget_password, #registration {
   background-color: var(--color-dark-blue);
   color: var(--color-light);
-  font-size: clamp(0.6875rem, 0.512254902rem + 0.7189542484vw, 1.375rem);
+  font-size: clamp(0.75rem, 0.5588235294rem + 0.7843137255vw, 1.5rem);
+}
+
+.error {
+  font-weight: 666;
+  color: rgb(255, 0, 0);
+  font-size: clamp(0.625rem, 0.4656862745rem + 0.6535947712vw, 1.25rem);
+  text-indent: 1.25rem;
+}
+
+#backBtn {
+  font-size: clamp(0.9375rem, 0.6985294118rem + 0.9803921569vw, 1.875rem);
 }
 
 .input, .btn {
@@ -525,7 +536,7 @@ h3 {
 }
 
 .btn {
-  border-radius: clamp(5rem, 5.637254902rem + -2.614379085vw, 2.5rem);
+  border-radius: clamp(1.25rem, 0.931372549rem + 1.3071895425vw, 2.5rem);
   background-color: var(--color-orange);
   color: var(--color-light);
   font-size: clamp(1rem, 0.7450980392rem + 1.045751634vw, 2rem);
