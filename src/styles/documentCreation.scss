@@ -1,0 +1,49 @@
+@use 'helpers' as *;
+
+.form {
+    justify-content: end;
+    #createDoc {
+        margin: 0;        
+    }   
+
+    &__img-notebook {
+        top: 0;
+        left: fluid(200, 99);
+    }
+
+
+
+    &__buttons {
+        @include flex-center(false, true);
+        margin-bottom: fluid(100, 50);
+        Button {
+            background-color: var(--color-light-grey);
+            color: black;
+            border-radius: fluid(24,12);
+            @include fluid-text(36,18)
+        }
+
+    }   
+
+    &__decorative-image {
+        transform: rotate(180deg);
+        border-radius: fluid(100, 50) fluid(25, 12.5);
+        position: relative;
+        opacity: 0.9;
+        overflow: hidden;
+        width: fluid(600, 300); // Ширина блока
+        height: fluid(290.1, 145); // Высота блока
+        background-image: url('../assets/orange-tringle.png');
+        background-size: 100% 100%; // Растягиваем изображение на весь блок
+        background-position: center; // Центрируем изображение
+        background-repeat: no-repeat; // Запрещаем повторение изображения
+      }
+}
+
+#addDoc {
+    
+    background-image: url('../assets/add-doc.png');
+}
+#selectDoc {
+    background-image: url('../assets/select-doc.png');
+}
