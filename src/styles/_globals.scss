@@ -47,6 +47,7 @@ body {
 
                     display: flex;
                     justify-content: end;
+                    align-items: center;
                     position: fixed;
                     z-index: 3;
                     top: 0;
@@ -56,23 +57,54 @@ body {
                     width: 100%;
                     height: rem(64);
 
+                    &__login-icon {
+                        position: relative;
+                        overflow: hidden;
+                        width: fluid(81.2, 54.13); // Ширина блока
+                        height: fluid(64, 42.6); // Высота блока
+                        background-size: 100% 100%; // Растягиваем изображение на весь блок
+                        background-position: center; // Центрируем изображение
+                        background-repeat: no-repeat; // Запрещаем повторение изображения
+                        background-image: url('../assets/login-icon.png');
+                        left: fluid(28, 14);
+                        cursor: pointer;
+                        background-color: rgba(0,0,0,0);
+                        &:hover + &__login-button {  // При наведении на иконку меняем кнопку
+                            background-color: var(--color-purple)
+                          }
+
+
+                    }
+
+                    
+
                     &__login-button {
                         background: none;
                         border: none;
                         color: var(--color-light); /* Цвет текста */
                         @include fluid-text(24,12);
                         cursor: pointer;
-                        margin: fluid(12, 6);
+                        margin: fluid(12, 6) 0;
                         margin-right: fluid(40, 20);
                         border-radius: 5px;
                         transition: background-color 0.3s;
-                    }
+                        padding-left: fluid(20, 10);
 
-                    &__login-button:hover {
-                        background-color: var(--color-purple); /* Цвет фона при наведении */
-                      }
+                        appearance: none; // Убирает стандартную стрелку
+                        -webkit-appearance: none;
+                        -moz-appearance: none;
 
+                        &:hover, &:active, &:focus {
+                            background-color: var(--color-purple);
+                            
+                          }
+                        option {
+                            background-color: rgba(0, 42, 73, 0.9);
+                            cursor: pointer;
+                          }
+                        }
                 }
+
                 &__content {
                     @include flex-center(false, false);
                     @include mobile {
@@ -208,6 +240,8 @@ h1 {
 
 h2 {
     @include fluid-text(48, 24);
+    font-weight: 100;
+    font-family: var(--font-family-accent);
 }
 
 h3 {
@@ -220,6 +254,3 @@ h3 {
     font-size: fluid(20,10);
     text-indent: rem(20);
 }
-
-
- 

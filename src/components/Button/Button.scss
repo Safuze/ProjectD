@@ -1,5 +1,7 @@
 @use '../../styles/helpers' as *;
+button {
 
+}
 .input, .btn {
     width: fluid(512, 256);
     height: fluid(64, 32);
@@ -11,4 +13,18 @@
     color: var(--color-light);
     @include fluid-text(32, 16);
 
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+    
+    &:hover {
+        transform: translateY(-2px); // Кнопка немного поднимается
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); // Добавляем тень
+        background-color: (var(--color-dark-orange));
+        color: white !important;
+        cursor: pointer;
+    }
+    
+    &:active {
+        transform: translateY(1px); // Кнопка "утапливается"
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); // Уменьшаем тень
+    }
 }

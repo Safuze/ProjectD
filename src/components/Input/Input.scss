@@ -6,3 +6,11 @@
     border-radius: fluid(20, 10);
     background-color: var(--color-light-grey);
 }
+
+input {
+    transition: background-color 0.3s ease;
+  }
+  
+input.valid {
+    background-color: rgba(76, 175, 80, 0.5);
+  }

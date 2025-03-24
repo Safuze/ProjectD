@@ -17,6 +17,13 @@ export default function Register({ onBackClick, onRegisterSuccess }) {
     confirmPassword: '',
   });
 
+  const [touched, setTouched] = useState({
+    login: false,
+    email: false,
+    password: false,
+    confirmPassword: false,
+  });
+
   const [marginBottom, setMarginBottom] = useState(58.631);
   const [marginTopForBackDown, setMarginTopForBackDown] = useState(25);
 
@@ -29,6 +36,10 @@ export default function Register({ onBackClick, onRegisterSuccess }) {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setUser({ ...user, [name]: value });
+    // Если поле уже "тронуто" (было в фокусе), запускаем валидацию
+    if (touched[name]) {
+      validateFields(name, value);
+    }
   };
 
   const validateFields = (name, value) => {
@@ -78,6 +89,8 @@ export default function Register({ onBackClick, onRegisterSuccess }) {
 
   const handleBlur = (e) => {
     const { name, value } = e.target;
+    // Помечаем поле как "тронутое" и валидируем
+    setTouched({ ...touched, [name]: true });
     validateFields(name, value);
   };
 
@@ -101,6 +114,45 @@ export default function Register({ onBackClick, onRegisterSuccess }) {
     );
   };
 
+  const isFieldValid = (name) => {
+    // Проверяем, было ли поле "тронуто" (получало фокус)
+    if (!touched[name]) return false;
+  
+    switch (name) {
+      case 'login':
+        return (
+          user.login.length >= 4 &&
+          /^[A-Za-z]/.test(user.login) &&
+          /^[A-Za-z0-9]+$/.test(user.login) &&
+          !errors.login
+        );
+  
+      case 'email':
+        // Используем ТОТ ЖЕ regex, что и в validateFields
+        return (
+          /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(user.email) &&
+          !errors.email
+        );
+  
+      case 'password':
+        return (
+          user.password.length >= 4 &&
+          !errors.password
+        );
+  
+      case 'confirmPassword':
+        return (
+          user.confirmPassword &&
+          user.password &&
+          user.confirmPassword === user.password &&
+          !errors.confirmPassword
+        );
+  
+      default:
+        return false;
+    }
+  };
+
   return (
     <>
       <div className="form__main" style={{ marginBottom: marginBottom }}>
@@ -108,45 +160,53 @@ export default function Register({ onBackClick, onRegisterSuccess }) {
           {errors.login && <div className="error">{errors.login}</div>}
         </div>
         <Input
+          className={isFieldValid('login') ? 'valid' : ''}
           name="login"
           type="text"
           placeholder="Логин"
           value={user.login}
           onChange={handleChange}
           onBlur={handleBlur}
+          style={isFieldValid('login') ? { backgroundColor: 'rgba(124, 255, 131, 0.5)', color: 'white' } : {}}
         />
         <div className="error-container">
           {errors.email && <div className="error">{errors.email}</div>}
         </div>
         <Input
+          className={isFieldValid('email') ? 'valid' : ''}
           name="email"
-          type="email"
+          type="text"
           placeholder="Email"
           value={user.email}
           onChange={handleChange}
           onBlur={handleBlur}
+          style={isFieldValid('email') ? { backgroundColor: 'rgba(124, 255, 131, 0.5)', color: 'white' } : {}}
         />
         <div className="error-container">
           {errors.password && <div className="error">{errors.password}</div>}
         </div>
         <Input
+          className={isFieldValid('password') ? 'valid' : ''}
           name="password"
           type="password"
           placeholder="Пароль"
           value={user.password}
           onChange={handleChange}
           onBlur={handleBlur}
+          style={isFieldValid('password') ? { backgroundColor: 'rgba(124, 255, 131, 0.5)', color: 'white' } : {}}
         />
         <div className="error-container">
           {errors.confirmPassword && <div className="error">{errors.confirmPassword}</div>}
         </div>
         <Input
+          className={isFieldValid('login') ? 'valid' : ''}
           name="confirmPassword"
           type="password"
           placeholder="Повторите пароль"
           value={user.confirmPassword}
           onChange={handleChange}
           onBlur={handleBlur}
+          style={isFieldValid('confirmPassword') ? { backgroundColor: 'rgba(124, 255, 131, 0.5)', color: 'white' } : {}}
         />
         {isRegistrationValid() && (
           <Button onClick={handleRegisterSubmit}>Зарегистрироваться</Button>

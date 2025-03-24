@@ -220,6 +220,7 @@ svg * {
   --color-light-2: #E7E7E7;
   --color-dark: black;
   --color-orange: #DF8627;
+  --color-dark-orange: #ff7b00;
   --color-purple: #A998F4;
   --color-grey: #888888;
   --color-light-grey: #D9D9D9;
@@ -318,6 +319,7 @@ body #root div .grid-container {
 body #root div .grid-container .navbar {
   display: flex;
   justify-content: end;
+  align-items: center;
   position: fixed;
   z-index: 3;
   top: 0;
@@ -327,19 +329,43 @@ body #root div .grid-container .navbar {
   width: 100%;
   height: 4rem;
 }
+body #root div .grid-container .navbar__login-icon {
+  position: relative;
+  overflow: hidden;
+  width: clamp(3.383125rem, 2.9518627451rem + 1.7692810458vw, 5.075rem);
+  height: clamp(2.6625rem, 2.3215686275rem + 1.3986928105vw, 4rem);
+  background-size: 100% 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-image: url("../assets/login-icon.png");
+  left: clamp(0.875rem, 0.6519607843rem + 0.9150326797vw, 1.75rem);
+  cursor: pointer;
+  background-color: rgba(0, 0, 0, 0);
+}
+body #root div .grid-container .navbar__login-icon:hover + body #root div .grid-container .navbar__login-icon__login-button {
+  background-color: var(--color-purple);
+}
 body #root div .grid-container .navbar__login-button {
   background: none;
   border: none;
   color: var(--color-light); /* Цвет текста */
   font-size: clamp(0.75rem, 0.5588235294rem + 0.7843137255vw, 1.5rem);
   cursor: pointer;
-  margin: clamp(0.375rem, 0.2794117647rem + 0.3921568627vw, 0.75rem);
+  margin: clamp(0.375rem, 0.2794117647rem + 0.3921568627vw, 0.75rem) 0;
   margin-right: clamp(1.25rem, 0.931372549rem + 1.3071895425vw, 2.5rem);
   border-radius: 5px;
   transition: background-color 0.3s;
+  padding-left: clamp(0.625rem, 0.4656862745rem + 0.6535947712vw, 1.25rem);
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
 }
-body #root div .grid-container .navbar__login-button:hover {
-  background-color: var(--color-purple); /* Цвет фона при наведении */
+body #root div .grid-container .navbar__login-button:hover, body #root div .grid-container .navbar__login-button:active, body #root div .grid-container .navbar__login-button:focus {
+  background-color: var(--color-purple);
+}
+body #root div .grid-container .navbar__login-button option {
+  background-color: rgba(0, 42, 73, 0.9);
+  cursor: pointer;
 }
 body #root div .grid-container__content {
   display: flex;
@@ -460,6 +486,8 @@ h1 {
 
 h2 {
   font-size: clamp(1.5rem, 1.1176470588rem + 1.568627451vw, 3rem);
+  font-weight: 100;
+  font-family: var(--font-family-accent);
 }
 
 h3 {
@@ -499,8 +527,6 @@ h3 {
   margin-bottom: clamp(0.9375rem, 0.6985294118rem + 0.9803921569vw, 1.875rem);
 }
 .form__text h2 {
-  font-weight: 100;
-  font-family: var(--font-family-accent);
   text-align: center;
   margin: 0 0 clamp(0.46875rem, 0.3492647059rem + 0.4901960784vw, 0.9375rem) 0;
   letter-spacing: clamp(0.125rem, 0.0931372549rem + 0.1307189542vw, 0.25rem);
@@ -568,6 +594,9 @@ h3 {
   border-radius: clamp(0.75rem, 0.5588235294rem + 0.7843137255vw, 1.5rem);
   font-size: clamp(1.125rem, 0.8382352941rem + 1.1764705882vw, 2.25rem);
 }
+.form__buttons Button:hover {
+  color: var(--color-light);
+}
 .form__decorative-image {
   transform: rotate(180deg);
   border-radius: clamp(3.125rem, 2.3284313725rem + 3.2679738562vw, 6.25rem) clamp(0.78125rem, 0.5821078431rem + 0.8169934641vw, 1.5625rem);
@@ -581,6 +610,59 @@ h3 {
   background-position: center;
   background-repeat: no-repeat;
 }
+.form__createDoc {
+  width: clamp(18.75rem, 13.9705882353rem + 19.6078431373vw, 37.5rem);
+  height: clamp(24.21875rem, 18.0453431373rem + 25.3267973856vw, 48.4375rem);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+}
+.form__doc-data {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.form__doc-data .select-wrapper {
+  position: relative;
+  width: clamp(16rem, 11.9215686275rem + 16.7320261438vw, 32rem);
+  margin: clamp(0.3125rem, 0.2328431373rem + 0.3267973856vw, 0.625rem);
+}
+.form__doc-data .select-wrapper::after {
+  content: "▼";
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: #555;
+  font-size: clamp(0.625rem, 0.4656862745rem + 0.6535947712vw, 1.25rem);
+}
+.form__doc-data .select-wrapper select {
+  text-indent: 0.5rem;
+  width: 100%;
+  padding: clamp(0.3125rem, 0.2328431373rem + 0.3267973856vw, 0.625rem) clamp(0.46875rem, 0.3492647059rem + 0.4901960784vw, 0.9375rem);
+  border-radius: clamp(0.625rem, 0.4656862745rem + 0.6535947712vw, 1.25rem);
+  border: 0.0625rem solid var(--color-light-grey);
+  background-color: var(--color-light-grey);
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  cursor: pointer;
+}
+.form__doc-data .select-wrapper select:hover {
+  border-color: var(--color-grey);
+}
+.form__doc-data .select-wrapper select:focus {
+  outline: none;
+  border-color: var(--color-blue);
+  box-shadow: 0 0 0.3125rem rgba(0, 123, 255, 0.5);
+}
+.form__doc-data .select-wrapper select:disabled {
+  background-color: #f5f5f5;
+  cursor: not-allowed;
+}
 
 #addDoc {
   background-image: url("../assets/add-doc.png");
@@ -588,6 +670,21 @@ h3 {
 
 #selectDoc {
   background-image: url("../assets/select-doc.png");
+}
+
+#back_and_cont {
+  margin: 0;
+  width: clamp(16rem, 11.9215686275rem + 16.7320261438vw, 32rem);
+}
+#back_and_cont * {
+  background-color: var(--color-orange);
+  color: var(--color-light);
+}
+#back_and_cont .btn:first-child {
+  margin-left: 0;
+}
+#back_and_cont .btn:last-child {
+  margin-right: 0;
 }
 
 .input, .btn {
@@ -601,6 +698,18 @@ h3 {
   background-color: var(--color-orange);
   color: var(--color-light);
   font-size: clamp(1rem, 0.7450980392rem + 1.045751634vw, 2rem);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: var(--color-dark-orange);
+  color: white !important;
+  cursor: pointer;
+}
+.btn:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .input {
@@ -608,6 +717,14 @@ h3 {
   text-indent: 1.25rem;
   border-radius: clamp(0.625rem, 0.4656862745rem + 0.6535947712vw, 1.25rem);
   background-color: var(--color-light-grey);
+}
+
+input {
+  transition: background-color 0.3s ease;
+}
+
+input.valid {
+  background-color: rgba(76, 175, 80, 0.5);
 }
 
 /*# sourceMappingURL=main.css.map */
