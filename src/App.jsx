@@ -1,21 +1,56 @@
-import Background from './components/Background.jsx'
-import Navbar from './components/Navbar.jsx'
-import Header from './components/header.jsx'
-import Login from './components/Login.jsx'
-import { useState } from 'react'
+import React, { useState } from 'react';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import MainPage from './pages/MainPage';
+import UserProfilePage from './pages/UserProfilePage';
+import DocumentPage from './pages/DocumentPage';
 function App() {
-  return (
-    <div>
-      <Background />
-      <div className="grid-container">
-        <Navbar />
-        <div className='grid-container__content'>
-          <Header />
-          <Login />
-        </div>
-      </div>
-    </div>
-  )
+    const [userLogin, setUserLogin] = useState(null);
+    const [isCreatingDocument, setIsCreatingDocument] = useState(false);
+
+    const handleLogin = (login) => {
+        setUserLogin(login);
+        setIsCreatingDocument(false); // Сбрасываем при логине
+    };
+
+    const handleLogout = () => {
+        setUserLogin(null);
+    };
+
+    return (
+        <Router>
+            <Routes>
+                <Route 
+                    path="/" 
+                    element={
+                        <MainPage 
+                            userLogin={userLogin} 
+                            onLogin={handleLogin}
+                            isCreatingDocument={isCreatingDocument}
+                            setIsCreatingDocument={setIsCreatingDocument}
+                        />
+                    } 
+                />
+                <Route 
+                    path="/profile" 
+                    element={
+                        userLogin ? (
+                            <UserProfilePage 
+                                login={userLogin} 
+                                onLogout={handleLogout}
+                                setIsCreatingDocument={setIsCreatingDocument}
+                            />
+                        ) : (
+                            <Navigate to="/" />
+                        )
+                    } 
+                />
+                <Route 
+                    path="/document" 
+                    element={<DocumentPage setIsCreatingDocument={setIsCreatingDocument}/>} 
+                />
+            </Routes>
+        </Router>
+    );
 }
 
-export default App
+export default App;

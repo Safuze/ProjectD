@@ -21,22 +21,33 @@
 
         &__text {
             margin-bottom: fluid(30,15);
+
             h2 {
                 text-align: center;
                 margin: 0 0 fluid(15, 7.5) 0;
                 letter-spacing: fluid(4, 2);
             }
+            h3 {
+                margin-bottom: fluid(130,65);
+            }
+            
         }
         &__main {
             display: flex;
             flex-direction: column;
             margin-bottom: fluid(70, 35);
-            
         }
         &__down {
             display: flex;
             justify-content: space-between;
             margin: fluid(30, 15) fluid(10, 5);
+        }
+        &__forget_password_btn {
+            display: flex;
+            & {
+                width: fluid(550, 275);
+                margin: 0 ;
+            }            
         }
     }
 
@@ -71,4 +82,13 @@
 
 #backBtn {
     @include fluid-text(30, 15);
+}
+
+#forget_passwor_form {
+    display: flex;
+    flex-direction: column;
+}
+
+#enter_email {
+    margin-bottom: fluid(150, 75);
 }

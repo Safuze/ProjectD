@@ -3,15 +3,16 @@ import Button from './Button/Button';
 import Input from './Input/Input';
 import Register from './Register';
 import DocumentCreation from './DocumentCreation';
-
-export default function Login() {
+import ForgetPassword from './ForgetPassword';
+export default function Login({ onLogin,  isCreatingDocument, setIsCreatingDocument }) {
   const [authLogin, setAuthLogin] = useState('');
   const [authPassword, setAuthPassword] = useState('');
   const [authError, setAuthError] = useState('');
   const [isRegistering, setIsRegistering] = useState(false);
-  const [isCreatingDocument, setIsCreatingDocument] = useState(false);
+  const [isForgetPassword, setIsForgetPassword] = useState(false);
   const [user, setUser] = useState(null);
 
+  
   const handleChange = (e) => {
     const { name, value } = e.target;
     if (name === 'login') setAuthLogin(value);
@@ -20,6 +21,7 @@ export default function Login() {
 
   const handleLoginSubmit = () => {
     if (user && authLogin === user.login && authPassword === user.password) {
+      onLogin(authLogin); // Передаем логин в App
       setAuthError('');
       setIsCreatingDocument(true);
     } else {
@@ -27,13 +29,21 @@ export default function Login() {
     }
   };
 
+  const handleForgetPasswordClick = () => {
+    setIsForgetPassword(true);
+  }
+
   const handleRegistrationClick = () => {
     setIsRegistering(true);
   };
 
-  const handleBackClick = () => {
+  const handleBackClickReg = () => {
     setIsRegistering(false);
   };
+
+  const handleBackClickPassw = () => {
+    setIsForgetPassword(false);
+  }
 
   const handleRegisterSuccess = (userData) => {
     setUser(userData);
@@ -48,11 +58,15 @@ export default function Login() {
             <div className="form__img-notebook"></div>
           </div>
           <div className="form__text">
+            {isForgetPassword ? (
+              <h3>ВОССТАНОВЛЕНИЕ АККАУНТА</h3>
+            ) : (
             <h2 style={{ marginBottom: 0 }}>
               {isRegistering ? 'Регистрация'.toUpperCase() : 'Добро'.toUpperCase()}
               <br />
               {isRegistering ? '' : 'пожаловать'.toUpperCase()}
             </h2>
+            )}
           </div>
         </>
       )}
@@ -60,9 +74,14 @@ export default function Login() {
         <DocumentCreation />
       ) : isRegistering ? (
         <Register
-          onBackClick={handleBackClick}
+          onBackClick={handleBackClickReg}
           onRegisterSuccess={handleRegisterSuccess}
         />
+      ) : isForgetPassword ? (
+        <ForgetPassword 
+          onBackClick={handleBackClickPassw}
+        />
+
       ) : (
         <>
           <div className="form__main">
@@ -83,7 +102,7 @@ export default function Login() {
             {authError && <div className="error">{authError}</div>}
             <Button onClick={handleLoginSubmit}>Вход</Button>
             <div className="form__down">
-              <button className="forget_password">Забыли пароль?</button>
+              <button className="forget_password" onClick={handleForgetPasswordClick}>Забыли пароль?</button>
               <button id="registration" onClick={handleRegistrationClick}>
                 Регистрация
               </button>

@@ -1,0 +1,235 @@
+// Основной блок модального окна
+.share-modal {
+    position: relative;
+    background: white;
+    border-radius: 12px;
+    padding: 25px;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+    animation: modalFadeIn 0.3s ease-out;
+    box-sizing: border-box;
+  
+    // Оверлей (фон)
+    &__overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.7);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      backdrop-filter: blur(5px);
+    }
+  
+    // Заголовок
+    &__title {
+      margin: 0 0 20px;
+      text-align: center;
+      color: #333;
+      font-size: 1.5rem;
+      letter-spacing: 1px;
+      font-family: var(--font-family-accent);
+      font-weight: 600;
+    }
+  
+    // Кнопка закрытия
+    &__close-btn {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: none;
+      border: none;
+      font-size: 2rem;
+      cursor: pointer;
+      color: #777;
+      transition: color 0.2s;
+      line-height: 1;
+  
+      &:hover {
+        color: #333;
+      }
+  
+      &:focus {
+        outline: 2px solid rgba(0, 0, 0, 0.1);
+      }
+    }
+  
+    // Контейнер для кнопок соцсетей
+    &__social-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-bottom: 25px;
+      flex-wrap: wrap;
+    }
+  
+    // Кнопки соцсетей
+    &__social-btn {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.2s, box-shadow 0.2s;
+      padding: 0;
+      background: none; // Убираем дефолтный фон
+  
+      &:hover {
+        transform: scale(1.05);
+      }
+  
+      &:active {
+        transform: scale(0.95);
+      }
+  
+      &:focus {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
+      }
+  
+      // Модификаторы для разных соцсетей
+      &--vk {
+        background-color: var(--color-blue);
+        svg path:first-child {
+            color:  var(--color-blue);
+        } 
+      }
+  
+      &--tg {
+        background-color: var(--color-auqa);
+        svg path:first-child {
+            color:  var(--color-auqa);
+        } 
+      }
+  
+      &--wa {
+        background-color: #25D366;
+        svg path:first-child {
+            color: #25D366;
+        } 
+      }
+    }
+  
+    // Секция копирования ссылки
+    &__copy-section {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+  
+    // Поле с ссылкой
+    &__url-input {
+      flex: 1;
+      padding: 10px 15px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      min-width: 0; // Фикс для переполнения
+      background: #f9f9f9;
+  
+      &:focus {
+        outline: none;
+        border-color: #4a76a8;
+        box-shadow: 0 0 0 2px rgba(74, 118, 168, 0.2);
+      }
+    }
+  
+    // Кнопка копирования
+    &__copy-btn {
+      padding: 3px 15px;
+      background: #4a76a8;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+      font-weight: 500;
+      min-width: 80px;
+  
+      &:hover:not(:disabled) {
+        background: darken(#4a76a8, 10%);
+      }
+  
+      &:active:not(:disabled) {
+        transform: scale(0.95);
+      }
+  
+      &:disabled {
+        background: #4CAF50;
+        cursor: default;
+        opacity: 0.9;
+      }
+  
+      &:focus {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(74, 118, 168, 0.3);
+      }
+    }
+  
+    // Стили для иконок
+    &__icon {
+        svg {
+            width: 50px;
+            height: 50px;
+            display: block;
+
+            // Для иконки Telegram (у нее особый фон)
+            path:first-child {
+                fill: transparent;
+            }
+          }                                                                                                                                                 
+      }
+    
+        svg path:nth-of-type(2) {
+          fill: white;
+        }
+      
+      
+   
+      
+  
+  
+  // Анимация появления
+  @keyframes modalFadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  // Адаптив для мобилок
+  @media (max-width: 480px) {
+    .share-modal {
+      padding: 20px 15px;
+      
+      &__social-buttons {
+        gap: 12px;
+        margin-bottom: 20px;
+      }
+      
+      &__copy-section {
+        flex-direction: column;
+      }
+      
+      &__url-input {
+        width: 100%;
+      }
+      
+      &__copy-btn {
+        width: 100%;
+      }
+    }
+  }
+}

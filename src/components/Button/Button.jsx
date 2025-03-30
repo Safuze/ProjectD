@@ -1,6 +1,6 @@
 
-function Button({children, onClick}) {
-    return <button className="btn" onClick={onClick}>{ children }</button>  
+function Button({children, onClick, id}) {
+    return <button id={id} className="btn" onClick={onClick}>{ children }</button>  
 }
 
 export default Button;

@@ -58,6 +58,9 @@ body {
                     height: rem(64);
 
                     &__login-icon {
+                        @include mobile {
+                            display: none;
+                        }
                         position: relative;
                         overflow: hidden;
                         width: fluid(81.2, 54.13); // Ширина блока
@@ -76,7 +79,35 @@ body {
 
                     }
 
-                    
+                    &__make-doc {
+                        position: absolute;
+                        left: 50%;
+                        transform: translateX(-50%); 
+                        background: none;
+                        color: var(--color-light);
+                        transition: all 0.3s ease; // Плавные анимации для всех изменений
+                        border: none;
+
+                        // Стили при наведении
+                        &:hover {
+                            background-color: var(--color-purple);
+                            border-radius: fluid(10, 5);
+                            color: var(--color-accent); // Яркий цвет при наведении
+                            transform: translateX(-50%) scale(1.05); // Легкое увеличение
+                        }
+
+                        // Стили при активном нажатии
+                        &:active {
+                            color: var(--color-accent-dark); // Темнее обычного
+                            transform: translateX(-50%) scale(0.98); // Эффект "нажатия"
+                        }
+
+                        // Дополнительно: стили для фокуса (доступность)
+                        &:focus-visible {
+                            outline: 2px solid var(--color-accent);
+                            outline-offset: 2px;
+                        }
+                    }
 
                     &__login-button {
                         background: none;
@@ -240,17 +271,73 @@ h1 {
 
 h2 {
     @include fluid-text(48, 24);
-    font-weight: 100;
-    font-family: var(--font-family-accent);
+
 }
 
 h3 {
     @include fluid-text(32, 16);
 }
 
+h2, h3 {
+    font-weight: 100;
+    font-family: var(--font-family-accent);
+    letter-spacing: fluid(4, 2);
+}
+
+
 .error {
+
     font-weight: 666;
     color:rgb(255, 0, 0);
     font-size: fluid(20,10);
     text-indent: rem(20);
 }
+
+
+//  Стили ErrorModal.jsx
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  .modal {
+    color:black;
+    background: var(--color-light-2);
+    padding: fluid(20, 10);
+    border-radius: fluid(8, 4);
+    max-width: 400px;
+    width: 100%;
+    box-shadow: 0 fluid(2, 1) fluid(10, 5) rgba(0, 0, 0, 0.1);
+
+    &__content {
+        @include flex-center(false, true);
+    }
+  }
+  
+  .modal-button {
+    margin-top: fluid(15, 7.5);
+    padding: fluid(8, 4) fluid(16, 8);
+    background: var(--color-blue);
+    color: white;
+    border: none;
+    border-radius: fluid(4, 2);
+    cursor: pointer;
+  }
+  
+  .error-message {
+    color: #dc3545;
+    padding: fluid(10, 5);
+    margin: fluid(10, 5) 0;
+    border: 1px solid #dc3545;
+    border-radius: fluid(4, 2);
+    background-color: #f8d7da;
+  }

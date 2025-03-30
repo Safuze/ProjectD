@@ -1,0 +1,114 @@
+@use 'helpers' as *;
+#profile {
+    
+    
+
+    gap: fluid(100, 0) !important;
+    .avatar-block {
+
+        @include mobile {
+            display: none;
+        } 
+
+        margin-top: rem(64);
+        align-self: flex-start;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        &__icon {
+            width: fluid(200, 57.1);
+            height: fluid(200, 57.1);
+            background-image: url('../assets/Avatar.png');
+            background-size: 100% 100%; // Растягиваем изображение на весь блок
+            background-position: center; // Центрируем изображение
+            background-repeat: no-repeat; // Запрещаем повторение изображения
+        }
+        span {
+            white-space: nowrap;
+        }
+    }
+    
+    .main-content {
+        @include mobile {
+            position: absolute;
+            top: 0;
+            margin-top: fluid(150, 75);
+        } 
+        box-shadow: 0 0 fluid(15, 7.5) var(--color-orange);
+        border-radius: fluid(30,8.5);
+        opacity: 0.9;
+        margin-top: rem(64);
+        width: fluid(1250, 357.1);
+        height: fluid(750, 214.2);
+        background-color: var(--color-dark-blue);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        .tabs {
+            gap: fluid(30, 8.5);
+            display: flex;
+            margin-top: fluid(80, 22.8);
+            &__button {
+                background: none;
+                color: var(--color-ligth);
+                letter-spacing: fluid(4, 1.1);
+                @include fluid-text(40, 11.4);
+                padding: 0;
+                .line {
+                    width: 100%;
+                    height: fluid(6, 1.7);
+                    background-color: var(--color-grey);
+                }
+                .line.active {
+                    background-color: var(--color-auqa);
+                }
+            }
+        }
+        
+        .tab-content {
+            margin: fluid(40, 11.4) fluid(80, 22.8);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            .data-tab {
+                margin-bottom: fluid(150, 42.8);
+                &__item {
+                    margin: fluid(20, 5.7) 0;
+                }
+
+                &__login, &__email, &__fio {
+                    margin-right: fluid(80, 22.8);
+                    @include fluid-text(32, 9.1);
+                }
+            }
+
+            &__down {
+                display: flex;
+                justify-content: space-between;
+                align-items: end;
+                #edit {
+                    width: fluid(360, 102.8);
+                    height: fluid(64, 18.2);
+                    border-radius: fluid(40, 11.4);
+                    @include fluid-text(32, 9.1);
+                    position: relative;
+                    top: fluid(0, -30);
+
+                }
+            }
+        }
+
+        .tabs {
+            margin: fluid(80, 22.8) 0 0 fluid(80, 22.8);
+        }
+    }
+}
+
+#data-img {
+    width: fluid(203, 58);
+    height: fluid(147, 42);
+    left: 0;
+    top: fluid(0, -30);
+    position: relative;
+    transform:  translate(0, 0);
+}
