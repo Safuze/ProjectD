@@ -6,6 +6,13 @@
     margin: fluid(10, 5);
 }
 .btn {
+
+    &[disabled] {
+        cursor: not-allowed;
+        opacity: 0.8;
+        pointer-events: none;
+      }
+    
     border-radius: fluid(40, 20);
     background-color: var(--color-orange);
     color: var(--color-light);
@@ -26,3 +33,6 @@
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); // Уменьшаем тень
     }
 }
+
+
+

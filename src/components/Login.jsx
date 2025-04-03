@@ -11,12 +11,20 @@ export default function Login({ onLogin,  isCreatingDocument, setIsCreatingDocum
   const [isRegistering, setIsRegistering] = useState(false);
   const [isForgetPassword, setIsForgetPassword] = useState(false);
   const [user, setUser] = useState(null);
+  const [isFormValid, setIsFormValid] = useState(false);
 
-  
+
+  // Обновляем состояние при изменении полей
   const handleChange = (e) => {
     const { name, value } = e.target;
     if (name === 'login') setAuthLogin(value);
     if (name === 'password') setAuthPassword(value);
+  
+    // Проверяем, что оба поля не пустые
+    setIsFormValid(
+      (name === 'login' ? value : authLogin).trim() !== '' && 
+      (name === 'password' ? value : authPassword).trim() !== ''
+    );
   };
 
   const handleLoginSubmit = () => {
@@ -100,7 +108,13 @@ export default function Login({ onLogin,  isCreatingDocument, setIsCreatingDocum
               onChange={handleChange}
             />
             {authError && <div className="error">{authError}</div>}
-            <Button onClick={handleLoginSubmit}>Вход</Button>
+            <Button 
+              onClick={handleLoginSubmit}   
+              className={isFormValid ? "form-valid" : undefined} // undefined не добавит класс
+              disabled={!isFormValid}
+            >
+              Вход
+            </Button>
             <div className="form__down">
               <button className="forget_password" onClick={handleForgetPasswordClick}>Забыли пароль?</button>
               <button id="registration" onClick={handleRegistrationClick}>

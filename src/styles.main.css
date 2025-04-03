@@ -640,12 +640,6 @@ h2, h3 {
   color: rgba(76, 175, 79, 0.8705882353);
   font-size: 16px;
 }
-.form__main span {
-  margin-bottom: clamp(0.4375rem, 0.3259803922rem + 0.4575163399vw, 0.875rem);
-}
-.form__main #enter_code {
-  margin-bottom: clamp(3.125rem, 2.3284313725rem + 3.2679738562vw, 6.25rem);
-}
 .form__down {
   display: flex;
   justify-content: space-between;
@@ -690,19 +684,6 @@ h2, h3 {
 
 #enter_email {
   margin-bottom: clamp(4.6875rem, 3.4926470588rem + 4.9019607843vw, 9.375rem);
-}
-
-#forget_password_form {
-  font-size: clamp(0.875rem, 0.6519607843rem + 0.9150326797vw, 1.75rem);
-  text-align: center;
-  justify-content: center;
-  align-items: center;
-}
-#forget_password_form span {
-  font-size: clamp(0.75rem, 0.5588235294rem + 0.7843137255vw, 1.5rem);
-}
-#forget_password_form #enter_confirmPassword {
-  margin-bottom: clamp(1.25rem, 0.931372549rem + 1.3071895425vw, 2.5rem);
 }
 
 .form {
@@ -1308,4 +1289,4 @@ input.valid {
   }
 }
 
-/*# sourceMappingURL=main.css.map */
+/*# sourceMappingURL=styles.main.css.map */

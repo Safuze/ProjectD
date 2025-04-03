@@ -11,6 +11,7 @@
     "sass-watch": "sass --watch ."
   },
   "dependencies": {
+    "classnames": "^2.5.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-router-dom": "^7.4.0"

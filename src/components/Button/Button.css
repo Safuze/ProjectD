@@ -1,0 +1,29 @@
+.input, .btn {
+  width: clamp(16rem, 11.9215686275rem + 16.7320261438vw, 32rem);
+  height: clamp(2rem, 1.4901960784rem + 2.091503268vw, 4rem);
+  margin: clamp(0.3125rem, 0.2328431373rem + 0.3267973856vw, 0.625rem);
+}
+
+.btn {
+  border-radius: clamp(1.25rem, 0.931372549rem + 1.3071895425vw, 2.5rem);
+  background-color: var(--color-orange);
+  color: var(--color-light);
+  font-size: clamp(1rem, 0.7450980392rem + 1.045751634vw, 2rem);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+.btn[disabled] {
+  cursor: not-allowed;
+  opacity: 0.8;
+  pointer-events: none;
+}
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: var(--color-dark-orange);
+  color: white !important;
+  cursor: pointer;
+}
+.btn:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}/*# sourceMappingURL=Button.css.map */

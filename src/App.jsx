@@ -14,6 +14,7 @@ function App() {
 
     const handleLogout = () => {
         setUserLogin(null);
+        setIsCreatingDocument(false); // Добавляем сброс состояния документа
     };
 
     return (

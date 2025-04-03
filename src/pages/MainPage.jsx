@@ -14,7 +14,7 @@ const MainPage = ({ userLogin, onLogin, isCreatingDocument, setIsCreatingDocumen
                     <Header />
                     <Login 
                         onLogin={onLogin}
-                        isCreatingDocument={isCreatingDocument}
+                        isCreatingDocument={userLogin && isCreatingDocument} // Добавляем проверку на userLogin
                         setIsCreatingDocument={setIsCreatingDocument}
                     /> {/* Передаем функцию в Login */}
                 </div>

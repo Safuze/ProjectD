@@ -2,30 +2,26 @@ import React from 'react';
 import Button from './Button/Button';
 import Input from './Input/Input';
 import DropdownMenu from './DropdownMenu';
-import { useState, useRef } from 'react';
+import ErrorModal from './ErrorModal';
+import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom'; // Импортируем хук для навигации
 
-function ErrorModal({ message, onClose }) {
-  return (
-    <div className="modal-overlay">
-      <div className="modal">
-        <div className="modal__content">
-          <p>{message}</p>
-          <button onClick={onClose} className="modal-button">
-            Вернуться к созданию
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 export default function DocumentCreation() {
+  const [isFormValid1, setIsFormValid1] = useState(true);
+  const [isFormValid2, setIsFormValid2] = useState(false);
+  const [fio, setFio] = useState('');
   const [firm, setFirm] = useState('');
   const [selectedValue, setSelectedValue] = useState('');
   const [isCreatesDocument, setIsCreatesDocument] = useState(false);
   const [error, setError] = useState(null);
   const navigate = useNavigate(); // Создаем экземпляр navigate
+  useEffect(() => {
+    setIsFormValid2(
+      selectedValue && 
+      firm.trim() !== '' && 
+      fio.trim() !== ''
+    );
+  }, [selectedValue, firm, fio]); // Зависимости от всех полей формы
 
   const shablon1 = { format: 'Акт', firm: 'Аниме' }; 
   const shablon2 = { format: 'Заказ', firm: 'Аниме' }; 
@@ -37,15 +33,33 @@ export default function DocumentCreation() {
   const reports = [shablon2, shablon5];
   const orders = [shablon3, shablon6];
 
-  const handleSelectChange = (event) => {
-    setSelectedValue(event.target.value);
-  };
 
   const handleChange = (event) => {
-    const { name, value} = event.target;
+    const { name, value } = event.target;
     if (name === 'firm') setFirm(value);
-    console.log(value);
-  }
+    if (name === 'fio') setFio(value);
+
+    // Проверяем валидность с актуальными значениями
+    checkFormValidity(name, value);
+    };
+
+    const handleSelectChange = (event) => {
+      setSelectedValue(event.target.value);
+      checkFormValidity('selectedValue', event.target.value);
+    };
+
+    const checkFormValidity = (changedField, newValue) => {
+      const currentFirm = changedField === 'firm' ? newValue : firm;
+      const currentFio = changedField === 'fio' ? newValue : fio;
+      const currentSelected = changedField === 'selectedValue' ? newValue : selectedValue;
+
+      setIsFormValid2(
+        currentSelected && 
+        currentFirm.trim() !== '' && 
+        currentFio.trim() !== ''
+      );
+    }
+  
 
   const handleCreateDocumentClick = () => {
     setIsCreatesDocument(true);
@@ -54,10 +68,16 @@ export default function DocumentCreation() {
   }
 
   const handleBackClickFromError = () => {
+    setFirm('');
+    setFio('');
+    setSelectedValue('');
     setError('Документ не найден');
   };
 
   const handleBackClick = () => {
+    setFirm('');
+    setFio('');
+    setSelectedValue('');
     setIsCreatesDocument(false);
     setError(null);
   }
@@ -76,7 +96,7 @@ export default function DocumentCreation() {
     selectedValue === '1' ? acts.some(item => item.firm?.toLowerCase() === firm.toLowerCase()) :
     selectedValue === '2' ? reports.some(item => item.firm?.toLowerCase() === firm.toLowerCase()) :
     orders.some(item => item.firm?.toLowerCase() === firm.toLowerCase());
-
+    setIsFormValid2(false);
     docExists ? navigate('/document') : handleBackClickFromError();
   }
 
@@ -102,6 +122,7 @@ export default function DocumentCreation() {
         <ErrorModal 
           message={error} 
           onClose={closeErrorModal}
+          children='Вернуться к созданию'
         />
       )}
 
@@ -136,14 +157,27 @@ export default function DocumentCreation() {
                   onChange={handleChange}
                 />
                 <Input
-                  name="FIO"
+                  name="fio"
                   type="text"
                   placeholder="Введите ФИО юр.лица"
+                  value={fio}
+                  onChange={handleChange}
                 />
               </div>
               <div id="back_and_cont" className="form__buttons" style={{flexDirection: 'row'}}>
-                <Button onClick={handleBackClick}>Назад</Button>
-                <Button onClick={handleContinueClick}>Продолжить</Button>
+                <Button 
+                  onClick={handleBackClick}
+                  className={isFormValid1 ? "form-valid" : undefined}
+                >
+                  Назад
+                </Button>
+                <Button 
+                  onClick={handleContinueClick}
+                  className={isFormValid2 ? "form-valid" : undefined}
+                  disabled={!isFormValid2}
+                >
+                  Продолжить
+                </Button>
               </div>
   
           </div>
@@ -153,7 +187,10 @@ export default function DocumentCreation() {
         <>
           <div className="form__img-notebook"></div>
           <div className="form__buttons">
-            <Button onClick={handleCreateDocumentClick}>
+            <Button 
+              onClick={handleCreateDocumentClick}
+              className={isFormValid1 ? "form-valid" : undefined}
+            >
                 Создать документ
             </Button>
             <input
@@ -164,8 +201,11 @@ export default function DocumentCreation() {
               ref={fileInputRef}
               accept=".doc,.docx,.pdf,.txt" // Укажите нужные форматы
             />
-            <Button onClick={() => fileInputRef.current.click()}>
-                Выбрать имеющийся
+            <Button 
+              onClick={() => fileInputRef.current.click()}
+              className={isFormValid1 ? "form-valid" : undefined}
+            >
+              Выбрать имеющийся
             </Button>
           </div>
           <div className="form__decorative-image"></div>

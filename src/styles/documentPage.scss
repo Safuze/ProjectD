@@ -3,7 +3,7 @@
 .documentPage {
     height: 100vh;
     background-color: var(--color-dark-blue);
-    opacity: 0.8;
+    opacity: 0.8    ;
     @include flex-center(false, false);
     
     &__doc-content {

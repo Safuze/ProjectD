@@ -1,5 +1,7 @@
 @use 'helpers' as *;
     .form {
+
+    
         position: relative;
 
         @include flex-center(false, true);
@@ -35,7 +37,38 @@
         &__main {
             display: flex;
             flex-direction: column;
+            
             margin-bottom: fluid(70, 35);
+            button.btn {
+                opacity: 0.8;
+                transition: opacity 0.3s ease;
+            }
+
+            .input-container {
+                &.valid {
+                    .input {
+                      border: 2px solid #4caf4fde;
+                      box-shadow: 0 0 0 1px #4caf4fde;
+                    }
+                    
+                    &::after {
+                      content: '✓';
+                      position: absolute;
+                      right: 10px;
+                      top: 50%;
+                      transform: translateY(-50%);
+                      color: #4caf4fde;
+                      font-size: 16px;
+                    }
+                  }
+            }
+            span {
+                margin-bottom: fluid(14, 7);
+            }
+            #enter_code{
+                margin-bottom: fluid(100, 50);
+            }
+
         }
         &__down {
             display: flex;
@@ -84,11 +117,21 @@
     @include fluid-text(30, 15);
 }
 
-#forget_passwor_form {
-    display: flex;
-    flex-direction: column;
-}
 
 #enter_email {
     margin-bottom: fluid(150, 75);
+}
+
+#forget_password_form {
+    @include fluid-text(28, 14);
+    span {@include fluid-text(24, 12);}
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+
+    #enter_password {
+    }
+    #enter_confirmPassword {
+        margin-bottom: fluid(40, 20);
+    }
 }

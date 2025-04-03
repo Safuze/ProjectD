@@ -286,7 +286,6 @@ h2, h3 {
 
 
 .error {
-
     font-weight: 666;
     color:rgb(255, 0, 0);
     font-size: fluid(20,10);
@@ -341,3 +340,9 @@ h2, h3 {
     border-radius: fluid(4, 2);
     background-color: #f8d7da;
   }
+
+
+.form-valid {
+    opacity: 1 !important;
+}
+

@@ -3,6 +3,8 @@ import Button from './Button/Button';
 import Input from './Input/Input';
 
 export default function Register({ onBackClick, onRegisterSuccess }) {
+  const [isFormValid, setIsFormValid] = useState(true);
+  
   const [user, setUser] = useState({
     login: '',
     email: '',
@@ -31,15 +33,15 @@ export default function Register({ onBackClick, onRegisterSuccess }) {
     const errorCount = Object.values(errors).filter((error) => error).length;
     setMarginBottom(58.631 - errorCount * 5);
     setMarginTopForBackDown(25 - errorCount * 5);
-  }, [errors]);
+    setIsFormValid(isRegistrationValid());
+  }, [errors, user]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setUser({ ...user, [name]: value });
+    setUser(prev => ({ ...prev, [name]: value }));
     // Если поле уже "тронуто" (было в фокусе), запускаем валидацию
-    if (touched[name]) {
-      validateFields(name, value);
-    }
+    validateFields(name, value);
+
   };
 
   const validateFields = (name, value) => {
@@ -48,7 +50,9 @@ export default function Register({ onBackClick, onRegisterSuccess }) {
     switch (name) {
       case 'email': {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(value)) {
+        if (!value) {
+          newErrors.email = '';
+        } else if (!emailRegex.test(value)) {
           newErrors.email = 'Неправильный email';
         } else {
           newErrors.email = '';
@@ -57,7 +61,9 @@ export default function Register({ onBackClick, onRegisterSuccess }) {
       }
       case 'login': {
         const loginRegex = /^[A-Za-z][A-Za-z0-9]*$/;
-        if (value.length < 4 || !loginRegex.test(value)) {
+        if (!value) {
+          newErrors.login = '';
+        } else if (value.length < 4 || !loginRegex.test(value)) {
           newErrors.login = 'Некорректный логин';
         } else {
           newErrors.login = '';
@@ -65,7 +71,9 @@ export default function Register({ onBackClick, onRegisterSuccess }) {
         break;
       }
       case 'password': {
-        if (value.length < 4) {
+        if (!value) {
+          newErrors.password = '';
+        } else if (value.length < 4) {
           newErrors.password = 'Пароль должен быть не менее 4 символов';
         } else {
           newErrors.password = '';
@@ -73,7 +81,9 @@ export default function Register({ onBackClick, onRegisterSuccess }) {
         break;
       }
       case 'confirmPassword': {
-        if (value !== user.password) {
+        if (!value) {
+          newErrors.confirmPassword = '';
+        } else if (value !== user.password) {
           newErrors.confirmPassword = 'Пароли не совпадают';
         } else {
           newErrors.confirmPassword = '';
@@ -85,13 +95,15 @@ export default function Register({ onBackClick, onRegisterSuccess }) {
     }
 
     setErrors(newErrors);
+    setTouched(prev => ({ ...prev, [name]: true }));
   };
 
   const handleBlur = (e) => {
     const { name, value } = e.target;
-    // Помечаем поле как "тронутое" и валидируем
-    setTouched({ ...touched, [name]: true });
-    validateFields(name, value);
+    if (!touched[name]) {
+      setTouched(prev => ({ ...prev, [name]: true }));
+      validateFields(name, value);
+    }
   };
 
   const handleRegisterSubmit = () => {
@@ -115,42 +127,8 @@ export default function Register({ onBackClick, onRegisterSuccess }) {
   };
 
   const isFieldValid = (name) => {
-    // Проверяем, было ли поле "тронуто" (получало фокус)
     if (!touched[name]) return false;
-  
-    switch (name) {
-      case 'login':
-        return (
-          user.login.length >= 4 &&
-          /^[A-Za-z]/.test(user.login) &&
-          /^[A-Za-z0-9]+$/.test(user.login) &&
-          !errors.login
-        );
-  
-      case 'email':
-        // Используем ТОТ ЖЕ regex, что и в validateFields
-        return (
-          /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(user.email) &&
-          !errors.email
-        );
-  
-      case 'password':
-        return (
-          user.password.length >= 4 &&
-          !errors.password
-        );
-  
-      case 'confirmPassword':
-        return (
-          user.confirmPassword &&
-          user.password &&
-          user.confirmPassword === user.password &&
-          !errors.confirmPassword
-        );
-  
-      default:
-        return false;
-    }
+    return !errors[name] && user[name];
   };
 
   return (
@@ -159,58 +137,62 @@ export default function Register({ onBackClick, onRegisterSuccess }) {
         <div className="error-container">
           {errors.login && <div className="error">{errors.login}</div>}
         </div>
-        <Input
-          className={isFieldValid('login') ? 'valid' : ''}
-          name="login"
-          type="text"
-          placeholder="Логин"
-          value={user.login}
-          onChange={handleChange}
-          onBlur={handleBlur}
-          style={isFieldValid('login') ? { backgroundColor: 'rgba(124, 255, 131, 0.5)', color: 'white' } : {}}
-        />
+        <div className={`input-container ${isFieldValid('login') ? 'valid' : ''}`}>
+          <Input
+            name="login"
+            type="text"
+            placeholder="Логин"
+            value={user.login}
+            onChange={handleChange}
+            onBlur={handleBlur}
+          />
+        </div>
         <div className="error-container">
           {errors.email && <div className="error">{errors.email}</div>}
         </div>
-        <Input
-          className={isFieldValid('email') ? 'valid' : ''}
-          name="email"
-          type="text"
-          placeholder="Email"
-          value={user.email}
-          onChange={handleChange}
-          onBlur={handleBlur}
-          style={isFieldValid('email') ? { backgroundColor: 'rgba(124, 255, 131, 0.5)', color: 'white' } : {}}
-        />
+        <div className={`input-container ${isFieldValid('email') ? 'valid' : ''}`}>
+          <Input
+            name="email"
+            type="text"
+            placeholder="Email"
+            value={user.email}
+            onChange={handleChange}
+            onBlur={handleBlur}
+          />
+        </div>
         <div className="error-container">
           {errors.password && <div className="error">{errors.password}</div>}
         </div>
-        <Input
-          className={isFieldValid('password') ? 'valid' : ''}
-          name="password"
-          type="password"
-          placeholder="Пароль"
-          value={user.password}
-          onChange={handleChange}
-          onBlur={handleBlur}
-          style={isFieldValid('password') ? { backgroundColor: 'rgba(124, 255, 131, 0.5)', color: 'white' } : {}}
-        />
+        <div className={`input-container ${isFieldValid('password') ? 'valid' : ''}`}>
+          <Input
+            name="password"
+            type="password"
+            placeholder="Пароль"
+            value={user.password}
+            onChange={handleChange}
+            onBlur={handleBlur}
+          />
+        </div>
         <div className="error-container">
           {errors.confirmPassword && <div className="error">{errors.confirmPassword}</div>}
         </div>
-        <Input
-          className={isFieldValid('login') ? 'valid' : ''}
-          name="confirmPassword"
-          type="password"
-          placeholder="Повторите пароль"
-          value={user.confirmPassword}
-          onChange={handleChange}
-          onBlur={handleBlur}
-          style={isFieldValid('confirmPassword') ? { backgroundColor: 'rgba(124, 255, 131, 0.5)', color: 'white' } : {}}
-        />
-        {isRegistrationValid() && (
-          <Button onClick={handleRegisterSubmit}>Зарегистрироваться</Button>
-        )}
+        <div className={`input-container ${isFieldValid('confirmPassword') ? 'valid' : ''}`}>
+          <Input
+            name="confirmPassword"
+            type="password"
+            placeholder="Повторите пароль"
+            value={user.confirmPassword}
+            onChange={handleChange}
+            onBlur={handleBlur}
+          />
+        </div>
+        <Button 
+          onClick={handleRegisterSubmit} 
+          disabled={!isFormValid}
+          className={isFormValid ? "form-valid" : ""}
+        >
+          Зарегистрироваться
+        </Button>
         <div className="form__down" style={{ marginBottom: 0, marginTop: marginTopForBackDown }}>
           <button id="backBtn" className="forget_password" onClick={onBackClick}>
             Назад

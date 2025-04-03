@@ -112,8 +112,15 @@ export default function UserProfilePage({ login, onLogout, email, setIsCreatingD
 
                             {activeTab === 'documents' && (
                                 <div className="documents-tab">
-                                    <h2>Сохраненные документы</h2>
-                                    <p>Здесь будут отображаться ваши документы...</p>
+                                    <div className="documents-tab__docs">
+                                        <div className="documents-tab__docs-item"></div>
+                                        <div className="documents-tab__docs-item"></div>
+                                        <div className="documents-tab__docs-item"></div>
+                                        <div className="documents-tab__docs-item"></div>
+                                    </div>
+                                    <div className='documents-tab__show-more'>
+                                        <button >Показать ещё</button>
+                                    </div>
                                 </div>
                             )}
                         </div>
