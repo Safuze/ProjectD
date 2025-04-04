@@ -74,6 +74,9 @@
             display: flex;
             justify-content: space-between;
             margin: fluid(30, 15) fluid(10, 5);
+            #register-btn {
+                width: fluid(400, 200);
+            }
         }
         &__forget_password_btn {
             display: flex;

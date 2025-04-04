@@ -47,7 +47,7 @@
         .tabs {
             gap: fluid(30, 8.5);
             display: flex;
-            margin-top: fluid(80, 22.8);
+            margin: fluid(80, 22.8) 0 0 fluid(80, 22.8);
             &__button {
                 background: none;
                 color: var(--color-ligth);
@@ -96,6 +96,73 @@
 
                 }
             }
+
+            .documents-tab {
+                gap: fluid(82, 10);
+                @include flex-center(false, true);
+                &__docs {
+                    width: 100%;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    @include mobile {
+                        justify-content: space-around;
+
+                    }
+                }
+                
+                &__docs-item {
+                    width: fluid(231.8, 85.5);
+                    height: fluid(328, 121.4);
+                    background-color: azure;
+                    border: fluid(3, 1.5) solid var(--color-grey);
+
+                    transition: 
+                    transform 0.2s ease-in-out,
+                    border 0.2s ease-in-out;
+                }
+                &__docs-item:last-of-type {
+                    @include mobile {
+                        display: none;
+                    }
+                }
+
+                &__docs-item:hover {
+                    transform: scale(1.1);
+                    border: fluid(4, 2) solid var(--color-auqa);
+                    cursor: pointer;
+                }
+
+                &__show-more {
+                    @include flex-center(false, false);
+                    button {
+                        display: flex;
+                        align-items: center;
+                        text-indent: fluid(30, 15);
+                        padding: 0;
+                        background: none;
+                        color: white;
+                        font-family: var(--font-family-accent);
+                        font-weight: 575;
+                        @include fluid-text(20, 10);
+
+                        transition: 
+                        transform 0.2s ease-in-out,
+                        text-decoration 0.2s ease-in-out;
+
+                        img {
+                            position: absolute;
+                            max-width: fluid(24, 12);
+                            height: fluid(24, 12);
+                    }
+                }
+                button:hover {
+                    transform: scale(1.1);
+                    text-decoration: underline var(--color-auqa);
+                    
+          
+                }
+            }
         }
 
         .tabs {
@@ -111,4 +178,5 @@
     top: fluid(0, -30);
     position: relative;
     transform:  translate(0, 0);
+    }
 }

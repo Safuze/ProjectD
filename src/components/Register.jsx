@@ -31,8 +31,8 @@ export default function Register({ onBackClick, onRegisterSuccess }) {
 
   useEffect(() => {
     const errorCount = Object.values(errors).filter((error) => error).length;
-    setMarginBottom(58.631 - errorCount * 5);
-    setMarginTopForBackDown(25 - errorCount * 5);
+    setMarginBottom(58.631 - errorCount * 8);
+    setMarginTopForBackDown(25 - errorCount * 8);
     setIsFormValid(isRegistrationValid());
   }, [errors, user]);
 
@@ -186,17 +186,19 @@ export default function Register({ onBackClick, onRegisterSuccess }) {
             onBlur={handleBlur}
           />
         </div>
-        <Button 
-          onClick={handleRegisterSubmit} 
-          disabled={!isFormValid}
-          className={isFormValid ? "form-valid" : ""}
-        >
-          Зарегистрироваться
-        </Button>
+        
         <div className="form__down" style={{ marginBottom: 0, marginTop: marginTopForBackDown }}>
           <button id="backBtn" className="forget_password" onClick={onBackClick}>
             Назад
           </button>
+            <Button 
+            onClick={handleRegisterSubmit} 
+            disabled={!isFormValid}
+            className={isFormValid ? "form-valid" : ""}
+            id="register-btn"
+          >
+            Зарегистрироваться
+          </Button>
         </div>
       </div>
     </>

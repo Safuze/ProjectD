@@ -119,7 +119,10 @@ export default function UserProfilePage({ login, onLogout, email, setIsCreatingD
                                         <div className="documents-tab__docs-item"></div>
                                     </div>
                                     <div className='documents-tab__show-more'>
-                                        <button >Показать ещё</button>
+                                        
+                                        <button >
+                                        <img src="https://img.icons8.com/ios-filled/50/FFFFFF/chevron-down.png" alt="chevron-down"/>
+                                            ПОКАЗАТЬ ЕЩЁ</button>
                                     </div>
                                 </div>
                             )}
