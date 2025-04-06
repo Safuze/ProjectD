@@ -111,6 +111,7 @@ const ForgetPassword = ({ onBackClick }) => {
       console.log(newPassword) // Заглушка
       console.log(confirmPassword) // Заглушка
     } else setEnd(false);
+    successfulСode && !passwordError ? setEnd(true) : setEnd(false);
   }
 
   return (

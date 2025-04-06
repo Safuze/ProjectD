@@ -9,6 +9,7 @@ function App() {
     const [userEmail, setUserEmail] = useState(null);
     const [isCreatingDocument, setIsCreatingDocument] = useState(false);
 
+   
     const handleLogin = (login) => {
         setUserLogin(login);
         setIsCreatingDocument(false); // Сбрасываем при логине
