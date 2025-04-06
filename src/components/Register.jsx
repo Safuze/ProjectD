@@ -12,6 +12,7 @@ export default function Register({ onBackClick, onRegisterSuccess }) {
     confirmPassword: '',
   });
 
+
   const [errors, setErrors] = useState({
     email: '',
     login: '',
@@ -35,6 +36,7 @@ export default function Register({ onBackClick, onRegisterSuccess }) {
     setMarginTopForBackDown(25 - errorCount * 8);
     setIsFormValid(isRegistrationValid());
   }, [errors, user]);
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -130,6 +132,7 @@ export default function Register({ onBackClick, onRegisterSuccess }) {
     if (!touched[name]) return false;
     return !errors[name] && user[name];
   };
+
 
   return (
     <>

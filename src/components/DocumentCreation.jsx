@@ -3,6 +3,7 @@ import Button from './Button/Button';
 import Input from './Input/Input';
 import DropdownMenu from './DropdownMenu';
 import ErrorModal from './ErrorModal';
+import Document from './Document';
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom'; // Импортируем хук для навигации
 

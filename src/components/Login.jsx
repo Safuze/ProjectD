@@ -4,7 +4,7 @@ import Input from './Input/Input';
 import Register from './Register';
 import DocumentCreation from './DocumentCreation';
 import ForgetPassword from './ForgetPassword';
-export default function Login({ onLogin,  isCreatingDocument, setIsCreatingDocument }) {
+export default function Login({ onEmail, onLogin,  isCreatingDocument, setIsCreatingDocument }) {
   const [authLogin, setAuthLogin] = useState('');
   const [authPassword, setAuthPassword] = useState('');
   const [authError, setAuthError] = useState('');
@@ -30,6 +30,7 @@ export default function Login({ onLogin,  isCreatingDocument, setIsCreatingDocum
   const handleLoginSubmit = () => {
     if (user && authLogin === user.login && authPassword === user.password) {
       onLogin(authLogin); // Передаем логин в App
+      onEmail(user.email);
       setAuthError('');
       setIsCreatingDocument(true);
     } else {

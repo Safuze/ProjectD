@@ -4,7 +4,9 @@ import Navbar from '../components/Navbar';
 import Header from '../components/Header';
 import Login from '../components/Login';
 
-const MainPage = ({ userLogin, onLogin, isCreatingDocument, setIsCreatingDocument }) => {
+const MainPage = ({ onEmail, userLogin, onLogin, isCreatingDocument, setIsCreatingDocument }) => {
+    
+
     return (
         <div>
             <Background />
@@ -13,6 +15,7 @@ const MainPage = ({ userLogin, onLogin, isCreatingDocument, setIsCreatingDocumen
                 <div className='grid-container__content'>
                     <Header />
                     <Login 
+                        onEmail={onEmail}
                         onLogin={onLogin}
                         isCreatingDocument={userLogin && isCreatingDocument} // Добавляем проверку на userLogin
                         setIsCreatingDocument={setIsCreatingDocument}
