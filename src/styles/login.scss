@@ -1,0 +1,140 @@
+@use 'helpers' as *;
+    .form {
+
+    
+        position: relative;
+
+        @include flex-center(false, true);
+        width: fluid(600, 300);
+        height: fluid(775, 387.5);
+        background-color: var(--color-dark-blue);
+        opacity: 0.8;
+        border-radius: fluid(100, 50) fluid(25, 12.5);
+        box-shadow: 0 0 fluid(15, 7.5) var(--color-orange);
+        &__top {
+            border-radius: fluid(100, 50) fluid(25, 12.5);
+            display: flex;
+            justify-content: space-around;
+            overflow: hidden;
+            margin: 0;
+            height: 100vh;
+            width: 100%;
+        }
+
+        &__text {
+            margin-bottom: fluid(30,15);
+
+            h2 {
+                text-align: center;
+                margin: 0 0 fluid(15, 7.5) 0;
+                letter-spacing: fluid(4, 2);
+            }
+            h3 {
+                margin-bottom: fluid(130,65);
+            }
+            
+        }
+        &__main {
+            display: flex;
+            flex-direction: column;
+            
+            margin-bottom: fluid(70, 35);
+            button.btn {
+                opacity: 0.8;
+                transition: opacity 0.3s ease;
+            }
+
+            .input-container {
+                &.valid {
+                    .input {
+                      border: 2px solid #4caf4fde;
+                      box-shadow: 0 0 0 1px #4caf4fde;
+                    }
+                    
+                    &::after {
+                      content: '✓';
+                      position: absolute;
+                      right: 10px;
+                      top: 50%;
+                      transform: translateY(-50%);
+                      color: #4caf4fde;
+                      font-size: 16px;
+                    }
+                  }
+            }
+            span {
+                margin-bottom: fluid(14, 7);
+            }
+            #enter_code{
+                margin-bottom: fluid(100, 50);
+            }
+
+        }
+        &__down {
+            display: flex;
+            justify-content: space-between;
+            margin: fluid(30, 15) fluid(10, 5);
+            #register-btn {
+                width: fluid(400, 200);
+            }
+        }
+        &__forget_password_btn {
+            display: flex;
+            & {
+                width: fluid(550, 275);
+                margin: 0 ;
+            }            
+        }
+    }
+
+
+.form__img-line {
+    position: relative;
+    width: fluid(431, 215.5);
+    height: fluid(73.6, 36.8);
+    background-image: url('../assets/orange-line.png');
+    transform: rotate(162deg) translate(fluid(150,75), fluid(50, 25));
+}
+
+.form__img-notebook {
+    position: absolute;
+    width: fluid(203, 101.5);
+    height: fluid(147, 73.5);
+    background-image: url('../assets/doc.png');
+    background-size: contain; // Масштабирует изображение, чтобы оно поместилось в контейнер
+    background-repeat: no-repeat; // Отключает повторение изображения
+    background-position: center; // Центрирует изображение
+    transform: rotate(3deg) translate(fluid(199, 99.5), fluid(-31, -15.5));
+ 
+}
+
+.forget_password, #registration {
+    background-color: var(--color-dark-blue);
+    color: var(--color-light);
+    @include fluid-text(24, 12);
+
+}
+
+
+#backBtn {
+    @include fluid-text(30, 15);
+}
+
+
+#enter_email {
+    margin-bottom: fluid(150, 75);
+}
+
+#forget_password_form {
+    @include fluid-text(28, 14);
+    span {@include fluid-text(24, 12);}
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+
+    #enter_password {
+    }
+    #enter_confirmPassword {
+        margin-bottom: fluid(40, 20);
+    }
+}

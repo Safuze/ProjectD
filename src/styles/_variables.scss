@@ -1,0 +1,30 @@
+@use 'helpers' as *;
+
+:root { 
+    --color-light: #FFFFFF;
+    --color-light-1: #F5F5F5;
+    --color-light-2: #E7E7E7;
+
+    --color-dark: black;
+    --color-orange: #DF8627;
+    --color-dark-orange: #ff7b00;
+    --color-purple: #A998F4;
+    --color-grey: #888888;
+    --color-light-grey: #D9D9D9;
+
+    --color-auqa: #27B7DF;
+    --color-blue:#005999;
+    --color-light-blue:#161f25;
+    --color-dark-blue:#002A49;
+
+    --font-family-base: 'Cuprum', 'sans-serif';
+    --font-family-accent: 'Forum', 'sans-serif';
+
+    --container-width: #{rem(1400)};
+    --container-padding-x: #{rem(16)} ;
+
+    --transition-duration: 0.2s;
+
+    @include laptop {
+        --container-width: #{rem(1120)};}
+}

@@ -1,0 +1,406 @@
+@use 'helpers' as *;
+#profile {
+    
+    
+
+    gap: fluid(100, 0) !important;
+    .avatar-block {
+
+        @include mobile {
+            display: none;
+        } 
+
+        margin-top: rem(64);
+        align-self: flex-start;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        &__icon {
+            width: fluid(200, 57.1);
+            height: fluid(200, 57.1);
+            background-image: url('../assets/Avatar.png');
+            background-size: 100% 100%; // Растягиваем изображение на весь блок
+            background-position: center; // Центрируем изображение
+            background-repeat: no-repeat; // Запрещаем повторение изображения
+        }
+        span {
+            white-space: nowrap;
+        }
+    }
+    
+    .main-content {
+        .tabs {
+            gap: fluid(30, 8.5);
+            display: flex;
+            margin: fluid(80, 22.8) 0 0 fluid(80, 22.8);
+            &__button {
+                background: none;
+                color: var(--color-ligth);
+                letter-spacing: fluid(4, 1.1);
+                @include fluid-text(40, 11.4);
+                padding: 0;
+                .line {
+                    width: 100%;
+                    height: fluid(6, 1.7);
+                    background-color: var(--color-grey);
+                }
+                .line.active {
+                    background-color: var(--color-auqa);
+                }
+            }
+        }
+        
+        .tab-content {
+            margin: fluid(40, 11.4) fluid(80, 22.8);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            .data-tab {
+                margin-bottom: fluid(150, 42.8);
+                &__item {
+                    margin: fluid(20, 5.7) 0;
+                }
+
+                &__login, &__email, &__fio {
+                    margin-right: fluid(80, 22.8);
+                    @include fluid-text(32, 9.1);
+                }
+            }
+
+            &__down {
+                display: flex;
+                justify-content: space-between;
+                align-items: end;
+                #edit {
+                    width: fluid(360, 102.8);
+                    height: fluid(64, 18.2);
+                    border-radius: fluid(40, 11.4);
+                    @include fluid-text(32, 9.1);
+                    position: relative;
+                    top: fluid(0, -30);
+
+                }
+            }
+
+            .documents-tab {
+                &__docs {
+   
+                    justify-content: space-between;
+
+                    @include mobile {
+                        justify-content: space-around;
+
+                    }
+                }
+                
+                &__docs-item:last-of-type {
+                    @include mobile {
+                        display: none;
+                    }
+                }
+                &__show-more {
+                    @include flex-center(false, false);
+                    button {
+                        display: flex;
+                        align-items: center;
+                        text-indent: fluid(30, 15);
+                        padding: 0;
+                        background: none;
+                        color: white;
+                        font-family: var(--font-family-accent);
+                        font-weight: 575;
+                        @include fluid-text(20, 10);
+
+                        transition: 
+                        transform 0.2s ease-in-out,
+                        text-decoration 0.2s ease-in-out;
+
+                        img {
+                            position: absolute;
+                            max-width: fluid(24, 12);
+                            height: fluid(24, 12);
+                    }
+                }
+                button:hover {
+                    transform: scale(1.1);
+                    text-decoration: underline var(--color-auqa);
+                    
+          
+                }
+            }
+        }
+
+        .tabs {
+            margin: fluid(80, 22.8) 0 0 fluid(80, 22.8);
+        }
+    }
+}
+
+#data-img {
+    width: fluid(203, 58);
+    height: fluid(147, 42);
+    left: 0;
+    top: fluid(0, -30);
+    position: relative;
+    transform:  translate(0, 0);
+    }
+}
+
+#savedDocs {
+    width: 90%;
+    height: 90%;
+    max-height:  rem(972);
+    max-width: rem(1728);
+    .documents-tab {
+        overflow: hidden;
+
+        &__docs { 
+            flex-grow: 1;
+            overflow-y: auto;
+            gap: fluid(30, 15);
+            padding: fluid(60, 30);
+
+            margin-right: fluid(30, 15); /* Смещаем скроллбар влево */
+
+            /* Кастомизация скроллбара (для WebKit браузеров) */
+            &::-webkit-scrollbar {
+                width: fluid(10,5); /* Можно сделать немного шире */
+            }
+            
+            &::-webkit-scrollbar-thumb {
+                background: var(--color-grey);
+                border-radius: fluid(4, 2);
+            }
+            
+            &::-webkit-scrollbar-track {
+                background: var(--color-light-2);
+                border-radius: fluid(4, 2);
+            }
+        }
+        
+        &__scroll-bar {
+            
+            display: none; /* скрываем кастомный скроллбар, если используем нативный */
+          }
+    }
+};
+
+.main-content {
+    @include mobile {
+        position: absolute;
+        top: 0;
+        margin-top: fluid(150, 75);
+    } 
+    box-shadow: 0 0 fluid(15, 7.5) var(--color-orange);
+    border-radius: fluid(30,8.5);
+    opacity: 0.9;
+    margin-top: rem(64);
+    width: fluid(1250, 357.1);
+    height: fluid(750, 214.2);
+    background-color: var(--color-dark-blue);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    &__header {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        .back-button {
+            width: fluid(80, 40);
+            height: fluid(80, 40);
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            position: relative;
+            
+            &::before {
+              content: '';
+              position: absolute;
+              left: 50%;
+              top: 50%;
+              width: fluid(24, 12);
+              height: fluid(24, 12);
+              border-left: fluid(4, 2) solid white;
+              border-bottom: fluid(4, 2) solid white;
+              transform: translate(-25%, -50%) rotate(45deg);
+            }
+            
+            &:hover {
+              opacity: 0.8;
+            }
+            
+            &:active {
+              opacity: 0.6;
+            }
+          }
+        h4 {
+            font-weight: 100;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            margin: 0; // убираем стандартные отступы у h4
+        }
+    }
+
+}
+
+.documents-tab {
+    position: relative; // Для позиционирования модального окна
+    gap: fluid(82, 10);
+    @include flex-center(false, true);
+    &__docs {
+        justify-content: start;
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        @include mobile {
+            justify-content: space-around;
+
+        }
+    }
+    
+    &__docs-item {
+        position: relative; // Для позиционирования внутренних элементов
+        overflow: hidden; // Чтобы не выходило за границы
+        width: fluid(231.8, 85.5);
+        height: fluid(328, 121.4);
+        background-color: white;
+        border: fluid(3, 1.5) solid var(--color-grey);
+
+        transition: 
+        transform 0.2s ease-in-out,
+        border 0.2s ease-in-out;
+    }
+    &__docs-item:hover {
+        transform: scale(1.1);
+        border: fluid(4, 2) solid var(--color-auqa);
+        cursor: pointer;
+    }
+}
+
+
+// Модальное окно с открытым документом
+    .document-modal {
+        position: fixed;
+        margin-top: rem(64);
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 1000;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+    
+        &__backdrop {
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          background: rgba(0, 0, 0, 0.7);
+          backdrop-filter: blur(fluid(10, 5));
+        }
+    
+        &__content {
+          position: relative;
+          z-index: 1001 !important;;
+          background: white;
+          border: fluid(3, 1.5) solid var(--color-auqa);
+          border-radius: fluid(12, 6);
+        
+          width: fluid(620.7, 310.35);
+          height: fluid(878, 439);
+          overflow: auto;
+          box-shadow: 0 fluid(10, 5) fluid(25, 15) rgba(0, 0, 0, 0.2);
+        }
+    
+        &__document {
+          width: 100%;
+          height: 100%;
+          border: fluid(2, 1) solid var(--color-grey);
+          background-color: white;
+        }
+    
+        /* Кнопки управления */
+        &__controls {
+          position: absolute;
+          top: 0;
+          left:0;
+          width: 100%;
+          display: flex;
+          justify-content: space-between;
+          padding: 0 fluid(10, 5);
+        }
+    
+        &__kebab, &__close {
+          background: none;
+          border: none;
+          cursor: pointer;
+          font-size: fluid-text(24, 12);
+          color: var(--color-dark);
+          transition: transform 0.2s ease-in-out;
+    
+          &:hover {
+            transform: scale(1.1);
+            color: var(--color-auqa);
+          }
+        }
+    
+        /* Выпадающее меню */
+        &__menu {
+          position: absolute;
+          top: fluid(36, 18);
+          left: fluid(15, 8);
+          background: white;
+          border: 1px solid var(--color-grey);
+          border-radius: fluid(8, 4);
+          box-shadow: 0 fluid(4, 2) fluid(12, 6) rgba(0, 0, 0, 0.15);
+          z-index: 1002;
+    
+          button {
+            text-indent: fluid(10, 5);
+            padding: fluid(4, 2) fluid(6, 3);
+            width: 100%;
+            text-align: left;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-size: fluid(16, 12);
+            color: var(--color-dark);
+            transition: all 0.2s ease-in-out;
+    
+            &:hover {
+              background: var(--color-light-grey);
+              color: var(--color-auqa);
+            }
+    
+            &:not(:last-child) {
+              border-bottom: 1px solid var(--color-grey);
+            }
+          }
+    
+          button:last-child {
+            color: #ff4d4f;
+          }
+        }
+      }
+
+/* Адаптация для мобильных */
+@include mobile {
+    .document-modal {
+      padding: fluid(20, 10);
+  
+      &__content {
+        padding: fluid(20, 10);
+        width: 95%;
+      }
+  
+      &__controls {
+        top: fluid(10, 8);
+        width: calc(100% - #{fluid(40, 20)});
+      }
+    }
+  }
+

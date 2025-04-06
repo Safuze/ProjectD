@@ -1,0 +1,13 @@
+@use 'normalize';
+@use 'fonts';
+@use 'variables' as *;
+@use 'utils';
+@use 'globals'; 
+@use 'login';
+@use 'documentCreation';
+@use '../components/Button/Button.scss';
+@use '../components/Input/Input.scss';
+@use './UserProfilePage.scss';
+@use './CustomPromt.scss';
+@use './documentPage.scss';
+@use './shareModal.scss';
