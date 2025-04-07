@@ -25,20 +25,24 @@ export default function DocumentCreation() {
   }, [selectedValue, firm, fio]); // Зависимости от всех полей формы
 
   const shablon1 = { format: 'Акт', firm: 'Аниме' }; 
-  const shablon2 = { format: 'Заказ', firm: 'Аниме' }; 
-  const shablon3 = { format: 'Отчет', firm: 'ЖИРАФ' }; 
-  const shablon4 = { format: 'Акт', firm: 'ЖИРАФ' }; 
-  const shablon5 = { format: 'Заказ', firm: 'БАЙТ' }; 
-  const shablon6 = { format: 'Отчет', firm: 'Море' }; 
-  const acts = [shablon1, shablon4];
-  const reports = [shablon2, shablon5];
-  const orders = [shablon3, shablon6];
+  const shablon2 = { format: 'Акт', firm: 'Байт' }; 
+  const shablon3 = { format: 'Акт', firm: 'Жираф' }; 
+  const shablon4 = { format: 'Акт', firm: 'Мега' }; 
+  const shablon5 = { format: 'Акт', firm: 'Море' }; 
+  const shablon6 = { format: 'Заказ', firm: 'Аниме' }; 
+  const shablon7 = { format: 'Заказ', firm: 'Байт' }; 
+  const shablon8 = { format: 'Заказ', firm: 'Мега' }; 
+  const shablon9 = { format: 'Отчет', firm: 'Жираф' }; 
+  const shablon10 = { format: 'Отчет', firm: 'Море' }; 
+
+  const acts = [shablon1, shablon2, shablon3, shablon4, shablon5];
+  const reports = [shablon6, shablon7, shablon8];
+  const orders = [shablon9, shablon10];
 
 
   const handleChange = (event) => {
     const { name, value } = event.target;
     if (name === 'firm') setFirm(value);
-    if (name === 'fio') setFio(value);
 
     // Проверяем валидность с актуальными значениями
     checkFormValidity(name, value);
@@ -51,13 +55,11 @@ export default function DocumentCreation() {
 
     const checkFormValidity = (changedField, newValue) => {
       const currentFirm = changedField === 'firm' ? newValue : firm;
-      const currentFio = changedField === 'fio' ? newValue : fio;
       const currentSelected = changedField === 'selectedValue' ? newValue : selectedValue;
 
       setIsFormValid2(
         currentSelected && 
-        currentFirm.trim() !== '' && 
-        currentFio.trim() !== ''
+        currentFirm.trim() !== ''
       );
     }
   
@@ -127,7 +129,7 @@ export default function DocumentCreation() {
         />
       )}
 
-      {/* NEW: Текстовая ошибка (если не в режиме создания) */}
+      {/*  Текстовая ошибка (если не в режиме создания) */}
       {error && !isCreatesDocument && (
         <div className="error-message">{error}</div>
       )}
@@ -136,6 +138,7 @@ export default function DocumentCreation() {
           <div className='form__createDoc'>
             <h2>{"Создание документа".toUpperCase()}</h2>
               <div className='form__doc-data'>
+                {/* Здесь будет новая форма */}
                 <div className="select-wrapper">
                   <DropdownMenu
                     name="format"
@@ -155,13 +158,6 @@ export default function DocumentCreation() {
                   type="text"
                   placeholder="Введите фирму"
                   value={firm}
-                  onChange={handleChange}
-                />
-                <Input
-                  name="fio"
-                  type="text"
-                  placeholder="Введите ФИО юр.лица"
-                  value={fio}
                   onChange={handleChange}
                 />
               </div>
