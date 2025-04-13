@@ -585,6 +585,32 @@ h2, h3 {
   opacity: 1 !important;
 }
 
+.back-button {
+  width: clamp(2.5rem, 1.862745098rem + 2.614379085vw, 5rem);
+  height: clamp(2.5rem, 1.862745098rem + 2.614379085vw, 5rem);
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  position: relative;
+}
+.back-button::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: clamp(0.75rem, 0.5588235294rem + 0.7843137255vw, 1.5rem);
+  height: clamp(0.75rem, 0.5588235294rem + 0.7843137255vw, 1.5rem);
+  border-left: clamp(0.125rem, 0.0931372549rem + 0.1307189542vw, 0.25rem) solid white;
+  border-bottom: clamp(0.125rem, 0.0931372549rem + 0.1307189542vw, 0.25rem) solid white;
+  transform: translate(-25%, -50%) rotate(45deg);
+}
+.back-button:hover {
+  opacity: 0.8;
+}
+.back-button:active {
+  opacity: 0.6;
+}
+
 .form {
   position: relative;
   display: flex;
@@ -752,10 +778,11 @@ h2, h3 {
   height: clamp(24.21875rem, 18.0453431373rem + 25.3267973856vw, 48.4375rem);
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
+  justify-content: center;
   align-items: center;
 }
 .form__doc-data {
+  height: clamp(12.5rem, 9.3137254902rem + 13.0718954248vw, 25rem);
   display: flex;
   flex-direction: column;
   justify-content: center;

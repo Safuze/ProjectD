@@ -346,3 +346,31 @@ h2, h3 {
     opacity: 1 !important;
 }
 
+.back-button {
+    width: fluid(80, 40);
+    height: fluid(80, 40);
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    position: relative;
+    
+    &::before {
+      content: '';
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: fluid(24, 12);
+      height: fluid(24, 12);
+      border-left: fluid(4, 2) solid white;
+      border-bottom: fluid(4, 2) solid white;
+      transform: translate(-25%, -50%) rotate(45deg);
+    }
+    
+    &:hover {
+      opacity: 0.8;
+    }
+    
+    &:active {
+      opacity: 0.6;
+    }
+  }

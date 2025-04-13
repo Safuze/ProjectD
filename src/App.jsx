@@ -3,12 +3,13 @@ import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-d
 import MainPage from './pages/MainPage';
 import UserProfilePage from './pages/UserProfilePage';
 import DocumentPage from './pages/DocumentPage';
+import DocumentData from './pages/DocumentData';
 import SavedDocuments from './pages/SavedDocuments';
 function App() {
     const [userLogin, setUserLogin] = useState(null);
     const [userEmail, setUserEmail] = useState(null);
     const [isCreatingDocument, setIsCreatingDocument] = useState(false);
-
+    const [documentReady, setDocumentReady] = useState(false);
    
     const handleLogin = (login) => {
         setUserLogin(login);
@@ -54,9 +55,22 @@ function App() {
                         )
                     } 
                 />
+                <Route
+                    path="/documentData"
+                    element={<DocumentData 
+                        setIsCreatingDocument={setIsCreatingDocument}
+                        userLogin={userLogin} 
+                        onLogin={handleLogin}
+                        setDocumentReady={setDocumentReady}
+                        />} 
+                />
                 <Route 
                     path="/document" 
-                    element={<DocumentPage setIsCreatingDocument={setIsCreatingDocument}/>} 
+                    element={<DocumentPage 
+                        setIsCreatingDocument={setIsCreatingDocument}
+                        documentReady={documentReady}
+                        setDocumentReady={setDocumentReady}
+                    />} 
                 />
                 <Route 
                     path="/documents" 

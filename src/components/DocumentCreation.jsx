@@ -1,29 +1,24 @@
 import React from 'react';
 import Button from './Button/Button';
-import Input from './Input/Input';
+import Input from './Input/Input'; // Импортируем Input обратно
 import DropdownMenu from './DropdownMenu';
 import ErrorModal from './ErrorModal';
-import Document from './Document';
 import { useState, useRef, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom'; // Импортируем хук для навигации
+import { useNavigate } from 'react-router-dom';
 
 export default function DocumentCreation() {
   const [isFormValid1, setIsFormValid1] = useState(true);
   const [isFormValid2, setIsFormValid2] = useState(false);
   const [fio, setFio] = useState('');
-  const [firm, setFirm] = useState('');
-  const [selectedValue, setSelectedValue] = useState('');
+  const [selectedFirm, setSelectedFirm] = useState('');
+  const [customFirm, setCustomFirm] = useState(''); // Для хранения своего варианта
+  const [selectedFormat, setSelectedFormat] = useState('');
   const [isCreatesDocument, setIsCreatesDocument] = useState(false);
   const [error, setError] = useState(null);
-  const navigate = useNavigate(); // Создаем экземпляр navigate
-  useEffect(() => {
-    setIsFormValid2(
-      selectedValue && 
-      firm.trim() !== '' && 
-      fio.trim() !== ''
-    );
-  }, [selectedValue, firm, fio]); // Зависимости от всех полей формы
+  const [showCustomInput, setShowCustomInput] = useState(false); // Показывать ли Input
+  const navigate = useNavigate();
 
+  // Шаблоны документов
   const shablon1 = { format: 'Акт', firm: 'Аниме' }; 
   const shablon2 = { format: 'Акт', firm: 'Байт' }; 
   const shablon3 = { format: 'Акт', firm: 'Жираф' }; 
@@ -36,72 +31,88 @@ export default function DocumentCreation() {
   const shablon10 = { format: 'Отчет', firm: 'Море' }; 
 
   const acts = [shablon1, shablon2, shablon3, shablon4, shablon5];
-  const reports = [shablon6, shablon7, shablon8];
-  const orders = [shablon9, shablon10];
+  const orders = [shablon6, shablon7, shablon8];
+  const reports = [shablon9, shablon10];
 
-
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    if (name === 'firm') setFirm(value);
-
-    // Проверяем валидность с актуальными значениями
-    checkFormValidity(name, value);
-    };
-
-    const handleSelectChange = (event) => {
-      setSelectedValue(event.target.value);
-      checkFormValidity('selectedValue', event.target.value);
-    };
-
-    const checkFormValidity = (changedField, newValue) => {
-      const currentFirm = changedField === 'firm' ? newValue : firm;
-      const currentSelected = changedField === 'selectedValue' ? newValue : selectedValue;
-
-      setIsFormValid2(
-        currentSelected && 
-        currentFirm.trim() !== ''
-      );
+  // Получаем список фирм для выбранного формата + добавляем "Свой вариант"
+  const getFirmsByFormat = (formatValue) => {
+    let firms = [];
+    switch(formatValue) {
+      case '1': firms = acts; break;
+      case '2': firms = orders; break;
+      case '3': firms = reports; break;
+      default: firms = [];
     }
-  
+    
+    // Добавляем "Свой вариант" в конец списка
+    return [...firms, { format: '', firm: '-----------Свой вариант-----------'}];
+  };
+
+  useEffect(() => {
+    setIsFormValid2(
+      selectedFormat && 
+      (selectedFirm || (showCustomInput && customFirm.trim() !== ''))
+    );
+  }, [selectedFormat, selectedFirm, showCustomInput, customFirm]);
+
+  const handleFormatChange = (event) => {
+    const value = event.target.value;
+    setSelectedFormat(value);
+    setSelectedFirm(''); // Сбрасываем выбор фирмы
+    setShowCustomInput(false); // Скрываем Input
+    setCustomFirm(''); // Очищаем свое значение
+  };
+
+  const handleFirmChange = (event) => {
+    const value = event.target.value;
+    setSelectedFirm(value);
+    
+    // Если выбран "Свой вариант", показываем Input
+    if (value === '-----------Свой вариант-----------') {
+      setShowCustomInput(true);
+    } else {
+      setShowCustomInput(false);
+      setCustomFirm('');
+    }
+  };
+
+  const handleCustomFirmChange = (event) => {
+    setCustomFirm(event.target.value);
+  };
 
   const handleCreateDocumentClick = () => {
     setIsCreatesDocument(true);
-    setError(null); // NEW: Сбрасываем ошибку при новом создании
-
-  }
-
-  const handleBackClickFromError = () => {
-    setFirm('');
-    setFio('');
-    setSelectedValue('');
-    setError('Документ не найден');
+    setError(null);
   };
 
   const handleBackClick = () => {
-    setFirm('');
+    setSelectedFirm('');
+    setSelectedFormat('');
+    setCustomFirm('');
     setFio('');
-    setSelectedValue('');
+    setShowCustomInput(false);
     setIsCreatesDocument(false);
     setError(null);
-  }
-
-  const closeErrorModal = () => {
-    setError(null);
-    handleBackClick();
   };
 
+
   const handleContinueClick = () => {
-    if (!firm.trim()) {
-      setError('Введите фирму!'); 
+    const firmToCheck = showCustomInput ? customFirm : selectedFirm;
+    
+    if (!firmToCheck || (showCustomInput && !customFirm.trim())) {
+      setError(showCustomInput ? 'Введите название фирмы!' : 'Выберите фирму!'); 
       return;
     }
-    const docExists = 
-    selectedValue === '1' ? acts.some(item => item.firm?.toLowerCase() === firm.toLowerCase()) :
-    selectedValue === '2' ? reports.some(item => item.firm?.toLowerCase() === firm.toLowerCase()) :
-    orders.some(item => item.firm?.toLowerCase() === firm.toLowerCase());
+    
+    const firms = getFirmsByFormat(selectedFormat);
+    const docExists = firms.some(item => 
+      item.firm === firmToCheck || 
+      (showCustomInput && item.firm?.toLowerCase() === customFirm.toLowerCase())
+    );
+    
     setIsFormValid2(false);
-    docExists ? navigate('/document') : handleBackClickFromError();
-  }
+    docExists ? navigate('/documentData') : navigate('/document');
+  };
 
   const fileInputRef = useRef(null);
 
@@ -109,57 +120,63 @@ export default function DocumentCreation() {
     const selectedFile = event.target.files[0];
     if (selectedFile) {
       console.log("Выбран файл:", selectedFile);
-      // Здесь можно:
-      // 1. Отправить файл на сервер
-      // 2. Сохранить в состоянии для дальнейшей обработки
-      // 3. Показать информацию о файле пользователю
     }
   };
 
-  
-
-
   return (
     <div id="createDoc" className="form__main">
-      {error && isCreatesDocument && (
-        <ErrorModal 
-          message={error} 
-          onClose={closeErrorModal}
-          children='Вернуться к созданию'
-        />
-      )}
 
-      {/*  Текстовая ошибка (если не в режиме создания) */}
       {error && !isCreatesDocument && (
         <div className="error-message">{error}</div>
       )}
+      
       {isCreatesDocument ? (
         <>
           <div className='form__createDoc'>
             <h2>{"Создание документа".toUpperCase()}</h2>
               <div className='form__doc-data'>
-                {/* Здесь будет новая форма */}
                 <div className="select-wrapper">
                   <DropdownMenu
                     name="format"
-                    id="shablon"
-                    placeholder='Выберете формат'
-                    onChange={handleSelectChange} // Передаем обработчик
-                    value={selectedValue} // Контролируемое значение
+                    id="format"
+                    placeholder='Выберите формат'
+                    onChange={handleFormatChange}
+                    value={selectedFormat}
                     options={[
                       { value: "1", label: "Акт" },
                       { value: "2", label: "Заказ" },
                       { value: "3", label: "Отчет" },
                     ]}
                   />
-                </div>               
-                <Input
-                  name="firm"
-                  type="text"
-                  placeholder="Введите фирму"
-                  value={firm}
-                  onChange={handleChange}
-                />
+                </div>
+                
+                {selectedFormat && (
+                  <>
+                    <div className="select-wrapper">
+                      <DropdownMenu
+                        name="firm"
+                        id="firm"
+                        placeholder='Выберите фирму'
+                        onChange={handleFirmChange}
+                        value={selectedFirm}
+                        options={getFirmsByFormat(selectedFormat).map(item => ({
+                          value: item.firm,
+                          label: item.firm
+                        }))}
+                      />
+                    </div>
+                    
+                    {showCustomInput && (
+                      <Input
+                        name="customFirm"
+                        type="text"
+                        placeholder="Введите название фирмы"
+                        value={customFirm}
+                        onChange={handleCustomFirmChange}
+                      />
+                    )}
+                  </>
+                )}
               </div>
               <div id="back_and_cont" className="form__buttons" style={{flexDirection: 'row'}}>
                 <Button 
@@ -176,9 +193,7 @@ export default function DocumentCreation() {
                   Продолжить
                 </Button>
               </div>
-  
           </div>
-          
         </>
       ) : (
         <>
@@ -196,7 +211,7 @@ export default function DocumentCreation() {
               onChange={handleFileSelect}
               style={{ display: 'none' }}
               ref={fileInputRef}
-              accept=".doc,.docx,.pdf,.txt" // Укажите нужные форматы
+              accept=".doc,.docx,.pdf,.txt"
             />
             <Button 
               onClick={() => fileInputRef.current.click()}
