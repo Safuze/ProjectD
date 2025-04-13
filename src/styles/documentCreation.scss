@@ -128,3 +128,113 @@
         margin-right: 0;
     }
 }
+
+.document-data-form {
+
+    @include mobile {
+    margin-bottom: rem(50);
+    margin-top: rem(50);
+    overflow-y:hidden;
+
+    }
+    margin: 0 fluid(60, 10);
+    display: flex;
+    flex-direction: column;
+    max-height: rem(375);
+    overflow-y: auto;
+
+    padding-right: fluid(10, 0);
+    scrollbar-width: thin;
+    scrollbar-color: #888 #f5f5f5;
+    .form-row {
+        @include flex-center(false, false);
+        @include mobile {
+            flex-wrap: wrap; /* Перенос на новую строку */
+            flex-direction: column
+        }
+        input {
+            margin: fluid(10, 3) fluid(10, 3);
+            @include fluid-text(28, 8);
+            border-radius: fluid(10, 4);
+            text-indent: fluid(10, 3);
+            }
+
+        input::placeholder {
+            font-size: fluid(16,4);
+
+            @include mobile {
+                font-size: fluid(21,10);
+            }
+
+            }
+        .remove-row-button {
+            color: white;
+            width: fluid(60, 30);
+            height: fluid(60, 30);;
+            background: none;
+            border-radius: 50%;
+        }
+    }
+    #addRow {
+        font-weight: 900;
+        @include fluid-text(32,16);
+        border-radius: 50%;
+        width: fluid(50,25);
+        height: fluid(50,25); 
+        align-self: center;
+    }
+}
+
+.document-data-form::-webkit-scrollbar {
+    width: 8px;
+}
+
+.document-data-form::-webkit-scrollbar-track {
+    background: #f5f5f5;
+    border-radius: 4px;
+}
+
+.document-data-form::-webkit-scrollbar-thumb {
+    background-color: #888;
+    border-radius: 4px;
+}
+
+.document-data-form::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+#data-block, #oneInput{
+    width: 70%;
+    height: 70%;
+    h4 {
+        @include fluid-text(28,14);
+    }
+    @include mobile {
+        justify-content: start;
+    }
+    .form-actions {
+        margin-bottom: fluid(20, 10);
+        align-self: center;
+        button {
+            @include fluid-text(28, 14);
+            width: fluid(400, 200);
+            height: fluid(52, 26);
+            border-radius: fluid(14, 7);
+        }
+    }
+}
+
+#oneInput {
+    width: 30%;
+    height: 70%;
+}
+
+.error-message {
+    color: #d32f2f;
+    background: #ffebee;
+    padding: 15px;
+    border-radius: 4px;
+    margin: 20px 0;
+    text-align: center;
+}
+

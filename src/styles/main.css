@@ -851,6 +851,120 @@ h2, h3 {
   margin-right: 0;
 }
 
+.document-data-form {
+  margin: 0 clamp(0.625rem, -0.1715686275rem + 3.2679738562vw, 3.75rem);
+  display: flex;
+  flex-direction: column;
+  max-height: 23.4375rem;
+  overflow-y: auto;
+  padding-right: clamp(0rem, -0.1593137255rem + 0.6535947712vw, 0.625rem);
+  scrollbar-width: thin;
+  scrollbar-color: #888 #f5f5f5;
+}
+@media (width <= 48.06125rem) {
+  .document-data-form {
+    margin-bottom: 3.125rem;
+    margin-top: 3.125rem;
+    overflow-y: hidden;
+  }
+}
+.document-data-form .form-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+@media (width <= 48.06125rem) {
+  .document-data-form .form-row {
+    flex-wrap: wrap; /* Перенос на новую строку */
+    flex-direction: column;
+  }
+}
+.document-data-form .form-row input {
+  margin: clamp(0.1875rem, 0.0759803922rem + 0.4575163399vw, 0.625rem) clamp(0.1875rem, 0.0759803922rem + 0.4575163399vw, 0.625rem);
+  font-size: clamp(0.5rem, 0.181372549rem + 1.3071895425vw, 1.75rem);
+  border-radius: clamp(0.25rem, 0.1544117647rem + 0.3921568627vw, 0.625rem);
+  text-indent: clamp(0.1875rem, 0.0759803922rem + 0.4575163399vw, 0.625rem);
+}
+.document-data-form .form-row input::placeholder {
+  font-size: clamp(0.25rem, 0.0588235294rem + 0.7843137255vw, 1rem);
+}
+@media (width <= 48.06125rem) {
+  .document-data-form .form-row input::placeholder {
+    font-size: clamp(0.625rem, 0.449754902rem + 0.7189542484vw, 1.3125rem);
+  }
+}
+.document-data-form .form-row .remove-row-button {
+  color: white;
+  width: clamp(1.875rem, 1.3970588235rem + 1.9607843137vw, 3.75rem);
+  height: clamp(1.875rem, 1.3970588235rem + 1.9607843137vw, 3.75rem);
+  background: none;
+  border-radius: 50%;
+}
+.document-data-form #addRow {
+  font-weight: 900;
+  font-size: clamp(1rem, 0.7450980392rem + 1.045751634vw, 2rem);
+  border-radius: 50%;
+  width: clamp(1.5625rem, 1.1642156863rem + 1.6339869281vw, 3.125rem);
+  height: clamp(1.5625rem, 1.1642156863rem + 1.6339869281vw, 3.125rem);
+  align-self: center;
+}
+
+.document-data-form::-webkit-scrollbar {
+  width: 8px;
+}
+
+.document-data-form::-webkit-scrollbar-track {
+  background: #f5f5f5;
+  border-radius: 4px;
+}
+
+.document-data-form::-webkit-scrollbar-thumb {
+  background-color: #888;
+  border-radius: 4px;
+}
+
+.document-data-form::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+#data-block, #oneInput {
+  width: 70%;
+  height: 70%;
+}
+#data-block h4, #oneInput h4 {
+  font-size: clamp(0.875rem, 0.6519607843rem + 0.9150326797vw, 1.75rem);
+}
+@media (width <= 48.06125rem) {
+  #data-block, #oneInput {
+    justify-content: start;
+  }
+}
+#data-block .form-actions, #oneInput .form-actions {
+  margin-bottom: clamp(0.625rem, 0.4656862745rem + 0.6535947712vw, 1.25rem);
+  align-self: center;
+}
+#data-block .form-actions button, #oneInput .form-actions button {
+  font-size: clamp(0.875rem, 0.6519607843rem + 0.9150326797vw, 1.75rem);
+  width: clamp(12.5rem, 9.3137254902rem + 13.0718954248vw, 25rem);
+  height: clamp(1.625rem, 1.2107843137rem + 1.6993464052vw, 3.25rem);
+  border-radius: clamp(0.4375rem, 0.3259803922rem + 0.4575163399vw, 0.875rem);
+}
+
+#oneInput {
+  width: 30%;
+  height: 70%;
+}
+
+.error-message {
+  color: #d32f2f;
+  background: #ffebee;
+  padding: 15px;
+  border-radius: 4px;
+  margin: 20px 0;
+  text-align: center;
+}
+
 .input, .btn {
   width: clamp(16rem, 11.9215686275rem + 16.7320261438vw, 32rem);
   height: clamp(2rem, 1.4901960784rem + 2.091503268vw, 4rem);

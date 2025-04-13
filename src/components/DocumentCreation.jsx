@@ -111,7 +111,15 @@ export default function DocumentCreation() {
     );
     
     setIsFormValid2(false);
-    docExists ? navigate('/documentData') : navigate('/document');
+    if (docExists) {
+      navigate('/documentData', { 
+        state: { 
+          selectedFormat,
+          selectedFirm: firmToCheck,
+          customFirm: showCustomInput ? customFirm : null
+        } 
+      });
+    } else navigate('/document');
   };
 
   const fileInputRef = useRef(null);
@@ -121,6 +129,7 @@ export default function DocumentCreation() {
     if (selectedFile) {
       console.log("Выбран файл:", selectedFile);
     }
+    navigate('/document');
   };
 
   return (

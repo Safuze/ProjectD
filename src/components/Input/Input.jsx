@@ -1,6 +1,6 @@
 import React from 'react';
 
-function Input({ id, type, placeholder, value, onChange, onBlur, name, style }) {
+function Input({ id, type, placeholder, value, onChange, onBlur, name, style, title}) {
   const handlePaste = (e) => {
     e.preventDefault();
     const pastedText = e.clipboardData.getData('text/plain');
@@ -18,7 +18,7 @@ function Input({ id, type, placeholder, value, onChange, onBlur, name, style }) 
       name={name}
       style={style}
       onPaste={handlePaste}
-
+      title={title}
     />
   );
 }

@@ -10,8 +10,8 @@ const DocumentPage = ( {setIsCreatingDocument, documentReady, setDocumentReady} 
 
     const handleBackClick = () => {
         setIsCreatingDocument(true);
-        setDocumentReady(false);
         navigate('/');
+        setDocumentReady(false);
       }
 
     return (
