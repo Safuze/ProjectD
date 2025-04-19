@@ -855,7 +855,7 @@ h2, h3 {
   margin: 0 clamp(0.625rem, -0.1715686275rem + 3.2679738562vw, 3.75rem);
   display: flex;
   flex-direction: column;
-  max-height: 23.4375rem;
+  max-height: 41.625rem;
   overflow-y: auto;
   padding-right: clamp(0rem, -0.1593137255rem + 0.6535947712vw, 0.625rem);
   scrollbar-width: thin;
@@ -894,20 +894,16 @@ h2, h3 {
     font-size: clamp(0.625rem, 0.449754902rem + 0.7189542484vw, 1.3125rem);
   }
 }
-.document-data-form .form-row .remove-row-button {
-  color: white;
-  width: clamp(1.875rem, 1.3970588235rem + 1.9607843137vw, 3.75rem);
-  height: clamp(1.875rem, 1.3970588235rem + 1.9607843137vw, 3.75rem);
-  background: none;
-  border-radius: 50%;
-}
-.document-data-form #addRow {
-  font-weight: 900;
-  font-size: clamp(1rem, 0.7450980392rem + 1.045751634vw, 2rem);
-  border-radius: 50%;
-  width: clamp(1.5625rem, 1.1642156863rem + 1.6339869281vw, 3.125rem);
-  height: clamp(1.5625rem, 1.1642156863rem + 1.6339869281vw, 3.125rem);
+
+.form-actions {
+  margin-bottom: clamp(0.625rem, 0.4656862745rem + 0.6535947712vw, 1.25rem);
   align-self: center;
+}
+.form-actions button {
+  font-size: clamp(0.875rem, 0.6519607843rem + 0.9150326797vw, 1.75rem);
+  width: clamp(12.5rem, 9.3137254902rem + 13.0718954248vw, 25rem);
+  height: clamp(1.625rem, 1.2107843137rem + 1.6993464052vw, 3.25rem);
+  border-radius: clamp(0.4375rem, 0.3259803922rem + 0.4575163399vw, 0.875rem);
 }
 
 .document-data-form::-webkit-scrollbar {
@@ -940,16 +936,6 @@ h2, h3 {
     justify-content: start;
   }
 }
-#data-block .form-actions, #oneInput .form-actions {
-  margin-bottom: clamp(0.625rem, 0.4656862745rem + 0.6535947712vw, 1.25rem);
-  align-self: center;
-}
-#data-block .form-actions button, #oneInput .form-actions button {
-  font-size: clamp(0.875rem, 0.6519607843rem + 0.9150326797vw, 1.75rem);
-  width: clamp(12.5rem, 9.3137254902rem + 13.0718954248vw, 25rem);
-  height: clamp(1.625rem, 1.2107843137rem + 1.6993464052vw, 3.25rem);
-  border-radius: clamp(0.4375rem, 0.3259803922rem + 0.4575163399vw, 0.875rem);
-}
 
 #oneInput {
   width: 30%;
@@ -965,6 +951,144 @@ h2, h3 {
   text-align: center;
 }
 
+#dataForm {
+  height: 92.5vh;
+  border-radius: 0%;
+}
+#dataForm input {
+  font-size: clamp(0.875rem, 0.6519607843rem + 0.9150326797vw, 1.75rem);
+}
+#dataForm .contractDate {
+  display: flex;
+  align-items: center;
+}
+#dataForm .contractDate input:last-of-type {
+  text-indent: clamp(0.1875rem, 0.1397058824rem + 0.1960784314vw, 0.375rem);
+  width: clamp(8.125rem, 6.0539215686rem + 8.4967320261vw, 16.25rem);
+}
+#dataForm .contractDate span {
+  margin-left: clamp(0.4375rem, 0.3259803922rem + 0.4575163399vw, 0.875rem);
+}
+#dataForm .array-item {
+  margin-bottom: clamp(0.9375rem, 0.6985294118rem + 0.9803921569vw, 1.875rem);
+}
+#dataForm .array-item button {
+  background: none;
+  color: white;
+  font-size: clamp(1.5625rem, 1.1642156863rem + 1.6339869281vw, 3.125rem);
+}
+#dataForm #add-spec {
+  font-size: clamp(0.875rem, 0.6519607843rem + 0.9150326797vw, 1.75rem);
+  width: clamp(12.5rem, 9.3137254902rem + 13.0718954248vw, 25rem);
+  height: clamp(1.625rem, 1.2107843137rem + 1.6993464052vw, 3.25rem);
+  border-radius: clamp(0.4375rem, 0.3259803922rem + 0.4575163399vw, 0.875rem);
+}
+
+.section-data {
+  display: flex;
+  justify-content: center;
+  gap: clamp(1.25rem, 0.4534313725rem + 3.2679738562vw, 4.375rem);
+}
+.section-data__input, .section-data__calendar {
+  display: flex;
+  flex-direction: column;
+}
+.section-data__calendar h4 {
+  margin: 0;
+}
+.section-data__calendar .range-date-picker {
+  font-size: clamp(0.625rem, 0.4656862745rem + 0.6535947712vw, 1.25rem);
+  color: black;
+  font-family: Arial, sans-serif;
+  max-width: clamp(15.625rem, 11.6421568627rem + 16.339869281vw, 31.25rem);
+  margin: clamp(0.625rem, 0.4656862745rem + 0.6535947712vw, 1.25rem) 0;
+  background-color: var(--color-light-2);
+  border-radius: clamp(0.3125rem, 0.2328431373rem + 0.3267973856vw, 0.625rem);
+  padding: clamp(0.625rem, 0.4656862745rem + 0.6535947712vw, 1.25rem);
+  box-shadow: 0 clamp(0.0625rem, 0.0465686275rem + 0.0653594771vw, 0.125rem) clamp(0.3125rem, 0.2328431373rem + 0.3267973856vw, 0.625rem) rgba(0, 0, 0, 0.1);
+}
+.section-data__calendar .range-date-picker hr {
+  margin: clamp(0.125rem, -0.0024509804rem + 0.522875817vw, 0.625rem);
+}
+.section-data__calendar .calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.section-data__calendar .month-year {
+  font-weight: bold;
+}
+.section-data__calendar .nav-button {
+  background: none;
+  border: none;
+  font-size: 1.2em;
+  cursor: pointer;
+  padding: 5px 10px;
+  border-radius: 4px;
+}
+.section-data__calendar .nav-button:hover {
+  background-color: #f0f0f0;
+}
+.section-data__calendar .weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: var(--color-grey);
+}
+.section-data__calendar .calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+}
+.section-data__calendar .calendar-day {
+  padding: 8px;
+  text-align: center;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.2s;
+  background-color: var(--color-light-grey);
+}
+.section-data__calendar .calendar-day:hover {
+  background-color: var(--color-auqa);
+}
+.section-data__calendar .empty-day {
+  visibility: hidden;
+}
+.section-data__calendar .past-day {
+  color: #999;
+}
+.section-data__calendar .start-date {
+  background-color: var(--color-blue);
+  color: white;
+  font-weight: bold;
+}
+.section-data__calendar .end-date {
+  background-color: var(--color-blue);
+  color: white;
+  font-weight: bold;
+}
+.section-data__calendar .in-range {
+  background-color: var(--color-orange);
+  color: white;
+}
+.section-data__calendar .selected-range {
+  margin-top: 15px;
+  padding: 10px;
+  border-radius: 4px;
+  text-align: center;
+  font-size: 0.9em;
+}
+.section-data .date-input {
+  margin: clamp(0.3125rem, 0.2328431373rem + 0.3267973856vw, 0.625rem);
+}
+.section-data .date-input input {
+  width: clamp(8.75rem, 6.5196078431rem + 9.1503267974vw, 17.5rem);
+}
+
+/* Стили для календаря периодов */
 .input, .btn {
   width: clamp(16rem, 11.9215686275rem + 16.7320261438vw, 32rem);
   height: clamp(2rem, 1.4901960784rem + 2.091503268vw, 4rem);
@@ -1515,6 +1639,31 @@ input.valid {
 }
 .icon-btn .share-btn:active {
   transform: scale(0.95);
+}
+
+.a4-container {
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+}
+
+.a4-page {
+  width: 300mm;
+  min-height: 297mm;
+  padding: 20mm;
+  background: white;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  margin: 0 auto;
+}
+
+.editable-doc {
+  width: 100%;
+  height: 250mm;
+  border: none;
+  resize: none;
+  font-family: "Cambria", serif;
+  font-size: 11pt;
+  line-height: 1.08;
 }
 
 .share-modal {

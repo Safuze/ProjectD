@@ -140,7 +140,7 @@
     margin: 0 fluid(60, 10);
     display: flex;
     flex-direction: column;
-    max-height: rem(375);
+    max-height: rem(666);
     overflow-y: auto;
 
     padding-right: fluid(10, 0);
@@ -167,23 +167,22 @@
             }
 
             }
-        .remove-row-button {
-            color: white;
-            width: fluid(60, 30);
-            height: fluid(60, 30);;
-            background: none;
-            border-radius: 50%;
-        }
+       
     }
-    #addRow {
-        font-weight: 900;
-        @include fluid-text(32,16);
-        border-radius: 50%;
-        width: fluid(50,25);
-        height: fluid(50,25); 
-        align-self: center;
+    
+}
+
+.form-actions {
+    margin-bottom: fluid(20, 10);
+    align-self: center;
+    button {
+        @include fluid-text(28, 14);
+        width: fluid(400, 200);
+        height: fluid(52, 26);
+        border-radius: fluid(14, 7);
     }
 }
+
 
 .document-data-form::-webkit-scrollbar {
     width: 8px;
@@ -212,16 +211,7 @@
     @include mobile {
         justify-content: start;
     }
-    .form-actions {
-        margin-bottom: fluid(20, 10);
-        align-self: center;
-        button {
-            @include fluid-text(28, 14);
-            width: fluid(400, 200);
-            height: fluid(52, 26);
-            border-radius: fluid(14, 7);
-        }
-    }
+    
 }
 
 #oneInput {
@@ -237,4 +227,171 @@
     margin: 20px 0;
     text-align: center;
 }
+
+#dataForm {
+    height: 92.5vh;
+    border-radius: 0%;
+    input {
+        @include fluid-text(28,14);
+    }
+
+    .contractDate {
+        display: flex;
+        align-items: center;
+        input:last-of-type {
+            text-indent: fluid(6,3);
+            width: fluid(260,130);
+        }
+        span {
+            margin-left: fluid(14,7);
+        }
+    }
+    .array-item {
+        margin-bottom: fluid(30,15);
+        button {
+            background: none;
+            color: white;
+            @include fluid-text(50,25);
+        }
+    }
+    #add-spec {
+        @include fluid-text(28, 14);
+        width: fluid(400, 200);
+        height: fluid(52, 26);
+        border-radius: fluid(14, 7);
+    }
+}
+
+
+
+.section-data {
+    display: flex;
+    justify-content: center;
+    gap: fluid(70, 20);
+    &__input, &__calendar{
+        display: flex;
+        flex-direction: column;
+    }
+
+    &__calendar {
+
+
+        h4 {
+            margin: 0;
+        }
+        
+        .range-date-picker {
+            @include fluid-text(20, 10);
+
+            color: black;
+            font-family: Arial, sans-serif;
+            max-width: fluid(500, 250);
+            margin: fluid(20, 10) 0;
+            background-color: var(--color-light-2);
+            border-radius: fluid(10, 5);
+            padding: fluid(20,10);
+            box-shadow: 0 fluid(2,1) fluid(10, 5) rgba(0, 0, 0, 0.1);
+            hr {
+                margin: fluid(10, 2);
+            }
+          }
+          
+          .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            
+          }
+    
+          .month-year {
+            font-weight: bold;
+          }
+  
+          .nav-button {
+            background: none;
+            border: none;
+            font-size: 1.2em;
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 4px;
+          }
+          
+          .nav-button:hover {
+            background-color: #f0f0f0;
+          }
+          
+          .weekdays {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: var(--color-grey);
+            
+          }
+          .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+          }
+          
+          .calendar-day {
+            padding: 8px;
+            text-align: center;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.2s;
+            background-color: var(--color-light-grey);
+          }
+          
+          .calendar-day:hover {
+            background-color: var(--color-auqa);
+          }
+          
+          .empty-day {
+            visibility: hidden;
+          }
+          
+          .past-day {
+            color: #999;
+          }
+          
+          .start-date {
+            background-color: var(--color-blue);
+            color: white;
+            font-weight: bold;
+          }
+          
+          .end-date {
+            background-color: var(--color-blue);
+            color: white;
+            font-weight: bold;
+          }
+          
+          .in-range {
+            background-color: var(--color-orange);
+            color: white;
+          }
+          
+          .selected-range {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 4px;
+            text-align: center;
+            font-size: 0.9em;
+          }
+    }
+
+    .date-input {
+        input {
+            width: fluid(280, 140);
+        }
+        margin: fluid(10, 5);
+
+    }
+}
+
+/* Стили для календаря периодов */
+
 

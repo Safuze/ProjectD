@@ -1,12 +1,38 @@
 import Button from "../components/Button/Button";
 import Background from "../components/Background"; // Импортируете Background, если нужно
 import { useNavigate } from 'react-router-dom';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ShareModal from '../components/ShareModal';
+import useFileStore from '../components/useFileStore';
+
+import mammoth from 'mammoth';
+
 const DocumentPage = ( {setIsCreatingDocument, documentReady, setDocumentReady} ) => {
     const [showShareModal, setShowShareModal] = useState(false);
-    const currentUrl = window.location.href; // или ваша кастомная ссылка
+    const file = useFileStore((state) => state.file); // Получаем файл из хранилища
+    const [content, setContent] = useState('');
     const navigate = useNavigate(); 
+
+    useEffect(() => {
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = async (e) => {
+            const result = await mammoth.extractRawText({ arrayBuffer: e.target.result });
+            setContent(result.value);
+          };
+          reader.readAsArrayBuffer(file);
+        }
+      }, [file]);
+
+    if (!file) {
+        return <div>Файл не загружен</div>;
+      }
+    const currentUrl = window.location.href; // или ваша кастомная ссылка
+
+    
+    const handleSave = () => {
+        // Здесь логика сохранения измененного содержимого
+      };
 
     const handleBackClick = () => {
         setIsCreatingDocument(true);
@@ -47,7 +73,21 @@ const DocumentPage = ( {setIsCreatingDocument, documentReady, setDocumentReady} 
                         </div>
                         </>
                     ) : (
-                        <button onClick={handleBackClick} className="back-btn">Страница редактирования документа</button>
+                        <>
+                        
+                            <button onClick={handleBackClick} className="back-btn">Страница редактирования документа</button>
+                            <div className="a4-container">
+                                <div className="a4-page">
+                                    <h2>Документ</h2>
+                                    <textarea
+                                    value={content}
+                                    onChange={(e) => setContent(e.target.value)}
+                                    className="editable-doc"
+                                    />
+                                    <button onClick={handleSave}>Сохранить</button>
+                                </div>
+                            </div>
+                        </>
                     )}
                 </div>
             </div>
