@@ -5,7 +5,7 @@ import Navbar from '../components/Navbar';
 import Button from '../components/Button/Button';
 import Input from '../components/Input/Input';
 import RangeDatePicker from '../components/RangeDatePicker';
-
+import DropdownMenu from '../components/DropdownMenu'
 // Инициализация хранилища шаблонов
 const initializeTemplates = () => {
   return Array(10).fill(null).map(() => []);
@@ -18,7 +18,7 @@ const DocumentData = ({ setIsCreatingDocument, userLogin, onLogin, setDocumentRe
     const [currentDocument, setCurrentDocument] = useState(null);
     const [template, setTemplate] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
-
+    const [shablon, setShablon] = useState('');
     // В useEffect при получении location.state:
     useEffect(() => {
         if (location.state) {
@@ -50,6 +50,8 @@ const DocumentData = ({ setIsCreatingDocument, userLogin, onLogin, setDocumentRe
     const getTemplateIndex = (format, firm) => {
         // Ваша логика сопоставления формата и фирмы с индексом
         // Например:
+        format === '1' ? setShablon('АКТ') : format === '2' ? setShablon('ЗАКАЗ') : setShablon('ОТЧЕТ');
+
         if (format === '1' && firm === 'Аниме') return 0;
         if (format === '1' && firm === 'Байт') return 1;
         if (format === '1' && firm === 'Жираф') return 2;
@@ -60,7 +62,6 @@ const DocumentData = ({ setIsCreatingDocument, userLogin, onLogin, setDocumentRe
         if (format === '2' && firm === 'Мега') return 7; 
         if (format === '3' && firm === 'Жираф') return 8; 
         if (format === '3' && firm === 'Море') return 9; 
-
         return 0; // fallback
     };
 
@@ -90,11 +91,11 @@ const DocumentData = ({ setIsCreatingDocument, userLogin, onLogin, setDocumentRe
             case 0: // Акт Аниме
                 newDocument = {
                     ...newDocument,
-                    city: customerFirm === "Аниме".toLowerCase() ? 'Москва' : '',
+                    city: '',
                     contractNumber: '',
-                    contractDate: customerFirm === "Аниме".toLowerCase() ? '01.07.24' : '',
+                    contractDate: '',
                     orderNumber: '',
-                    nds: customerFirm === "Аниме".toLowerCase() ? '5' : '',
+                    nds: '',
                     specialists: [] // Массив специалистов
                 };
                 break;
@@ -116,14 +117,11 @@ const DocumentData = ({ setIsCreatingDocument, userLogin, onLogin, setDocumentRe
                     contractDate: '',
                     actNumber: '',
                     completedWorks: '',
+                    resultsWork: '',
                     workCost: '',
                     transferAmount: '',
                     links: [],
-                    report: {
-                        reportNumber: '',
-                        contractNumber: '',
-                        contractDate: ''
-                    }
+                    reportNumber: ''
                 };
                 break;
             case 3:
@@ -307,7 +305,7 @@ const DocumentData = ({ setIsCreatingDocument, userLogin, onLogin, setDocumentRe
     };
 
     const renderContractorCustomerFields = () => (
-        <>
+        <div className='form-firm'>
             <div className="form-section">
                 <h4>Исполнитель</h4>
                 <div className="firm-info">
@@ -344,7 +342,7 @@ const DocumentData = ({ setIsCreatingDocument, userLogin, onLogin, setDocumentRe
                     />
                 </div>
             </div>
-        </>
+        </div>
     );
 
     // Рендер полей в зависимости от шаблона
@@ -437,24 +435,797 @@ const DocumentData = ({ setIsCreatingDocument, userLogin, onLogin, setDocumentRe
                     </div>
                 );
             case 1: // Акт Байт
-                return null
-            case 2: // Акт Жираф
-                return null;
-            case 3: // Акт Мега 
-                return null;
+                return (
+                    <div className="template-fields">
+                        {renderContractorCustomerFields()}
+                        <div className="form-section">
+                            <h4>Данные Документа</h4>
+                            <div className='section-data'>
+                                <div className='section-data__input'>
+                                    <div className='date-input'>
+                                        <span>Договор создан:</span>       
+                                        <Input
+                                            value={currentDocument.contractDate}
+                                            type='date'
+                                            onChange={(e) => handleFieldChange('contractDate', e.target.value)}
+                                            placeholder="Дата Заключения Договора"
+                                            style={{color: currentDocument.contractDate === '' ? 'grey' : 'black'}}
+                                        />
+                                    </div>
+                                    <Input
+                                            value={currentDocument.contractNumber}
+                                            onChange={(e) => handleFieldChange('contractNumber', e.target.value)}
+                                            placeholder="Номер Договора"
+                                        />
+                                    <Input
+                                        value={currentDocument.applicationNumber}
+                                        onChange={(e) => handleFieldChange('applicationNumber', e.target.value)}
+                                        placeholder="Номер Заявки"
+                                    />
+                                    <Input
+                                        value={currentDocument.city}
+                                        onChange={(e) => handleFieldChange('city', e.target.value)}
+                                        placeholder="Город"
+                                    />
+                                </div>
+                                <div className='section-data__calendar'>
+                                    <h4>Выберите отчетный период:</h4>
+                                    <RangeDatePicker 
+                                        onDateRangeSelect={(range) => {
+                                            handleFieldChange('periodStartDate', range.startDate);
+                                            handleFieldChange('periodEndDate', range.endDate);
+                                        }}
+                                    />
+                                </div>
+                            </div>                  
+                        </div>
+                        <div className="form-section">
+                            <h4>Выполненные работы</h4>
+                            {currentDocument.works.map((work, index) => (
+                                <div key={index} className="array-item">
+                                    <Input
+                                        value={work.name}
+                                        onChange={(e) => handleArrayItemChange('works', index, 'name', e.target.value)}
+                                        placeholder="Название задачи"
+                                        style={{width:'35%'}}
 
+                                    />
+                                    <Input
+                                        value={work.cost}
+                                        onChange={(e) => handleArrayItemChange('works', index, 'cost', e.target.value)}
+                                        placeholder="Цена, руб, без НДС"
+                                        style={{width:'25%'}}
+                                    />
+                                    <Input
+                                        value={work.count}
+                                        onChange={(e) => handleArrayItemChange('works', index, 'count', e.target.value)}
+                                        placeholder="Количество"
+                                        style={{width:'25%'}}
+
+                                    />
+                                
+                                    <button onClick={() => removeArrayItem('works', index)}>×</button>
+                                </div>
+                            ))}
+                            <Button id='add-spec'onClick={() => addArrayItem('works', { name: '', cost: '', count: '' })}>
+                                Добавить работу
+                            </Button>
+                        </div>
+                    </div>
+                );                
+            case 2: // Акт Жираф
+                return (
+                    <div className="template-fields">
+                        {renderContractorCustomerFields()}
+                        <div className="form-section">
+                            <h4>Данные Документа</h4>
+                            <div className='section-data'>
+                                <div className='section-data__input'>
+                                    <div className='date-input'>
+                                        <span>Договор создан:</span>       
+                                        <Input
+                                            value={currentDocument.contractDate}
+                                            type='date'
+                                            onChange={(e) => handleFieldChange('contractDate', e.target.value)}
+                                            placeholder="Дата Заключения Договора"
+                                            style={{color: currentDocument.contractDate === '' ? 'grey' : 'black'}}
+                                        />
+                                    </div>
+                                    <Input
+                                            value={currentDocument.contractNumber}
+                                            onChange={(e) => handleFieldChange('contractNumber', e.target.value)}
+                                            placeholder="Номер Договора"
+                                        />
+                                    <Input
+                                        value={currentDocument.actNumber}
+                                        onChange={(e) => handleFieldChange('actNumber', e.target.value)}
+                                        placeholder="Номер Акта"
+                                    />
+                                    <Input
+                                        value={currentDocument.workCost}
+                                        onChange={(e) => handleFieldChange('workCost', e.target.value)}
+                                        placeholder="Cтоимость выполненных Работ (руб, коп.)"
+                                    />
+                                    <Input
+                                        value={currentDocument.transferAmount}
+                                        onChange={(e) => handleFieldChange('transferAmount', e.target.value)}
+                                        placeholder="Сумма к перечислению (руб, коп.)"
+                                    />
+                                    <Input
+                                        value={currentDocument.links}
+                                        onChange={(e) => handleFieldChange('links', e.target.value)}
+                                        placeholder="Ссылки с результатами работ"
+                                    />
+                                    <Input
+                                        value={currentDocument.reportNumber}
+                                        onChange={(e) => handleFieldChange('reportNumber', e.target.value)}
+                                        placeholder="Номер отчета к приложению"
+                                    />
+                                </div>
+                                <div className='section-data__calendar'>
+                                    <h4>Выберите отчетный период:</h4>
+                                    <RangeDatePicker 
+                                        onDateRangeSelect={(range) => {
+                                            handleFieldChange('periodStartDate', range.startDate);
+                                            handleFieldChange('periodEndDate', range.endDate);
+                                        }}
+                                    />
+                                </div>
+                                
+                            </div>    
+                            <div className='text-areas'>
+                                <textarea 
+                                        name="Выполненные работы"
+                                        value={currentDocument.completedWorks}
+                                        onChange={(e) => handleFieldChange('completedWorks', e.target.value)}
+                                        placeholder='Выполненные работы'
+                                    ></textarea>
+                                    <textarea 
+                                        name="Выполненные работы"
+                                        value={currentDocument.resultsWork}
+                                        onChange={(e) => handleFieldChange('resultsWork', e.target.value)}
+                                        placeholder='Результаты работ, предаставляемые заказчику'
+                                    ></textarea>
+                            </div>              
+                        </div>      
+                    </div>
+                );   
+            case 3: // Акт Мега 
+                return (
+                    <div className="template-fields">
+                        {renderContractorCustomerFields()}
+                        <div className="form-section">
+                            <h4>Данные Документа</h4>
+                            <div className='section-data'>
+                                <div className='section-data__input'>
+                                    <div className='date-input'>
+                                        <span>Договор создан:</span>       
+                                        <Input
+                                            value={currentDocument.contractDate}
+                                            type='date'
+                                            onChange={(e) => handleFieldChange('contractDate', e.target.value)}
+                                            placeholder="Дата Заключения Договора"
+                                            style={{color: currentDocument.contractDate === '' ? 'grey' : 'black'}}
+                                        />
+                                    </div>
+                                    <Input
+                                            value={currentDocument.contractNumber}
+                                            onChange={(e) => handleFieldChange('contractNumber', e.target.value)}
+                                            placeholder="Номер Договора"
+                                        />
+                                    <Input
+                                        value={currentDocument.orderNumber}
+                                        onChange={(e) => handleFieldChange('orderNumber', e.target.value)}
+                                        placeholder="Номер Заказа"
+                                    />
+                                    <Input
+                                        value={currentDocument.city}
+                                        onChange={(e) => handleFieldChange('city', e.target.value)}
+                                        placeholder="Город"
+                                    />
+                                    <Input
+                                        value={currentDocument.nds}
+                                        onChange={(e) => handleFieldChange('nds', e.target.value)}
+                                        placeholder="НДС, %"
+                                    />      
+                                </div>
+                                <div className='section-data__calendar'>
+                                    <h4>Выберите отчетный период:</h4>
+                                    <RangeDatePicker 
+                                        onDateRangeSelect={(range) => {
+                                            handleFieldChange('periodStartDate', range.startDate);
+                                            handleFieldChange('periodEndDate', range.endDate);
+                                        }}
+                                    />
+                                </div>
+                            </div>                  
+                        </div>
+                        <div className="form-section">
+                            <h4>Специалисты</h4>
+                            {currentDocument.specialists.map((specialist, index) => (
+                                <div key={index} className="array-item">
+                                    <Input
+                                        value={specialist.category}
+                                        onChange={(e) => handleArrayItemChange('specialists', index, 'category', e.target.value)}
+                                        placeholder="Категория специалиста"
+                                        style={{width:'35%'}}
+
+                                    />
+                                    <Input
+                                        value={specialist.costRate}
+                                        onChange={(e) => handleArrayItemChange('specialists', index, 'costRate', e.target.value)}
+                                        placeholder="Стоимость ставки нормо-часа специалиста, в т.ч. НДС 5%"
+                                        style={{width:'60%'}}
+                                    />
+                                    <Input
+                                        value={specialist.resourcesSpent}
+                                        onChange={(e) => handleArrayItemChange('specialists', index, 'resourcesSpent', e.target.value)}
+                                        placeholder="Объем затраченных ресурсов специалиста за Отчетный период, чел./час"
+                                        style={{width:'80%'}}
+
+                                    />
+                                
+                                    <button onClick={() => removeArrayItem('specialists', index)}>×</button>
+                                </div>
+                            ))}
+                            <Button id='add-spec'onClick={() => addArrayItem('specialists', { category: '', rate: '', hours: '' })}>
+                                Добавить специалиста
+                            </Button>
+                        </div>
+                    </div>
+                );
             case 4: // Акт Море
-                return null;
+                return (
+                    <div className="template-fields">
+                        {renderContractorCustomerFields()}
+                        <div className="form-section">
+                            <h4>Данные Документа</h4>
+                            <div className='section-data'>
+                                <div className='section-data__input'>
+                                    <div className='date-input'>
+                                        <span>Договор создан:</span>       
+                                        <Input
+                                            value={currentDocument.contractDate}
+                                            type='date'
+                                            onChange={(e) => handleFieldChange('contractDate', e.target.value)}
+                                            placeholder="Дата Заключения Договора"
+                                            style={{color: currentDocument.contractDate === '' ? 'grey' : 'black'}}
+                                        />
+                                    </div>
+                                    <Input
+                                            value={currentDocument.contractNumber}
+                                            onChange={(e) => handleFieldChange('contractNumber', e.target.value)}
+                                            placeholder="Номер Договора"
+                                        />
+                                    <Input
+                                        value={currentDocument.actNumber}
+                                        onChange={(e) => handleFieldChange('actNumber', e.target.value)}
+                                        placeholder="Номер Акта"
+                                    />
+                                    <Input
+                                        value={currentDocument.city}
+                                        onChange={(e) => handleFieldChange('city', e.target.value)}
+                                        placeholder="Город"
+                                    />
+                                    <Input
+                                        value={currentDocument.nds}
+                                        onChange={(e) => handleFieldChange('nds', e.target.value)}
+                                        placeholder="НДС, %"
+                                    />     
+                                    <Input
+                                        className='big-placeholder'
+                                        value={currentDocument.percentAward}
+                                        onChange={(e) => handleFieldChange('percentAward', e.target.value)}
+                                        placeholder="Процент вознаграждения за исключительное право на результаты"
+                                    />       
+                                </div>
+                                <div className='section-data__calendar'>
+                                    <h4>Выберите отчетный период:</h4>
+                                    <RangeDatePicker 
+                                        onDateRangeSelect={(range) => {
+                                            handleFieldChange('periodStartDate', range.startDate);
+                                            handleFieldChange('periodEndDate', range.endDate);
+                                        }}
+                                    />
+                                </div>
+                            </div>                  
+                        </div>
+                        <div className="form-section">
+                            <h4>Оказанные услуги</h4>
+                            {currentDocument.services.map((service, index) => (
+                                <div key={index} className="array-item">
+                                    <Input
+                                        value={service.name}
+                                        onChange={(e) => handleArrayItemChange('services', index, 'name', e.target.value)}
+                                        placeholder="Название услуги"
+                                        style={{width:'45%'}}
+
+                                    />
+                                    <Input
+                                        value={service.category}
+                                        onChange={(e) => handleArrayItemChange('services', index, 'category', e.target.value)}
+                                        placeholder="Категория специалиста"
+                                        style={{width:'45%'}}
+                                    />
+                                    <Input
+                                        value={service.rate}
+                                        onChange={(e) => handleArrayItemChange('services', index, 'rate', e.target.value)}
+                                        placeholder="Ставка, руб./час, в т.ч. НДС 5%"
+                                        style={{width:'45%'}}
+
+                                    />
+                                    <Input
+                                        value={service.hours}
+                                        onChange={(e) => handleArrayItemChange('services', index, 'hours', e.target.value)}
+                                        placeholder="Количество часов"
+                                        style={{width:'45%'}}
+
+                                    />
+                                
+                                    <button onClick={() => removeArrayItem('services', index)}>×</button>
+                                </div>
+                            ))}
+                            <Button id='add-spec'onClick={() => addArrayItem('services', { name: '', category: '', rate: '', hours: '' })}>
+                                Добавить услугу
+                            </Button>
+                        </div>
+                    </div>
+                );
             case 5: // Заказ Аниме
-                return null;
+                return (
+                    <div className="template-fields">
+                        {renderContractorCustomerFields()}
+                        <div className="form-section">
+                            <h4>Данные Документа</h4>
+                            <div className='section-data'>
+                                <div className='section-data__input'>
+                                    <div className='date-input'>
+                                        <span>Договор создан:</span>       
+                                        <Input
+                                            value={currentDocument.contractDate}
+                                            type='date'
+                                            onChange={(e) => handleFieldChange('contractDate', e.target.value)}
+                                            placeholder="Дата Заключения Договора"
+                                            style={{color: currentDocument.contractDate === '' ? 'grey' : 'black'}}
+                                        />
+                                    </div>
+                                    <Input
+                                            value={currentDocument.contractNumber}
+                                            onChange={(e) => handleFieldChange('contractNumber', e.target.value)}
+                                            placeholder="Номер Договора"
+                                        />
+                                    <Input
+                                        value={currentDocument.orderNumber}
+                                        onChange={(e) => handleFieldChange('orderNumber', e.target.value)}
+                                        placeholder="Номер Заказа"
+                                    />
+                                    <Input
+                                        value={currentDocument.city}
+                                        onChange={(e) => handleFieldChange('city', e.target.value)}
+                                        placeholder="Город"
+                                    />
+                                    <Input
+                                        value={currentDocument.nds}
+                                        onChange={(e) => handleFieldChange('nds', e.target.value)}
+                                        placeholder="НДС (%)"
+                                    />
+                                </div>
+                                <div className='section-data__calendar'>
+                                    <h4>Выберите отчетный период:</h4>
+                                    <RangeDatePicker 
+                                        onDateRangeSelect={(range) => {
+                                            handleFieldChange('periodStartDate', range.startDate);
+                                            handleFieldChange('periodEndDate', range.endDate);
+                                        }}
+                                    />
+                                </div>
+                            </div>                  
+                        </div>
+                        <div className="form-section">
+                            <h4>Выполненные работы</h4>
+                            {currentDocument.works.map((work, index) => (
+                                <div key={index} className="array-item">
+                                    <Input
+                                        value={work.name}
+                                        onChange={(e) => handleArrayItemChange('works', index, 'name', e.target.value)}
+                                        placeholder="Название задачи"
+                                        style={{width:'35%'}}
+                                    />
+                                    <Input
+                                        value={work.cost}
+                                        onChange={(e) => handleArrayItemChange('works', index, 'cost', e.target.value)}
+                                        placeholder="Итого предельная стоимость по Заказу (руб., коп.)"
+                                        style={{width:'60%'}}
+                                    />
+                                    <span>Начало работ:</span>
+                                    <Input
+                                        type="date"
+                                        value={work.startDate || ''}
+                                        onChange={(e) => handleArrayItemChange('works', index, 'startDate', e.target.value)}
+                                        placeholder="Начало работ"
+                                        style={{width: '25%'}}
+                                    />
+                                    <span> Конец работ:</span>
+                                    <Input
+                                        type="date"
+                                        value={work.endDate || ''}
+                                        onChange={(e) => handleArrayItemChange('works', index, 'endDate', e.target.value)}
+                                        placeholder="Конец работ"
+                                        style={{width: '25%'}}
+                                    />
+                                    <button onClick={() => removeArrayItem('works', index)}>×</button>
+                                </div>
+                            ))}
+                            <Button id='add-spec'onClick={() => addArrayItem('works', { name: '', startWork: '', endWork: '', cost: '' })}>
+                                Добавить работу
+                            </Button>
+                        </div>
+                    </div>
+                );          
             case 6: // Заказ Байт
-                return null;
+                return (
+                    <div className="template-fields">
+                        {renderContractorCustomerFields()}
+                        <div className="form-section">
+                            <h4>Данные Документа</h4>
+                            <div className='section-data'>
+                                <div className='section-data__input'>
+                                    <div className='date-input'>
+                                        <span>Договор создан:</span>       
+                                        <Input
+                                            value={currentDocument.contractDate}
+                                            type='date'
+                                            onChange={(e) => handleFieldChange('contractDate', e.target.value)}
+                                            placeholder="Дата Заключения Договора"
+                                            style={{color: currentDocument.contractDate === '' ? 'grey' : 'black'}}
+                                        />
+                                    </div>
+                                    <Input
+                                            value={currentDocument.contractNumber}
+                                            onChange={(e) => handleFieldChange('contractNumber', e.target.value)}
+                                            placeholder="Номер Договора"
+                                        />
+                                    <Input
+                                        value={currentDocument.applicationNumber}
+                                        onChange={(e) => handleFieldChange('applicationNumber', e.target.value)}
+                                        placeholder="Номер Заявки"
+                                    />
+                                </div>
+                                <div className='section-data__calendar'>
+                                    <h4>Выберите отчетный период:</h4>
+                                    <RangeDatePicker 
+                                        onDateRangeSelect={(range) => {
+                                            handleFieldChange('periodStartDate', range.startDate);
+                                            handleFieldChange('periodEndDate', range.endDate);
+                                        }}
+                                    />
+                                </div>
+                            </div>                  
+                        </div>
+                        <div id="two-form-section" className="form-section">
+                            <div>
+                                <h4>Выполненные работы</h4>
+                                {currentDocument.works.map((work, index) => (
+                                    <div key={index} className="array-item">
+                                        <Input
+                                            value={work.name}
+                                            onChange={(e) => handleArrayItemChange('works', index, 'name', e.target.value)}
+                                            placeholder="Название задачи"
+                                        />
+                                        <Input
+                                            value={work.cost}
+                                            onChange={(e) => handleArrayItemChange('works', index, 'cost', e.target.value)}
+                                            placeholder="Цена, руб. , без НДС"
+                                        />
+                                        <Input
+                                            value={work.count}
+                                            onChange={(e) => handleArrayItemChange('works', index, 'count', e.target.value)}
+                                            placeholder="Количество"
+                                        />              
+                                        <button onClick={() => removeArrayItem('works', index)}>×</button>
+                                    </div>
+                                ))}
+                                <Button id='add-spec'onClick={() => addArrayItem('works', { name: '', cost: '', count: '' })}>
+                                    Добавить работу
+                                </Button>
+                            </div>   
+                            <div>
+                                <h4>Список исполнителей</h4>
+                                {currentDocument.contractorsList.map((contractor, index) => (
+                                    <div key={index} className="array-item">
+                                        <Input
+                                            value={contractor.fio}
+                                            onChange={(e) => handleArrayItemChange('contractorsList', index, 'fio', e.target.value)}
+                                            placeholder="ФИО"
+                                        />
+                                        <Input
+                                            value={contractor.inn}
+                                            onChange={(e) => handleArrayItemChange('contractorsList', index, 'inn', e.target.value)}
+                                            placeholder="ИНН"
+                                        />
+                            
+                                        <button onClick={() => removeArrayItem('contractorsList', index)}>×</button>
+                                    </div>
+                                ))}
+                                <Button id='add-spec'onClick={() => addArrayItem('contractorsList', { fio: '', inn: '' })}>
+                                    Добавить исполнителя
+                                </Button>
+                            </div>              
+                        </div>
+
+                                
+
+                    </div>
+                );   
             case 7: // Заказ Мега
-                return null;
+                return (
+                    <div className="template-fields">
+                        {renderContractorCustomerFields()}
+                        <div className="form-section">
+                            <h4>Данные Документа</h4>
+                            <div className='section-data'>
+                                <div className='section-data__input'>
+                                    <div className='date-input'>
+                                        <span>Договор создан:</span>       
+                                        <Input
+                                            value={currentDocument.contractDate}
+                                            type='date'
+                                            onChange={(e) => handleFieldChange('contractDate', e.target.value)}
+                                            placeholder="Дата Заключения Договора"
+                                            style={{color: currentDocument.contractDate === '' ? 'grey' : 'black'}}
+                                        />
+                                    </div>
+                                    <Input
+                                            value={currentDocument.contractNumber}
+                                            onChange={(e) => handleFieldChange('contractNumber', e.target.value)}
+                                            placeholder="Номер Договора"
+                                        />
+                                    <Input
+                                        value={currentDocument.orderNumber}
+                                        onChange={(e) => handleFieldChange('orderNumber', e.target.value)}
+                                        placeholder="Номер Заказа"
+                                    />
+                                    <Input
+                                        value={currentDocument.city}
+                                        onChange={(e) => handleFieldChange('city', e.target.value)}
+                                        placeholder="Город"
+                                    />
+                                    <Input
+                                        value={currentDocument.nds}
+                                        onChange={(e) => handleFieldChange('nds', e.target.value)}
+                                        placeholder="НДС (%)"
+                                    />
+                                </div>
+                                <div className='section-data__calendar'>
+                                    <h4>Выберите отчетный период:</h4>
+                                    <RangeDatePicker 
+                                        onDateRangeSelect={(range) => {
+                                            handleFieldChange('periodStartDate', range.startDate);
+                                            handleFieldChange('periodEndDate', range.endDate);
+                                        }}
+                                    />
+                                </div>
+                            </div>                  
+                        </div>
+                        <div className="form-section">
+                            <h4>Выполненные работы</h4>
+                            {currentDocument.works.map((work, index) => (
+                                <div key={index} className="array-item">
+                                    <Input
+                                        value={work.name}
+                                        onChange={(e) => handleArrayItemChange('works', index, 'name', e.target.value)}
+                                        placeholder="Название задачи"
+                                        style={{width:'35%'}}
+                                    />
+                                    <Input
+                                        value={work.cost}
+                                        onChange={(e) => handleArrayItemChange('works', index, 'cost', e.target.value)}
+                                        placeholder="Cтоимость выполненной работы (руб. и коп.)"
+                                        style={{width:'60%'}}
+                                    />
+                                    <span>Начало работ:</span>
+                                    <Input
+                                        type="date"
+                                        value={work.startDate || ''}
+                                        onChange={(e) => handleArrayItemChange('works', index, 'startDate', e.target.value)}
+                                        placeholder="Начало работ"
+                                        style={{width: '25%'}}
+                                    />
+                                    <span> Конец работ:</span>
+                                    <Input
+                                        type="date"
+                                        value={work.endDate || ''}
+                                        onChange={(e) => handleArrayItemChange('works', index, 'endDate', e.target.value)}
+                                        placeholder="Конец работ"
+                                        style={{width: '25%'}}
+                                    />
+                                    <button onClick={() => removeArrayItem('works', index)}>×</button>
+                                </div>
+                            ))}
+                            <Button id='add-spec'onClick={() => addArrayItem('works', { name: '', startWork: '', endWork: '', cost: '' })}>
+                                Добавить работу
+                            </Button>
+                        </div>
+                    </div>
+                );          
             case 8: // Отчет Жираф
-            return null;
-            case 9: // Отчет море 
-                default:
+                return (
+                    <div className="template-fields">
+                        {renderContractorCustomerFields()}
+                        <div className="form-section">
+                            <h4>Данные Документа</h4>
+                            <div className='section-data'>
+                                <div className='section-data__input'>
+                                    <Input
+                                        value={currentDocument.applicationNumber}
+                                        onChange={(e) => handleFieldChange('applicationNumber', e.target.value)}
+                                        placeholder="Номер Заявки"
+                                    />
+                                    <Input
+                                        value={currentDocument.city}
+                                        onChange={(e) => handleFieldChange('city', e.target.value)}
+                                        placeholder="Город"
+                                    />
+                                    <Input
+                                        value={currentDocument.nds}
+                                        onChange={(e) => handleFieldChange('nds', e.target.value)}
+                                        placeholder="НДС (%)"
+                                    />
+                                </div>
+                                <div className='section-data__calendar'>
+                                    <h4>Выберите отчетный период:</h4>
+                                    <RangeDatePicker 
+                                        onDateRangeSelect={(range) => {
+                                            handleFieldChange('periodStartDate', range.startDate);
+                                            handleFieldChange('periodEndDate', range.endDate);
+                                        }}
+                                    />
+                                </div>
+                            </div>                  
+                        </div>
+                        <div className="form-section">
+                            <h4>Работы исполнителя</h4>
+                            {currentDocument.contractorsWork.map((contractorWork, index) => (
+                                <div key={index} className="array-item">
+                                    <Input
+                                        value={contractorWork.name}
+                                        onChange={(e) => handleArrayItemChange('contractorsWork', index, 'name', e.target.value)}
+                                        placeholder="Название задачи"
+                                    />
+                                    <Input
+                                        value={contractorWork.cost}
+                                        onChange={(e) => handleArrayItemChange('contractorsWork', index, 'cost', e.target.value)}
+                                        placeholder="Стоимость в час/руб"
+                                    />
+                                    <Input
+                                        value={contractorWork.hours}
+                                        onChange={(e) => handleArrayItemChange('contractorsWork', index, 'hours', e.target.value)}
+                                        placeholder="Кол-во часов"
+                                    />              
+                                    <button onClick={() => removeArrayItem('contractorsWork', index)}>×</button>
+                                </div>
+                            ))}
+                            <Button id='add-spec'onClick={() => addArrayItem('contractorsWork', { name: '', cost: '', hours: '' })}>
+                                Добавить работу
+                            </Button>
+                        </div>                
+                    </div>
+                );              
+            case 9: // Отчет море
+                return (
+                    <div className="template-fields">
+                        {renderContractorCustomerFields()}
+                        <div className="form-section">
+                            <h4>Данные Документа</h4>
+                            <div className='section-data'>
+                                <div className='section-data__input'>
+                                    <div className='date-input'>
+                                        <span>Договор создан:</span>       
+                                        <Input
+                                            value={currentDocument.contractDate}
+                                            type='date'
+                                            onChange={(e) => handleFieldChange('contractDate', e.target.value)}
+                                            placeholder="Дата Заключения Договора"
+                                            style={{color: currentDocument.contractDate === '' ? 'grey' : 'black'}}
+                                        />
+                                    </div>
+                                    <Input
+                                            value={currentDocument.contractNumber}
+                                            onChange={(e) => handleFieldChange('contractNumber', e.target.value)}
+                                            placeholder="Номер Договора"
+                                        />
+                                    <Input
+                                        value={currentDocument.city}
+                                        onChange={(e) => handleFieldChange('city', e.target.value)}
+                                        placeholder="Город"
+                                    />    
+                                </div>
+                                <div className='section-data__calendar'>
+                                    <h4>Выберите отчетный период:</h4>
+                                    <RangeDatePicker 
+                                        onDateRangeSelect={(range) => {
+                                            handleFieldChange('periodStartDate', range.startDate);
+                                            handleFieldChange('periodEndDate', range.endDate);
+                                        }}
+                                    />
+                                </div>
+                            </div>                  
+                        </div>
+                        <div className="form-section">
+                            <h4>Специалисты</h4>
+                            {currentDocument.specialists.map((specialist, index) => (
+                                <div key={index} className="array-item" style={{display:'flex', flexDirection:'column', justifyContent:'center'}}>
+                                    <div>
+                                        <Input
+                                            value={specialist.fio}
+                                            onChange={(e) => handleArrayItemChange('specialists', index, 'fio', e.target.value)}
+                                            placeholder="ФИО"
+                                            style={{width:'30%'}}
+                                        />
+                                        <Input
+                                            value={specialist.calendar}
+                                            onChange={(e) => handleArrayItemChange('specialists', index, 'calendar', e.target.value)}
+                                            placeholder="Календарь (РФ)"
+                                            style={{width:'20%'}}
+                                        />
+                                        <Input
+                                            value={specialist.typeOfDay}
+                                            onChange={(e) => handleArrayItemChange('specialists', index, 'typeOfDay', e.target.value)}
+                                            placeholder="Тип дня (раб/нераб)"
+                                            style={{width:'25%'}}
+                                        />
+                                        <Input
+                                            value={specialist.wh}
+                                            onChange={(e) => handleArrayItemChange('specialists', index, 'wh', e.target.value)}
+                                            placeholder="WH (час)"
+                                            style={{width:'15%'}}
+                                        />
+                                    </div>                   
+                                    <div id='grid-template10'>
+                                        <div>
+                                            <span>Дата:</span>
+                                            <Input
+                                                type="date"
+                                                value={specialist.date || ''}
+                                                onChange={(e) => handleArrayItemChange('specialists', index, 'date', e.target.value)}
+                                                placeholder="Дата"
+                                                style={{width: '40%'}}
+                                            />
+                                        </div>
+                                        <div>
+                                            <span>Отсутствие:</span>
+                                            <DropdownMenu
+                                                name={`specialists-${index}-absence`}
+                                                value={specialist.absence}
+                                                onChange={(e) => handleArrayItemChange('specialists', index, 'absence', e.target.value)}
+                                                options={[
+                                                    { value: '+', label: '+' },
+                                                    { value: '-', label: '-' }
+                                                ]}
+                                                style={{width:'30%'}}
+                                            />
+                                        </div>
+                                        <textarea 
+                                            name="Комментарий"
+                                            value={specialist.comment}
+                                            onChange={(e) => handleArrayItemChange('specialists', index, 'comment', e.target.value)}
+                                            placeholder='Комментарий (задачи)'
+                                        ></textarea>
+                                    </div>
+                                    
+                                    
+            
+                                
+                                    <button onClick={() => removeArrayItem('specialists', index)}>×</button>
+                                </div>
+                            ))}
+                            <Button id='add-spec'onClick={() => addArrayItem('specialists', { fio: '', calendar: '', typeOfDay: '', date: '', absence: '', wh: '', comment: '' })}>
+                                Добавить специалиста
+                            </Button>
+                        </div>
+                    </div>
+                );
+            default:
                 return null;
         }
     };
@@ -488,7 +1259,7 @@ const DocumentData = ({ setIsCreatingDocument, userLogin, onLogin, setDocumentRe
                 <div id="dataForm" className="main-content">
                     <div className="main-content__header">
                         <button onClick={handleBackClick} className="back-button"></button>
-                        <h4>Заполните данные документа</h4>
+                        <h4>Заполните данные документа "{shablon}"</h4>
                     </div>
                     
                     <div className="document-data-form">

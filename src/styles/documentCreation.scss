@@ -131,6 +131,16 @@
 
 .document-data-form {
 
+    .form-firm {
+        display: flex;
+        input {
+            width: fluid(500, 200);
+        }
+        div {
+            flex: 1;
+        }
+    }
+
     @include mobile {
     margin-bottom: rem(50);
     margin-top: rem(50);
@@ -392,6 +402,40 @@
     }
 }
 
-/* Стили для календаря периодов */
+#two-form-section {
+    display: flex;
+    justify-content: space-around;
+    div {
+        flex: 1;
+        
+    };
+    input {
+        width: fluid(380,190);
+    }
+   
+}
 
+#grid-template10 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;  /* Два равных столбца */
+    grid-template-rows: auto auto;    /* Две строки */
 
+    div:first-of-type {
+        margin-left: fluid(12, 6);
+        grid-column: 1;    /* Первый столбец */
+        grid-row: 1;       /* Первая строка */
+    }
+    div:last-of-type {
+        margin-left: fluid(12, 6);
+        select {
+            margin-left: fluid(12, 6);
+        }
+        grid-column: 1;    /* Первый столбец */
+        grid-row: 2;       /* Первая строка */
+    }
+    textarea {
+        grid-column: 2;    /* Второй столбец */
+        grid-row: 1 / span 2; /* Занимает обе строки */
+    }
+
+}

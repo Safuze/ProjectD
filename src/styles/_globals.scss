@@ -374,3 +374,20 @@ h2, h3 {
       opacity: 0.6;
     }
   }
+
+textarea {
+    margin: fluid(10, 5);
+    @include fluid-text(24, 12);
+    width: fluid(468, 234);
+    height: fluid(120, 60);
+    border-radius: fluid(10, 5);
+}
+
+.text-areas {
+    display: flex;
+    justify-content: center;
+}
+
+.big-placeholder::placeholder {
+    @include fluid-text(18,9);
+}
