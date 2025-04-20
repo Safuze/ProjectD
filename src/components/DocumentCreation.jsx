@@ -26,7 +26,7 @@ export default function DocumentCreation() {
   const shablon2 = { format: 'Акт', firm: 'Байт' }; 
   const shablon3 = { format: 'Акт', firm: 'Жираф' }; 
   const shablon4 = { format: 'Акт', firm: 'Мега' }; 
-  const shablon5 = { format: 'Акт', firm: 'Море' }; 
+  const shablon5 = { format: 'Акт', firm: 'Море' };          
   const shablon6 = { format: 'Заказ', firm: 'Аниме' }; 
   const shablon7 = { format: 'Заказ', firm: 'Байт' }; 
   const shablon8 = { format: 'Заказ', firm: 'Мега' }; 
@@ -54,7 +54,7 @@ export default function DocumentCreation() {
   useEffect(() => {
     setIsFormValid2(
       selectedFormat && 
-      (selectedFirm || (showCustomInput && customFirm.trim() !== ''))
+      (selectedFirm && (showCustomInput && customFirm.trim() !== ''))
     );
   }, [selectedFormat, selectedFirm, showCustomInput, customFirm]);
 
@@ -69,15 +69,13 @@ export default function DocumentCreation() {
   const handleFirmChange = (event) => {
     const value = event.target.value;
     setSelectedFirm(value);
-    
+    setShowCustomInput(true);
     // Если выбран "Свой вариант", показываем Input и очищаем customFirm
     if (value === "Свой вариант") {
-      setShowCustomInput(true);
       setCustomFirm(""); // Очищаем, если выбрали "Свой вариант"
     } 
     // Если выбрана другая фирма, заполняем Input её названием
     else if (value) {
-      setShowCustomInput(true);
       setCustomFirm(value); // Заполняем значением фирмы (без "Шаблон №")
     } 
     // Если ничего не выбрано, скрываем Input
@@ -88,6 +86,7 @@ export default function DocumentCreation() {
   };
 
   const handleCustomFirmChange = (event) => {
+    if (customFirm === '') setIsFormValid2(false);
     event.target.name === setCustomFirm(event.target.value);
   };
 
@@ -116,14 +115,10 @@ export default function DocumentCreation() {
       return;
     }
     
-    const firms = getFirmsByFormat(selectedFormat);
-    const docExists = firms.some(item => 
-      item.firm === firmToCheck || 
-      (showCustomInput && item.firm?.toLowerCase() === customFirm.toLowerCase())
-    );
-    
+  
     setIsFormValid2(false);
-    if (docExists) {
+    console.log(selectedFirm);
+    if (selectedFirm !== 'Свой вариат') {
       navigate('/documentData', { 
         state: { 
           selectedFormat,
@@ -249,7 +244,7 @@ export default function DocumentCreation() {
               onClick={() => fileInputRef.current.click()}
               className={isFormValid1 ? "form-valid" : undefined}
             >
-              Загрузить документ
+              Загрузить шаблон
             </Button>
           </div>
           <div className="form__decorative-image"></div>
