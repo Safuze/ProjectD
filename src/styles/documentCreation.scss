@@ -135,10 +135,12 @@
         display: flex;
         input {
             width: fluid(500, 200);
+            
         }
         div {
             flex: 1;
         }
+
     }
 
     @include mobile {
@@ -229,19 +231,11 @@
     height: 70%;
 }
 
-.error-message {
-    color: #d32f2f;
-    background: #ffebee;
-    padding: 15px;
-    border-radius: 4px;
-    margin: 20px 0;
-    text-align: center;
-}
-
 #dataForm {
     height: 92.5vh;
     border-radius: 0%;
     input {
+        margin: fluid(12, 6) fluid(10, 5);
         @include fluid-text(28,14);
     }
 
@@ -258,10 +252,14 @@
     }
     .array-item {
         margin-bottom: fluid(30,15);
+        display: flex;
         button {
             background: none;
             color: white;
             @include fluid-text(50,25);
+        }
+        div, button {
+            margin-left: fluid(30, 15);
         }
     }
     #add-spec {
@@ -397,8 +395,42 @@
         input {
             width: fluid(280, 140);
         }
-        margin: fluid(10, 5);
 
+    }
+
+    .data-select {
+        transition: background-color 0.3s ease;
+        border: none;
+        border-radius: fluid(20, 10);
+        background-color: var(--color-light-grey);
+        height: fluid(64, 32);
+        width: fluid(512, 256);
+        margin: fluid(10, 5);
+        cursor: pointer;
+        padding: fluid(10, 5) fluid(15, 7.5);
+        border: rem(1) solid var(--color-light-grey);
+
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        
+        
+            &:hover {
+              border-color: var(--color-grey);
+            }
+        
+            &:focus {
+              outline: none;
+              border-color: var(--color-blue);
+              box-shadow: 0 0 rem(5) rgba(0, 123, 255, 0.5);
+            }
+        
+            // Стили для disabled
+            &:disabled {
+              background-color: #f5f5f5;
+              cursor: not-allowed;
+            }
+        
     }
 }
 
@@ -439,3 +471,24 @@
     }
 
 }
+
+
+
+.input-container, .dropdown-container {
+        position: relative;
+        width: 100%;
+    }
+.input-error, .dropdown-error {
+    border: rem(1) solid #ff4444;
+}
+.error-message, .dropdown-error-message {
+    font-style: italic;
+    color: #ff4444;
+    @include fluid-text(18,9);
+    margin-top: fluid(4,2);
+    position: absolute;
+    bottom: -12px;
+    left: 0;
+    z-index: 20;
+  }
+

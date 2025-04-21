@@ -572,15 +572,6 @@ h2, h3 {
   cursor: pointer;
 }
 
-.error-message {
-  color: #dc3545;
-  padding: clamp(0.3125rem, 0.2328431373rem + 0.3267973856vw, 0.625rem);
-  margin: clamp(0.3125rem, 0.2328431373rem + 0.3267973856vw, 0.625rem) 0;
-  border: 1px solid #dc3545;
-  border-radius: clamp(0.125rem, 0.0931372549rem + 0.1307189542vw, 0.25rem);
-  background-color: #f8d7da;
-}
-
 .form-valid {
   opacity: 1 !important;
 }
@@ -968,20 +959,12 @@ textarea {
   height: 70%;
 }
 
-.error-message {
-  color: #d32f2f;
-  background: #ffebee;
-  padding: 15px;
-  border-radius: 4px;
-  margin: 20px 0;
-  text-align: center;
-}
-
 #dataForm {
   height: 92.5vh;
   border-radius: 0%;
 }
 #dataForm input {
+  margin: clamp(0.375rem, 0.2794117647rem + 0.3921568627vw, 0.75rem) clamp(0.3125rem, 0.2328431373rem + 0.3267973856vw, 0.625rem);
   font-size: clamp(0.875rem, 0.6519607843rem + 0.9150326797vw, 1.75rem);
 }
 #dataForm .contractDate {
@@ -997,11 +980,15 @@ textarea {
 }
 #dataForm .array-item {
   margin-bottom: clamp(0.9375rem, 0.6985294118rem + 0.9803921569vw, 1.875rem);
+  display: flex;
 }
 #dataForm .array-item button {
   background: none;
   color: white;
   font-size: clamp(1.5625rem, 1.1642156863rem + 1.6339869281vw, 3.125rem);
+}
+#dataForm .array-item div, #dataForm .array-item button {
+  margin-left: clamp(0.9375rem, 0.6985294118rem + 0.9803921569vw, 1.875rem);
 }
 #dataForm #add-spec {
   font-size: clamp(0.875rem, 0.6519607843rem + 0.9150326797vw, 1.75rem);
@@ -1107,11 +1094,35 @@ textarea {
   text-align: center;
   font-size: 0.9em;
 }
-.section-data .date-input {
-  margin: clamp(0.3125rem, 0.2328431373rem + 0.3267973856vw, 0.625rem);
-}
 .section-data .date-input input {
   width: clamp(8.75rem, 6.5196078431rem + 9.1503267974vw, 17.5rem);
+}
+.section-data .data-select {
+  transition: background-color 0.3s ease;
+  border: none;
+  border-radius: clamp(0.625rem, 0.4656862745rem + 0.6535947712vw, 1.25rem);
+  background-color: var(--color-light-grey);
+  height: clamp(2rem, 1.4901960784rem + 2.091503268vw, 4rem);
+  width: clamp(16rem, 11.9215686275rem + 16.7320261438vw, 32rem);
+  margin: clamp(0.3125rem, 0.2328431373rem + 0.3267973856vw, 0.625rem);
+  cursor: pointer;
+  padding: clamp(0.3125rem, 0.2328431373rem + 0.3267973856vw, 0.625rem) clamp(0.46875rem, 0.3492647059rem + 0.4901960784vw, 0.9375rem);
+  border: 0.0625rem solid var(--color-light-grey);
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+.section-data .data-select:hover {
+  border-color: var(--color-grey);
+}
+.section-data .data-select:focus {
+  outline: none;
+  border-color: var(--color-blue);
+  box-shadow: 0 0 0.3125rem rgba(0, 123, 255, 0.5);
+}
+.section-data .data-select:disabled {
+  background-color: #f5f5f5;
+  cursor: not-allowed;
 }
 
 #two-form-section {
@@ -1148,6 +1159,26 @@ textarea {
   grid-row: 1/span 2; /* Занимает обе строки */
 }
 
+.input-container, .dropdown-container {
+  position: relative;
+  width: 100%;
+}
+
+.input-error, .dropdown-error {
+  border: 0.0625rem solid #ff4444;
+}
+
+.error-message, .dropdown-error-message {
+  font-style: italic;
+  color: #ff4444;
+  font-size: clamp(0.5625rem, 0.4191176471rem + 0.5882352941vw, 1.125rem);
+  margin-top: clamp(0.125rem, 0.0931372549rem + 0.1307189542vw, 0.25rem);
+  position: absolute;
+  bottom: -12px;
+  left: 0;
+  z-index: 20;
+}
+
 .input, .btn {
   width: clamp(16rem, 11.9215686275rem + 16.7320261438vw, 32rem);
   height: clamp(2rem, 1.4901960784rem + 2.091503268vw, 4rem);
@@ -1179,7 +1210,6 @@ textarea {
 }
 
 .input {
-  border: none;
   text-indent: 1.25rem;
   border-radius: clamp(0.625rem, 0.4656862745rem + 0.6535947712vw, 1.25rem);
   background-color: var(--color-light-grey);
@@ -1187,10 +1217,6 @@ textarea {
 
 input {
   transition: background-color 0.3s ease;
-}
-
-input.valid {
-  background-color: rgba(76, 175, 80, 0.5);
 }
 
 #profile {
