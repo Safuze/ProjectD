@@ -380,6 +380,3 @@ textarea {
     justify-content: center;
 }
 
-.big-placeholder::placeholder {
-    @include fluid-text(18,9);
-}

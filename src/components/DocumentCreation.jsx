@@ -37,18 +37,16 @@ export default function DocumentCreation() {
   const orders = [shablon6, shablon7, shablon8];
   const reports = [shablon9, shablon10];
 
-  // Получаем список фирм для выбранного формата + добавляем "Свой вариант"
+  // Получаем список фирм для выбранного формата 
   const getFirmsByFormat = (formatValue) => {
     let firms = [];
     switch(formatValue) {
       case '1': firms = acts; break;
       case '2': firms = orders; break;
       case '3': firms = reports; break;
-      default: firms = [];
     }
     
-    // Добавляем "Свой вариант" в конец списка
-    return [...firms, { format: '', firm: 'Свой вариант'}];
+    return [...firms];
   };
 
   useEffect(() => {
@@ -70,12 +68,8 @@ export default function DocumentCreation() {
     const value = event.target.value;
     setSelectedFirm(value);
     setShowCustomInput(true);
-    // Если выбран "Свой вариант", показываем Input и очищаем customFirm
-    if (value === "Свой вариант") {
-      setCustomFirm(""); // Очищаем, если выбрали "Свой вариант"
-    } 
-    // Если выбрана другая фирма, заполняем Input её названием
-    else if (value) {
+
+    if (value) {
       setCustomFirm(value); // Заполняем значением фирмы (без "Шаблон №")
     } 
     // Если ничего не выбрано, скрываем Input
@@ -118,7 +112,7 @@ export default function DocumentCreation() {
   
     setIsFormValid2(false);
     console.log(selectedFirm);
-    if (selectedFirm !== 'Свой вариат') {
+    if (selectedFirm) {
       navigate('/documentData', { 
         state: { 
           selectedFormat,
@@ -126,7 +120,7 @@ export default function DocumentCreation() {
           customerFirm:  customFirm
         } 
       });
-    } else navigate('/document');
+    }
   };
 
   const fileInputRef = useRef(null);
@@ -176,13 +170,7 @@ export default function DocumentCreation() {
                         placeholder='Выберите подходящий шаблон'
                         onChange={handleFirmChange}
                         value={selectedFirm}
-                        options={getFirmsByFormat(selectedFormat).map((item, index, array) => {
-                          if (index === array.length - 1) {
-                            return {
-                              value: item.firm,
-                              label: item.firm // Просто название фирмы без "Шаблон №"
-                            };
-                          }
+                        options={getFirmsByFormat(selectedFormat).map((item, index) => {
                           return {
                             value: item.firm,
                             label: `Шаблон ${index + 1} (${item.firm})`

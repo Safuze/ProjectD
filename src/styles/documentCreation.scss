@@ -236,7 +236,7 @@
     border-radius: 0%;
     input {
         margin: fluid(12, 6) fluid(10, 5);
-        @include fluid-text(28,14);
+        @include fluid-text(24,12);
     }
 
     .contractDate {
@@ -257,10 +257,56 @@
             background: none;
             color: white;
             @include fluid-text(50,25);
+            margin-left: 0 ;
         }
-        div, button {
+        div {
             margin-left: fluid(30, 15);
         }
+        
+    }
+    .array-ite {
+        display: flex;
+        flex-direction: column;
+        justify-content: center !important;
+        align-items: center;
+        margin-bottom: fluid(30,15);
+        button {
+            background: none;
+            color: white;
+            @include fluid-text(50,25);
+        }
+        textarea {
+            margin-top: fluid(70, 35) !important;
+            }
+        &__item {
+            display: flex;
+            margin: 0;
+            
+        }        
+        &__inside-item {
+           
+            display: flex;
+            flex-direction: row;
+            justify-content: end;
+            span {
+                white-space: nowrap;
+                margin: 0 fluid(10,5);
+                align-self: center;
+
+            }
+            input {
+                width: fluid(396, 188);
+            }
+            select {
+                text-indent: rem(20);
+                width: fluid(224, 112);
+                margin: fluid(12, 6);
+            }
+            .dropdown-error-message {
+                bottom: fluid(-90, -45);
+            }
+
+        }      
     }
     #add-spec {
         @include fluid-text(28, 14);
@@ -447,32 +493,11 @@
    
 }
 
-#grid-template10 {
-    display: grid;
-    grid-template-columns: 1fr 1fr;  /* Два равных столбца */
-    grid-template-rows: auto auto;    /* Две строки */
-
-    div:first-of-type {
-        margin-left: fluid(12, 6);
-        grid-column: 1;    /* Первый столбец */
-        grid-row: 1;       /* Первая строка */
-    }
-    div:last-of-type {
-        margin-left: fluid(12, 6);
-        select {
-            margin-left: fluid(12, 6);
-        }
-        grid-column: 1;    /* Первый столбец */
-        grid-row: 2;       /* Первая строка */
-    }
-    textarea {
-        grid-column: 2;    /* Второй столбец */
-        grid-row: 1 / span 2; /* Занимает обе строки */
-    }
-
+.dropdown-container {
+    display: flex;
+    justify-content: end;
+    margin-right: fluid(10, 5);
 }
-
-
 
 .input-container, .dropdown-container {
         position: relative;
@@ -492,3 +517,16 @@
     z-index: 20;
   }
 
+.template-fields {
+    input.input, .dropdown-menu.data-select {
+    width: fluid(480, 240);
+    height: fluid(60.3, 30);
+    border-radius: fluid(16, 8);
+    }
+}
+
+.dropdown-menu.data-select {
+    @include fluid-text(24, 12);
+    height: fluid(20, 10);
+    margin-left: 0;
+}

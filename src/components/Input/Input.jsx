@@ -79,14 +79,29 @@ function Input({
   };
 
   const handleChange = (e) => {
-    const newValue = e.target.value;
-    if (validation && validation.numeric && newValue && !/^\d*$/.test(newValue)) {
-      return; // Блокируем ввод нечисловых символов
+    let newValue = e.target.value;
+  
+    if (validation?.numeric) {
+      if (newValue && !/^\d+$/.test(newValue)) { // обязательно одно число, без пустых строк и без пробелов
+        return;
+      }
+    }    
+
+    if (validation?.numeric) {
+      // запрещаем все, кроме цифр
+      if (!/^\d*$/.test(newValue)) {
+        return;
+      }
     }
-    if (validation && validation.alpha && newValue && !/^[а-яА-ЯёЁa-zA-Z\s\-]*$/.test(newValue)) {
-      return; // Блокируем ввод небуквенных символов
+    if (validation?.alpha) {
+      // разрешаем только буквы, дефисы, пробелы
+      if (!/^[а-яА-ЯёЁa-zA-Z\s\-]*$/.test(newValue)) {
+        return;
+      }
     }
+  
     onChange(e);
+  
     if (isTouched) {
       validate(newValue);
     }

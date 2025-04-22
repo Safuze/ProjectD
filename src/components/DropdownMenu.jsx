@@ -10,7 +10,8 @@ function DropdownMenu({
   value = "",
   validation = {}, // Добавляем пропс для валидации
   onBlur, // Добавляем пропс onBlur
-  style // Добавляем пропс style для совместимости
+  style, // Добавляем пропс style для совместимости
+  title
 }) {
   const [error, setError] = useState('');
   const [isTouched, setIsTouched] = useState(false);
@@ -55,6 +56,7 @@ function DropdownMenu({
         onBlur={handleBlur}
         value={value}
         style={style}
+        title={title}
       >
         <option value="" hidden>{placeholder}</option>
         {options.map((option) => (
