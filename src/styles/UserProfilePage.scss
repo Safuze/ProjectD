@@ -37,7 +37,7 @@
                 background: none;
                 color: var(--color-ligth);
                 letter-spacing: fluid(4, 1.1);
-                @include fluid-text(40, 11.4);
+                @include fluid-text(36, 12);
                 padding: 0;
                 .line {
                     width: 100%;
@@ -63,7 +63,7 @@
 
                 &__login, &__email, &__fio {
                     margin-right: fluid(80, 22.8);
-                    @include fluid-text(32, 9.1);
+                    @include fluid-text(27, 9);
                 }
             }
 
@@ -74,7 +74,7 @@
                 #edit {
                     width: fluid(360, 102.8);
                     height: fluid(64, 18.2);
-                    border-radius: fluid(40, 11.4);
+                    border-radius: fluid(30, 10);
                     @include fluid-text(32, 9.1);
                     position: relative;
                     top: fluid(0, -30);

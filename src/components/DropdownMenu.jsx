@@ -1,8 +1,6 @@
 import { useState } from 'react';
 
 function DropdownMenu({
-  name,
-  id,
   onChange,
   options,
   placeholder,
@@ -10,8 +8,7 @@ function DropdownMenu({
   value = "",
   validation = {}, // Добавляем пропс для валидации
   onBlur, // Добавляем пропс onBlur
-  style, // Добавляем пропс style для совместимости
-  title
+  ...props
 }) {
   const [error, setError] = useState('');
   const [isTouched, setIsTouched] = useState(false);
@@ -49,14 +46,11 @@ function DropdownMenu({
   return (
     <div className="dropdown-container">
       <select 
+        {...props}
         className={selectClasses}
-        name={name}
-        id={id}
         onChange={handleChange}
         onBlur={handleBlur}
         value={value}
-        style={style}
-        title={title}
       >
         <option value="" hidden>{placeholder}</option>
         {options.map((option) => (

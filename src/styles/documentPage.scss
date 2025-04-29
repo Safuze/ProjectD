@@ -10,13 +10,13 @@
         @include flex-center(false, true);
         .download_and_print {
             display: flex;
-            width: fluid(600, 300);
+            width: fluid(600, 200);
 
             button {
-                height: fluid(50, 25);
+                height: fluid(50, 16.6);
                 background-color: var(--color-light-2);
                 color: black;
-                border-radius: fluid(20, 10);
+                border-radius: fluid(20, 6.66);
             }
             
 
@@ -28,8 +28,8 @@
         background-color: white;
         max-width: 794px;
         max-height: 1123px;
-        width: fluid(579.7, 289.8);
-        height: fluid(820, 410);
+        width: fluid(579.7, 193.2);
+        height: fluid(820, 273.3);
     }
 }
 
@@ -39,12 +39,12 @@
 
     .back-btn {
         position: relative;
-        margin-left: fluid(15, 7.5);
-        padding: fluid(8, 4) fluid(20, 10) fluid(8, 4) fluid(30, 15); // Больше отступ слева для стрелки
+        margin-left: fluid(15, 5);
+        padding: fluid(8, 2.66) fluid(20, 6.66) fluid(8, 2.66) fluid(30, 10); // Больше отступ слева для стрелки
         background: none;
         border: none;
         cursor: pointer;
-        font-size: fluid-text(16, 8);
+        font-size: fluid-text(15, 5);
         color: #333;
         transition: all 0.3s ease;
       
@@ -52,7 +52,7 @@
         &::before {
           content: "";
           position: absolute;
-          left: 10px;
+          left: fluid(10,3.3);
           top: 50%;
           transform: translateY(-50%);
           width: fluid(14, 7);
@@ -66,7 +66,7 @@
           color: #0066cc;
           
           &::before {
-            left: 7px; // Анимация движения при наведении
+            left: fluid(7, 2.5); // Анимация движения при наведении
           }
         }
       
@@ -76,8 +76,8 @@
       }
 
       .share-btn {
-        width: 40px;
-        height: 40px;
+        width: fluid(40, 13.3);
+        height: fluid(40, 13.3);
         border-radius: 50%;
         background: #f0f0f0;
         border: none;
@@ -89,8 +89,8 @@
         transition: all 0.3s ease;
         margin: fluid(10, 5) fluid(10, 5);
         svg {
-          width: 20px;
-          height: 20px;
+          width: fluid(20, 6.66);
+          height: fluid(20, 6.66);
           color: #555;
         }
       
@@ -113,24 +113,24 @@
 .a4-container {
   display: flex;
   justify-content: center;
-  padding: 20px;
+  padding: fluid(20, 6.66);
 }
 
 .a4-page {
-  width: 300mm;
-  min-height: 297mm;
-  padding: 20mm;
+  width: fluid(1138, 379.3);
+  min-height: fluid(1126.7, 375.5);
+  padding: fluid(75.6, 25.2);
   background: white;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  box-shadow: 0 0 fluid(10, 3.3) rgba(0,0,0,0.1);
   margin: 0 auto;
 }
 
 .editable-doc {
   width: 100%;
-  height: 250mm;
+  height: fluid(944.8, 314.93);
   border: none;
   resize: none;
   font-family: 'Cambria', serif;
-  font-size: 11pt;
+  @include fluid-text(14, 4.6);
   line-height: 1.08;
 }

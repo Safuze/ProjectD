@@ -4,7 +4,8 @@ import Input from './Input/Input';
 import Register from './Register';
 import DocumentCreation from './DocumentCreation';
 import ForgetPassword from './ForgetPassword';
-export default function Login({ onEmail, onLogin,  isCreatingDocument, setIsCreatingDocument }) {
+
+export default function Login({ onEmail, onLogin, isCreatingDocument, setIsCreatingDocument }) {
   const [authLogin, setAuthLogin] = useState('');
   const [authPassword, setAuthPassword] = useState('');
   const [authError, setAuthError] = useState('');
@@ -12,29 +13,53 @@ export default function Login({ onEmail, onLogin,  isCreatingDocument, setIsCrea
   const [isForgetPassword, setIsForgetPassword] = useState(false);
   const [user, setUser] = useState(null);
   const [isFormValid, setIsFormValid] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-
-  // Обновляем состояние при изменении полей
   const handleChange = (e) => {
     const { name, value } = e.target;
     if (name === 'login') setAuthLogin(value);
     if (name === 'password') setAuthPassword(value);
   
-    // Проверяем, что оба поля не пустые
     setIsFormValid(
       (name === 'login' ? value : authLogin).trim() !== '' && 
       (name === 'password' ? value : authPassword).trim() !== ''
     );
   };
 
-  const handleLoginSubmit = () => {
-    if (user && authLogin === user.login && authPassword === user.password) {
-      onLogin(authLogin); // Передаем логин в App
-      onEmail(user.email);
-      setAuthError('');
+  const handleLoginSubmit = async () => {
+    if (!isFormValid) return;
+    
+    setIsLoading(true);
+    setAuthError('');
+
+    try {
+      const response = await fetch('http://localhost:3001/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          login: authLogin,
+          password: authPassword
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Ошибка авторизации');
+      }
+
+      // Успешная авторизация
+      onLogin(authLogin);
+      onEmail(data.user.email);
       setIsCreatingDocument(true);
-    } else {
-      setAuthError('Неправильный логин или пароль');
+      
+    } catch (error) {
+      console.error('Login error:', error);
+      setAuthError(error.message || 'Неправильный логин или пароль');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -57,7 +82,12 @@ export default function Login({ onEmail, onLogin,  isCreatingDocument, setIsCrea
   const handleRegisterSuccess = (userData) => {
     setUser(userData);
     setIsRegistering(false);
+    // Автоматически заполняем поля входа после регистрации
+    setAuthLogin(userData.login);
+    setAuthPassword(userData.password);
+    setIsFormValid(true);
   };
+
   return (
     <div className="form">
       {!isCreatingDocument && (
@@ -90,7 +120,6 @@ export default function Login({ onEmail, onLogin,  isCreatingDocument, setIsCrea
         <ForgetPassword 
           onBackClick={handleBackClickPassw}
         />
-
       ) : (
         <>
           <div className="form__main">
@@ -111,10 +140,10 @@ export default function Login({ onEmail, onLogin,  isCreatingDocument, setIsCrea
             {authError && <div className="error">{authError}</div>}
             <Button 
               onClick={handleLoginSubmit}   
-              className={isFormValid ? "form-valid" : undefined} // undefined не добавит класс
-              disabled={!isFormValid}
+              className={isFormValid ? "form-valid" : undefined}
+              disabled={!isFormValid || isLoading}
             >
-              Вход
+              {isLoading ? 'Вход...' : 'Вход'}
             </Button>
             <div className="form__down">
               <button className="forget_password" onClick={handleForgetPasswordClick}>Забыли пароль?</button>

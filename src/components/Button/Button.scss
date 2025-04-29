@@ -1,9 +1,9 @@
 @use '../../styles/helpers' as *;
 
 .input, .btn {
-    width: fluid(512, 256);
-    height: fluid(64, 32);
-    margin: fluid(10, 5);
+    width: fluid(480, 160);
+    height: fluid(60, 20);
+    margin: fluid(9, 3);
 }
 .btn {
 
@@ -13,16 +13,16 @@
         pointer-events: none;
       }
     
-    border-radius: fluid(40, 20);
+    border-radius: fluid(40, 13.3);
     background-color: var(--color-orange);
     color: var(--color-light);
-    @include fluid-text(32, 16);
+    @include fluid-text(33, 11);
 
     transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
     
     &:hover {
         transform: translateY(-2px); // Кнопка немного поднимается
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); // Добавляем тень
+        box-shadow: 0 fluid(4,1.33) fluid(8,2.66) rgba(0, 0, 0, 0.1); // Добавляем тень
         background-color: (var(--color-dark-orange));
         color: white !important;
         cursor: pointer;
@@ -30,7 +30,7 @@
     
     &:active {
         transform: translateY(1px); // Кнопка "утапливается"
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); // Уменьшаем тень
+        box-shadow: 0 fluid(2,1) fluid(4,2) rgba(0, 0, 0, 0.1); // Уменьшаем тень
     }
 }
 

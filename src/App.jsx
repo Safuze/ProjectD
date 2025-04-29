@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import MainPage from './pages/MainPage';
 import UserProfilePage from './pages/UserProfilePage';
-import DocumentPage from './pages/DocumentPage';
 import DocumentData from './pages/DocumentData';
 import SavedDocuments from './pages/SavedDocuments';
+import DocumentPage from './pages/DocumentPage';
 function App() {
     const [userLogin, setUserLogin] = useState(null);
     const [userEmail, setUserEmail] = useState(null);
@@ -66,11 +66,13 @@ function App() {
                 />
                 <Route 
                     path="/document" 
-                    element={<DocumentPage 
-                        setIsCreatingDocument={setIsCreatingDocument}
-                        documentReady={documentReady}
-                        setDocumentReady={setDocumentReady}
-                    />} 
+                    element={
+                        <DocumentPage
+                            setIsCreatingDocument={setIsCreatingDocument}
+                            documentReady={documentReady}
+                            setDocumentReady={setDocumentReady}
+                        />
+                    } 
                 />
                 <Route 
                     path="/documents" 

@@ -6,6 +6,7 @@ import Button from '../components/Button/Button';
 import Input from '../components/Input/Input';
 import RangeDatePicker from '../components/RangeDatePicker';
 import DropdownMenu from '../components/DropdownMenu';
+import citiesData from '../russian-cities.json';
 // Инициализация хранилища шаблонов
 const initializeTemplates = () => {
   return Array(10).fill(null).map(() => []);
@@ -19,7 +20,9 @@ const DocumentData = ({ setIsCreatingDocument, userLogin, onLogin, setDocumentRe
     const [template, setTemplate] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [shablon, setShablon] = useState('');
-    const [dateErrors, setDateErrors] = useState({});
+    const [citySuggestions, setCitySuggestions] = useState([]);
+    const [showSuggestions, setShowSuggestions] = useState(false);
+    const cities = citiesData.map(city => city.name);
 
     // В useEffect при получении location.state:
     useEffect(() => {
@@ -48,6 +51,29 @@ const DocumentData = ({ setIsCreatingDocument, userLogin, onLogin, setDocumentRe
         setIsLoading(false);
     }, [location.state, navigate]);
 
+    // Функция для фильтрации городов:
+    const handleCityInputChange = (value) => {
+        handleFieldChange('city', value);
+        
+        if (value.length >= 2) {
+          const filteredCities = cities.filter(city => 
+            city.toLowerCase().includes(value.toLowerCase())
+          ).slice(0, 10); // Показываем только первые 10 результатов
+          
+          setCitySuggestions(filteredCities);
+          setShowSuggestions(true);
+        } else {
+          setCitySuggestions([]);
+          setShowSuggestions(false);
+        }
+      };
+
+    // функция для выбора города из подсказок
+    const handleCitySelect = (city) => {
+        handleFieldChange('city', city);
+        setShowSuggestions(false);
+    };
+    
     // Функция для определения индекса шаблона
     const getTemplateIndex = (format, firm) => {
         // Ваша логика сопоставления формата и фирмы с индексом
@@ -210,50 +236,17 @@ const DocumentData = ({ setIsCreatingDocument, userLogin, onLogin, setDocumentRe
         navigate(-1);
     };
 
-    // Валидация для конечной даты
-    const validateEndDate = (endDate, startDate, index) => {
-        if (!endDate || !startDate) return { isValid: true };
-        
-        const start = new Date(startDate);
-        const end = new Date(endDate);
-        
-        return {
-          isValid: end >= start,
-          message: "Дата окончания должна быть позже даты начала"
-        };
-      };
-
-    const validateAllDates = () => {
-        const errors = {};
-        let isValid = true;
-        
-        currentDocument.works.forEach((work, index) => {
-            if (work.startDate && work.endDate) {
-            const validation = validateEndDate(work.endDate, work.startDate, index);
-            if (!validation.isValid) {
-                errors[`endDate-${index}`] = validation.message;
-                isValid = false;
-            }
-            }
-        });
-        
-        setDateErrors(errors);
-        return isValid;
-    };
 
     const handleGenerateDoc = () => {
         if (!isFormValid) {
             alert('Заполните все обязательные поля перед генерацией документа');
             return;
         }
-        if (!validateAllDates()) {
-            return; // Не отправляем форму, если есть ошибки
-          }
         // Добавляем документ в соответствующий шаблон
         const updatedTemplates = [...templates];
         updatedTemplates[template.index].push(currentDocument);
         setTemplates(updatedTemplates);
-
+        console.log(currentDocument);
         // Сохраняем все шаблоны в localStorage или отправляем на сервер
         localStorage.setItem('documentTemplates', JSON.stringify(updatedTemplates));
 
@@ -375,6 +368,7 @@ const DocumentData = ({ setIsCreatingDocument, userLogin, onLogin, setDocumentRe
                             minLength: 5,
                             maxLength: 100,
                             pattern: /^[а-яА-ЯёЁ\s\-]+$/,
+                            minWords: 2, 
                             message: 'Допустимы только русские буквы, пробелы и дефисы'
                           }}
                         title='ФИО Должностного лица'
@@ -409,6 +403,7 @@ const DocumentData = ({ setIsCreatingDocument, userLogin, onLogin, setDocumentRe
                             minLength: 5,
                             maxLength: 100,
                             pattern: /^[а-яА-ЯёЁ\s\-]+$/,
+                            minWords: 2,
                             message: 'Допустимы только русские буквы, пробелы и дефисы'
                           }}
                         title='ФИО Должностного лица'
@@ -474,19 +469,32 @@ const DocumentData = ({ setIsCreatingDocument, userLogin, onLogin, setDocumentRe
                                         title='Номер Заказа'
 
                                     />
+                                    <div className="city-input-container">
                                     <Input
                                         value={currentDocument.city}
-                                        onChange={(e) => handleFieldChange('city', e.target.value)}
+                                        onChange={(e) => handleCityInputChange(e.target.value)}
                                         placeholder="Город"
                                         validation={{
-                                            required: true,
-                                            pattern: /^[а-яА-ЯёЁ\s\-]+$/,
-                                            message: "Город должен содержать только буквы и дефисы",
-                                            maxLength: 50
+                                        required: true,
+                                        pattern: /^[а-яА-ЯёЁ\s\-]+$/,
+                                        message: "Город должен содержать только буквы и дефисы",
+                                        maxLength: 50
                                         }}
                                         title='Укажите город'
-
-                                    />         
+                                    />
+                                    {showSuggestions && citySuggestions.length > 0 && (
+                                        <ul className="city-suggestions">
+                                        {citySuggestions.map((city, index) => (
+                                            <li 
+                                            key={index} 
+                                            onClick={() => handleCitySelect(city)}
+                                            >
+                                            {city}
+                                            </li>
+                                        ))}
+                                        </ul>
+                                    )}
+                                    </div>       
                                     <DropdownMenu
                                         className="data-select"
                                         placeholder="НДС (%)"
@@ -605,6 +613,7 @@ const DocumentData = ({ setIsCreatingDocument, userLogin, onLogin, setDocumentRe
                                             title='Номер Договора'
                                         />
                                     <Input
+                                        placeholder="Номер Заявки"
                                         value={currentDocument.applicationNumber}
                                         onChange={(e) => handleFieldChange('applicationNumber', e.target.value)}
                                         validation={{ 
@@ -615,18 +624,32 @@ const DocumentData = ({ setIsCreatingDocument, userLogin, onLogin, setDocumentRe
                                             maxLength: 20
                                           }}
                                     />
-                                    <Input
-                                        value={currentDocument.city}
-                                        onChange={(e) => handleFieldChange('city', e.target.value)}
-                                        placeholder="Город"
-                                        validation={{
+                                    <div className="city-input-container">
+                                        <Input
+                                            value={currentDocument.city}
+                                            onChange={(e) => handleCityInputChange(e.target.value)}
+                                            placeholder="Город"
+                                            validation={{
                                             required: true,
                                             pattern: /^[а-яА-ЯёЁ\s\-]+$/,
                                             message: "Город должен содержать только буквы и дефисы",
                                             maxLength: 50
-                                        }}
-                                        title='Укажите город'
-                                    />
+                                            }}
+                                            title='Укажите город'
+                                        />
+                                        {showSuggestions && citySuggestions.length > 0 && (
+                                            <ul className="city-suggestions">
+                                            {citySuggestions.map((city, index) => (
+                                                <li 
+                                                key={index} 
+                                                onClick={() => handleCitySelect(city)}
+                                                >
+                                                {city}
+                                                </li>
+                                            ))}
+                                            </ul>
+                                        )}
+                                    </div> 
                                 </div>
                                 <div className='section-data__calendar'>
                                     <h4>Выберите отчетный период:</h4>
@@ -716,6 +739,7 @@ const DocumentData = ({ setIsCreatingDocument, userLogin, onLogin, setDocumentRe
                                                 maxLength: 20,
                                                 validate: (value) => !/\s/.test(value)
                                               }}
+                                            placeholder="Номер Договора"
                                             title='Номер Договора'
                                         />
                                     <Input
@@ -867,18 +891,32 @@ const DocumentData = ({ setIsCreatingDocument, userLogin, onLogin, setDocumentRe
                                           }}
                                         title='Номер Заказа'
                                     />
-                                    <Input
-                                        value={currentDocument.city}
-                                        onChange={(e) => handleFieldChange('city', e.target.value)}
-                                        placeholder="Город"
-                                        validation={{
+                                    <div className="city-input-container">
+                                        <Input
+                                            value={currentDocument.city}
+                                            onChange={(e) => handleCityInputChange(e.target.value)}
+                                            placeholder="Город"
+                                            validation={{
                                             required: true,
                                             pattern: /^[а-яА-ЯёЁ\s\-]+$/,
                                             message: "Город должен содержать только буквы и дефисы",
                                             maxLength: 50
-                                        }}
-                                        title='Укажите город'
-                                    />
+                                            }}
+                                            title='Укажите город'
+                                        />
+                                        {showSuggestions && citySuggestions.length > 0 && (
+                                            <ul className="city-suggestions">
+                                            {citySuggestions.map((city, index) => (
+                                                <li 
+                                                key={index} 
+                                                onClick={() => handleCitySelect(city)}
+                                                >
+                                                {city}
+                                                </li>
+                                            ))}
+                                            </ul>
+                                        )}
+                                    </div> 
                                     <DropdownMenu
                                         className="data-select"
                                         placeholder="НДС (%)"
@@ -1008,18 +1046,32 @@ const DocumentData = ({ setIsCreatingDocument, userLogin, onLogin, setDocumentRe
                                           }}
                                         title='Номер Акта'
                                     />
-                                    <Input
-                                        value={currentDocument.city}
-                                        onChange={(e) => handleFieldChange('city', e.target.value)}
-                                        placeholder="Город"
-                                        validation={{
+                                    <div className="city-input-container">
+                                        <Input
+                                            value={currentDocument.city}
+                                            onChange={(e) => handleCityInputChange(e.target.value)}
+                                            placeholder="Город"
+                                            validation={{
                                             required: true,
                                             pattern: /^[а-яА-ЯёЁ\s\-]+$/,
                                             message: "Город должен содержать только буквы и дефисы",
                                             maxLength: 50
-                                        }}
-                                        title='Укажите город'
-                                    />
+                                            }}
+                                            title='Укажите город'
+                                        />
+                                        {showSuggestions && citySuggestions.length > 0 && (
+                                            <ul className="city-suggestions">
+                                            {citySuggestions.map((city, index) => (
+                                                <li 
+                                                key={index} 
+                                                onClick={() => handleCitySelect(city)}
+                                                >
+                                                {city}
+                                                </li>
+                                            ))}
+                                            </ul>
+                                        )}
+                                    </div> 
                                     <DropdownMenu
                                         className="data-select"
                                         placeholder="НДС (%)"
@@ -1176,18 +1228,32 @@ const DocumentData = ({ setIsCreatingDocument, userLogin, onLogin, setDocumentRe
                                           }}
                                         title='Номер Заказа'
                                     />
-                                    <Input
-                                        value={currentDocument.city}
-                                        onChange={(e) => handleFieldChange('city', e.target.value)}
-                                        placeholder="Город"
-                                        validation={{
+                                    <div className="city-input-container">
+                                        <Input
+                                            value={currentDocument.city}
+                                            onChange={(e) => handleCityInputChange(e.target.value)}
+                                            placeholder="Город"
+                                            validation={{
                                             required: true,
                                             pattern: /^[а-яА-ЯёЁ\s\-]+$/,
                                             message: "Город должен содержать только буквы и дефисы",
                                             maxLength: 50
-                                        }}
-                                        title='Укажите город'
-                                    />
+                                            }}
+                                            title='Укажите город'
+                                        />
+                                        {showSuggestions && citySuggestions.length > 0 && (
+                                            <ul className="city-suggestions">
+                                            {citySuggestions.map((city, index) => (
+                                                <li 
+                                                key={index} 
+                                                onClick={() => handleCitySelect(city)}
+                                                >
+                                                {city}
+                                                </li>
+                                            ))}
+                                            </ul>
+                                        )}
+                                    </div> 
                                     <DropdownMenu
                                         className="data-select"
                                         placeholder="НДС (%)"
@@ -1395,6 +1461,7 @@ const DocumentData = ({ setIsCreatingDocument, userLogin, onLogin, setDocumentRe
                                                     minLength: 5,
                                                     maxLength: 100,
                                                     pattern: /^[а-яА-ЯёЁ\s\-]+$/,
+                                                    minWords: 2,
                                                     message: 'Допустимы только русские буквы, пробелы и дефисы'
                                                 }}
                                                 title='ФИО исполнителя'
@@ -1473,18 +1540,32 @@ const DocumentData = ({ setIsCreatingDocument, userLogin, onLogin, setDocumentRe
                                           }}
                                         title='Номер Заказа'
                                     />
-                                    <Input
-                                        value={currentDocument.city}
-                                        onChange={(e) => handleFieldChange('city', e.target.value)}
-                                        placeholder="Город"
-                                        validation={{
+                                    <div className="city-input-container">
+                                        <Input
+                                            value={currentDocument.city}
+                                            onChange={(e) => handleCityInputChange(e.target.value)}
+                                            placeholder="Город"
+                                            validation={{
                                             required: true,
                                             pattern: /^[а-яА-ЯёЁ\s\-]+$/,
                                             message: "Город должен содержать только буквы и дефисы",
                                             maxLength: 50
-                                        }}
-                                        title='Укажите город'
-                                    />
+                                            }}
+                                            title='Укажите город'
+                                        />
+                                        {showSuggestions && citySuggestions.length > 0 && (
+                                            <ul className="city-suggestions">
+                                            {citySuggestions.map((city, index) => (
+                                                <li 
+                                                key={index} 
+                                                onClick={() => handleCitySelect(city)}
+                                                >
+                                                {city}
+                                                </li>
+                                            ))}
+                                            </ul>
+                                        )}
+                                    </div> 
                                     <DropdownMenu
                                         className="data-select"
                                         placeholder="НДС (%)"
@@ -1600,18 +1681,32 @@ const DocumentData = ({ setIsCreatingDocument, userLogin, onLogin, setDocumentRe
                                           }}
                                         title='Номер Заявки'
                                     />
-                                    <Input
-                                        value={currentDocument.city}
-                                        onChange={(e) => handleFieldChange('city', e.target.value)}
-                                        placeholder="Город"
-                                        validation={{
+                                    <div className="city-input-container">
+                                        <Input
+                                            value={currentDocument.city}
+                                            onChange={(e) => handleCityInputChange(e.target.value)}
+                                            placeholder="Город"
+                                            validation={{
                                             required: true,
                                             pattern: /^[а-яА-ЯёЁ\s\-]+$/,
                                             message: "Город должен содержать только буквы и дефисы",
                                             maxLength: 50
-                                        }}
-                                        title='Укажите город'
-                                    />
+                                            }}
+                                            title='Укажите город'
+                                        />
+                                        {showSuggestions && citySuggestions.length > 0 && (
+                                            <ul className="city-suggestions">
+                                            {citySuggestions.map((city, index) => (
+                                                <li 
+                                                key={index} 
+                                                onClick={() => handleCitySelect(city)}
+                                                >
+                                                {city}
+                                                </li>
+                                            ))}
+                                            </ul>
+                                        )}
+                                    </div> 
                                     <DropdownMenu
                                         className="data-select"
                                         placeholder="НДС (%)"
@@ -1722,18 +1817,32 @@ const DocumentData = ({ setIsCreatingDocument, userLogin, onLogin, setDocumentRe
                                               }}
                                             title='Номер Договора'
                                         />
-                                    <Input
-                                        value={currentDocument.city}
-                                        onChange={(e) => handleFieldChange('city', e.target.value)}
-                                        placeholder="Город"
-                                        validation={{
+                                    <div className="city-input-container">
+                                        <Input
+                                            value={currentDocument.city}
+                                            onChange={(e) => handleCityInputChange(e.target.value)}
+                                            placeholder="Город"
+                                            validation={{
                                             required: true,
                                             pattern: /^[а-яА-ЯёЁ\s\-]+$/,
                                             message: "Город должен содержать только буквы и дефисы",
                                             maxLength: 50
-                                        }}
-                                        title='Укажите город'
-                                    />    
+                                            }}
+                                            title='Укажите город'
+                                        />
+                                        {showSuggestions && citySuggestions.length > 0 && (
+                                            <ul className="city-suggestions">
+                                            {citySuggestions.map((city, index) => (
+                                                <li 
+                                                key={index} 
+                                                onClick={() => handleCitySelect(city)}
+                                                >
+                                                {city}
+                                                </li>
+                                            ))}
+                                            </ul>
+                                        )}
+                                    </div> 
                                 </div>
                                 <div className='section-data__calendar'>
                                     <h4>Выберите отчетный период:</h4>
@@ -1762,6 +1871,7 @@ const DocumentData = ({ setIsCreatingDocument, userLogin, onLogin, setDocumentRe
                                                     minLength: 5,
                                                     maxLength: 100,
                                                     pattern: /^[а-яА-ЯёЁ\s\-]+$/,
+                                                    minWords: 2,
                                                     message: 'Допустимы только русские буквы, пробелы и дефисы'
                                                 }}
                                                 title='ФИО Специалиста'

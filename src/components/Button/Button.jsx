@@ -1,12 +1,10 @@
 import classNames from 'classnames';
 
-function Button({children, onClick, id, className, disabled}) {
+function Button({children,  className, ...props}) {
     const btnClass = classNames('btn', className);
     return <button 
-                id={id} 
                 className={btnClass} 
-                onClick={onClick}       
-                disabled={disabled}
+                {...props}
             >
                 { children }
             </button>  

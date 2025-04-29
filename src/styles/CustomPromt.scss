@@ -14,10 +14,10 @@
   
     .prompt-modal {
       background: white;
-      padding: fluid(20, 10);
-      border-radius: fluid(8, 4);
-      width: fluid(500, 250);
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      padding: fluid(20, 6.66);
+      border-radius: fluid(8, 2.66);
+      width: fluid(500, 166.6);
+      box-shadow: 0 fluid(2,1) fluid(10,3.3) rgba(0, 0, 0, 0.1);
 
       h3 {
         letter-spacing: fluid(2,1);
@@ -29,21 +29,21 @@
   
       .prompt-input {
         width: 100%;
-        padding: 8px;
-        margin: fluid(10, 5) 0;
-        border: 1px solid #ccc;
-        border-radius: fluid(4, 2);
+        padding: fluid(8,2.66);
+        margin: fluid(10, 3.3) 0;
+        border: rem(1) solid #ccc;
+        border-radius: fluid(4, 1.33);
       }
   
       .prompt-buttons {
         display: flex;
         justify-content: flex-end;
-        gap: fluid(10, 5);
+        gap: fluid(10, 3.3);
   
         .prompt-button {
-          padding: fluid(6, 3) fluid(12, 6);
+          padding: fluid(6, 2) fluid(12, 4);
           border: none;
-          border-radius: fluid(4, 2);
+          border-radius: fluid(4, 1.33);
           cursor: pointer;
   
           &.confirm {

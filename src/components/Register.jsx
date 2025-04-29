@@ -4,15 +4,16 @@ import Input from './Input/Input';
 
 export default function Register({ onBackClick, onRegisterSuccess }) {
   const [isFormValid, setIsFormValid] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+  const [serverError, setServerError] = useState('');
   
   const [user, setUser] = useState({
     login: '',
     email: '',
     password: '',
     confirmPassword: '',
-    fio: '' // По умолчанию пустое (можно установить в личном кабинет)
+    fio: ''
   });
-
 
   const [errors, setErrors] = useState({
     email: '',
@@ -38,13 +39,10 @@ export default function Register({ onBackClick, onRegisterSuccess }) {
     setIsFormValid(isRegistrationValid());
   }, [errors, user]);
 
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setUser(prev => ({ ...prev, [name]: value }));
-    // Если поле уже "тронуто" (было в фокусе), запускаем валидацию
     validateFields(name, value);
-
   };
 
   const validateFields = (name, value) => {
@@ -109,11 +107,43 @@ export default function Register({ onBackClick, onRegisterSuccess }) {
     }
   };
 
-  const handleRegisterSubmit = () => {
-    if (isRegistrationValid()) {
-      onRegisterSuccess(user); // Передаем данные зарегистрированного пользователя
-      // Отправляем запрос на сервер и добавляем запись в таблицу пользователей 
-      console.log(user); // Заглушка
+  const handleRegisterSubmit = async () => {
+    if (!isRegistrationValid()) return;
+    
+    setIsLoading(true);
+    setServerError('');
+
+    try {
+      const response = await fetch('http://localhost:3001/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          login: user.login,
+          email: user.email,
+          password: user.password
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Ошибка регистрации');
+      }
+
+      // Успешная регистрация
+      onRegisterSuccess({
+        login: user.login,
+        email: user.email,
+        password: user.password // В реальном приложении не передавайте пароль!
+      });
+      
+    } catch (error) {
+      console.error('Registration error:', error);
+      setServerError(error.message || 'Произошла ошибка при регистрации');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -136,10 +166,11 @@ export default function Register({ onBackClick, onRegisterSuccess }) {
     return !errors[name] && user[name];
   };
 
-
   return (
     <>
       <div className="form__main" style={{ marginBottom: marginBottom }}>
+        {serverError && <div className="error server-error">{serverError}</div>}
+        
         <div className="error-container">
           {errors.login && <div className="error">{errors.login}</div>}
         </div>
@@ -153,6 +184,7 @@ export default function Register({ onBackClick, onRegisterSuccess }) {
             onBlur={handleBlur}
           />
         </div>
+        
         <div className="error-container">
           {errors.email && <div className="error">{errors.email}</div>}
         </div>
@@ -166,6 +198,7 @@ export default function Register({ onBackClick, onRegisterSuccess }) {
             onBlur={handleBlur}
           />
         </div>
+        
         <div className="error-container">
           {errors.password && <div className="error">{errors.password}</div>}
         </div>
@@ -179,6 +212,7 @@ export default function Register({ onBackClick, onRegisterSuccess }) {
             onBlur={handleBlur}
           />
         </div>
+        
         <div className="error-container">
           {errors.confirmPassword && <div className="error">{errors.confirmPassword}</div>}
         </div>
@@ -197,13 +231,13 @@ export default function Register({ onBackClick, onRegisterSuccess }) {
           <button id="backBtn" className="forget_password" onClick={onBackClick}>
             Назад
           </button>
-            <Button 
+          <Button 
             onClick={handleRegisterSubmit} 
-            disabled={!isFormValid}
+            disabled={!isFormValid || isLoading}
             className={isFormValid ? "form-valid" : ""}
             id="register-btn"
           >
-            Зарегистрироваться
+            {isLoading ? 'Регистрация...' : 'Зарегистрироваться'}
           </Button>
         </div>
       </div>

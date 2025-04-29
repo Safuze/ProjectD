@@ -1,17 +1,13 @@
 import { useState } from "react";
 function Input({ 
   id, 
-  type, 
-  placeholder, 
-  value, 
+  name,
   onChange, 
   onBlur, 
-  name, 
-  style, 
-  title,
   className = '', // Добавляем пропс className с дефолтным значением
   suggestions = [], // Новый пропс для подсказок
-  validation = {} // Новый пропс для правил валидации
+  validation = {}, // Новый пропс для правил валидации
+  ...props
 }) {
 
   const [error, setError] = useState('');
@@ -74,6 +70,16 @@ function Input({
       errorMessage = `Максимальная длина: ${validation.maxLength} символов`;
     }
     
+    // Проверка минимального количества слов (учитывает двойные фамилии)
+    if (isValid && validation.minWords && value) {
+      // Разделяем по пробелам, но учитываем, что дефис не разделяет слова
+      const words = value.trim().split(/\s+/).filter(word => word.replace(/-/g, '').length > 0);
+      if (words.length < validation.minWords) {
+        isValid = false;
+        errorMessage = `Введите минимум ${validation.minWords} слова (например, "Иванов Иван")`;
+      }
+    }
+
     setError(errorMessage);
     return isValid;
   };
@@ -138,17 +144,12 @@ function Input({
   return (
     <div className="input-container">
       <input
-        id={id}
-        type={type}
+        {...props}
+        name={name}
         className={inputClasses}
-        placeholder={placeholder}
-        value={value}
         onChange={handleChange}
         onBlur={handleBlur}
-        name={name}
-        style={style}
         onPaste={handlePaste}
-        title={title}
         list={datalistId}
       />
       {suggestions.length > 0 && (
