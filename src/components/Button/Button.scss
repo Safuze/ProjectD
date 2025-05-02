@@ -1,6 +1,8 @@
 @use '../../styles/helpers' as *;
 
 .input, .btn {
+    max-width: fluid(510, 170);
+    max-height: fluid(63, 21);
     width: fluid(480, 160);
     height: fluid(60, 20);
     margin: fluid(9, 3);

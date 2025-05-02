@@ -2,17 +2,18 @@ import React, { useState, useEffect } from 'react';
 import Button from './Button/Button';
 import Input from './Input/Input';
 
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001'; // Резервный URL
+
 export default function Register({ onBackClick, onRegisterSuccess }) {
   const [isFormValid, setIsFormValid] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
-  const [serverError, setServerError] = useState('');
+  const [apiError, setApiError] = useState('');
   
   const [user, setUser] = useState({
     login: '',
     email: '',
     password: '',
     confirmPassword: '',
-    fio: ''
   });
 
   const [errors, setErrors] = useState({
@@ -42,7 +43,11 @@ export default function Register({ onBackClick, onRegisterSuccess }) {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setUser(prev => ({ ...prev, [name]: value }));
-    validateFields(name, value);
+    if (touched[name]) {
+      validateFields(name, value, user.password); // Передаем текущий пароль для сравнения
+    }
+    setApiError('');
+
   };
 
   const validateFields = (name, value) => {
@@ -52,7 +57,7 @@ export default function Register({ onBackClick, onRegisterSuccess }) {
       case 'email': {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!value) {
-          newErrors.email = '';
+          newErrors.email = 'Email обязателен';
         } else if (!emailRegex.test(value)) {
           newErrors.email = 'Неправильный email';
         } else {
@@ -63,9 +68,11 @@ export default function Register({ onBackClick, onRegisterSuccess }) {
       case 'login': {
         const loginRegex = /^[A-Za-z][A-Za-z0-9]*$/;
         if (!value) {
-          newErrors.login = '';
-        } else if (value.length < 4 || !loginRegex.test(value)) {
-          newErrors.login = 'Некорректный логин';
+          newErrors.login = 'Логин обязателен';
+        } else if (value.length < 4) {
+          newErrors.login = 'Логин должен быть не менее 4 символов';
+        } else if (!loginRegex.test(value)) {
+          newErrors.login = 'Логин: латиница и цифры, начинается с буквы';
         } else {
           newErrors.login = '';
         }
@@ -73,17 +80,21 @@ export default function Register({ onBackClick, onRegisterSuccess }) {
       }
       case 'password': {
         if (!value) {
-          newErrors.password = '';
+          newErrors.password = 'Пароль обязателен';
         } else if (value.length < 4) {
           newErrors.password = 'Пароль должен быть не менее 4 символов';
         } else {
           newErrors.password = '';
         }
+        // Перепроверяем поле confirmPassword, если оно было тронуто
+        if (touched.confirmPassword) {
+          validateFields('confirmPassword', user.confirmPassword, value); // Передаем НОВЫЙ пароль
+        }
         break;
       }
       case 'confirmPassword': {
         if (!value) {
-          newErrors.confirmPassword = '';
+          newErrors.confirmPassword = 'Подтверждение пароля обязательно';
         } else if (value !== user.password) {
           newErrors.confirmPassword = 'Пароли не совпадают';
         } else {
@@ -103,18 +114,31 @@ export default function Register({ onBackClick, onRegisterSuccess }) {
     const { name, value } = e.target;
     if (!touched[name]) {
       setTouched(prev => ({ ...prev, [name]: true }));
-      validateFields(name, value);
     }
+    validateFields(name, value, user.password);
   };
 
   const handleRegisterSubmit = async () => {
-    if (!isRegistrationValid()) return;
+    // Дополнительная проверка перед отправкой
+    Object.keys(user).forEach(key => {
+      if (!touched[key]) {
+          setTouched(prev => ({ ...prev, [key]: true }));
+          validateFields(key, user[key], user.password);
+      }
+   });
+
+   // Проверяем валидность еще раз после потенциального обновления ошибок
+    const isValidNow = Object.values(errors).every(err => !err) &&
+                       Object.values(user).every(val => !!val);
+
+    if (!isValidNow || isLoading) return;
     
     setIsLoading(true);
-    setServerError('');
+    setApiError('');
 
     try {
-      const response = await fetch('http://localhost:3001/register', {
+      // ИСПОЛЬЗУЕМ API_BASE_URL
+      const response = await fetch(`${API_BASE_URL}/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -122,26 +146,24 @@ export default function Register({ onBackClick, onRegisterSuccess }) {
         body: JSON.stringify({
           login: user.login,
           email: user.email,
-          password: user.password
+          password: user.password, // Отправляем только основной пароль
         }),
+        credentials: 'include'
       });
 
-      const data = await response.json();
+      const data = await response.json(); // Читаем ответ в любом случае
 
       if (!response.ok) {
-        throw new Error(data.error || 'Ошибка регистрации');
+        throw new Error(data.message || `Ошибка регистрации (${response.status})`);
       }
 
-      // Успешная регистрация
-      onRegisterSuccess({
-        login: user.login,
-        email: user.email,
-        password: user.password // В реальном приложении не передавайте пароль!
-      });
-      
+      console.log('Registration successful:', data);
+      // Вызываем колбэк успешной регистрации, передавая данные, например, логин
+      onRegisterSuccess({ login: user.login });
+
     } catch (error) {
       console.error('Registration error:', error);
-      setServerError(error.message || 'Произошла ошибка при регистрации');
+      setApiError(error.message || 'Не удалось подключиться к серверу. Попробуйте позже.');
     } finally {
       setIsLoading(false);
     }
@@ -169,7 +191,7 @@ export default function Register({ onBackClick, onRegisterSuccess }) {
   return (
     <>
       <div className="form__main" style={{ marginBottom: marginBottom }}>
-        {serverError && <div className="error server-error">{serverError}</div>}
+        {apiError && <div className="error server-error">{apiError}</div>}
         
         <div className="error-container">
           {errors.login && <div className="error">{errors.login}</div>}

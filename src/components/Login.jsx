@@ -1,39 +1,46 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect  } from 'react';
 import Button from './Button/Button';
 import Input from './Input/Input';
 import Register from './Register';
 import DocumentCreation from './DocumentCreation';
 import ForgetPassword from './ForgetPassword';
 
+// Получаем URL API из переменных окружения Vite
+// Важно: VITE_API_URL должен быть определен в файле .env в корне фронтенда
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001'; // Резервный URL
 export default function Login({ onEmail, onLogin, isCreatingDocument, setIsCreatingDocument }) {
+  
   const [authLogin, setAuthLogin] = useState('');
   const [authPassword, setAuthPassword] = useState('');
   const [authError, setAuthError] = useState('');
   const [isRegistering, setIsRegistering] = useState(false);
   const [isForgetPassword, setIsForgetPassword] = useState(false);
-  const [user, setUser] = useState(null);
   const [isFormValid, setIsFormValid] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    setIsFormValid(authLogin.trim() !== '' && authPassword.trim() !== '');
+  }, [authLogin, authPassword]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     if (name === 'login') setAuthLogin(value);
     if (name === 'password') setAuthPassword(value);
-  
-    setIsFormValid(
-      (name === 'login' ? value : authLogin).trim() !== '' && 
-      (name === 'password' ? value : authPassword).trim() !== ''
-    );
+    // Сбрасываем ошибку при изменении любого поля
+    if (authError) setAuthError('');
+
   };
 
+  // Обработчик отправки формы авторизации
   const handleLoginSubmit = async () => {
-    if (!isFormValid) return;
-    
+    if (!isFormValid || isLoading) return;
+
     setIsLoading(true);
     setAuthError('');
 
     try {
-      const response = await fetch('http://localhost:3001/login', {
+      // ИСПОЛЬЗУЕМ API_BASE_URL
+      const response = await fetch(`${API_BASE_URL}/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -42,22 +49,23 @@ export default function Login({ onEmail, onLogin, isCreatingDocument, setIsCreat
           login: authLogin,
           password: authPassword
         }),
+        credentials: 'include'
       });
 
-      const data = await response.json();
+      const data = await response.json(); // Читаем ответ в любом случае
 
       if (!response.ok) {
-        throw new Error(data.error || 'Ошибка авторизации');
+        throw new Error(data.message || `Ошибка входа (${response.status})`);
       }
 
-      // Успешная авторизация
-      onLogin(authLogin);
-      onEmail(data.user.email);
-      setIsCreatingDocument(true);
-      
+      // Успешный вход
+      onLogin(data.user.login); // Передаем логин
+      if(onEmail) onEmail(data.user.email); // Передаем email, если колбэк есть
+      setIsCreatingDocument(true); // Переходим к созданию документа
+
     } catch (error) {
       console.error('Login error:', error);
-      setAuthError(error.message || 'Неправильный логин или пароль');
+      setAuthError(error.message || 'Не удалось подключиться к серверу. Попробуйте позже.');
     } finally {
       setIsLoading(false);
     }
@@ -65,26 +73,28 @@ export default function Login({ onEmail, onLogin, isCreatingDocument, setIsCreat
 
   const handleForgetPasswordClick = () => {
     setIsForgetPassword(true);
+    setIsRegistering(false); // Убедимся, что регистрация закрыта
+    setAuthError(''); // Сброс ошибки при переключении
   }
 
   const handleRegistrationClick = () => {
     setIsRegistering(true);
   };
 
-  const handleBackClickReg = () => {
+  // Возврат из регистрации или восстановления пароля к логину
+  const handleBackToLogin = () => {
     setIsRegistering(false);
+    setIsForgetPassword(false);
+    setAuthError(''); // Сброс ошибки
   };
 
-  const handleBackClickPassw = () => {
-    setIsForgetPassword(false);
-  }
-
   const handleRegisterSuccess = (userData) => {
-    setUser(userData);
     setIsRegistering(false);
+    setIsForgetPassword(false);
     // Автоматически заполняем поля входа после регистрации
     setAuthLogin(userData.login);
-    setAuthPassword(userData.password);
+    setAuthPassword('');
+    setAuthError('');
     setIsFormValid(true);
   };
 
@@ -113,12 +123,12 @@ export default function Login({ onEmail, onLogin, isCreatingDocument, setIsCreat
         <DocumentCreation />
       ) : isRegistering ? (
         <Register
-          onBackClick={handleBackClickReg}
+          onBackClick={handleBackToLogin}
           onRegisterSuccess={handleRegisterSuccess}
         />
       ) : isForgetPassword ? (
         <ForgetPassword 
-          onBackClick={handleBackClickPassw}
+          onBackClick={handleBackToLogin}
         />
       ) : (
         <>

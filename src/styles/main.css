@@ -649,7 +649,7 @@ textarea {
   letter-spacing: clamp(0.08125rem, 0.0382352941rem + 0.1764705882vw, 0.25rem);
 }
 .form__text h3 {
-  margin-bottom: clamp(2.70625rem, 1.325rem + 5.6666666667vw, 8.125rem);
+  margin-bottom: clamp(1.875rem, 0.9191176471rem + 3.9215686275vw, 5.625rem);
 }
 .form__main {
   display: flex;
@@ -658,7 +658,6 @@ textarea {
 }
 .form__main button.btn {
   font-size: clamp(0.5625rem, 0.2757352941rem + 1.1764705882vw, 1.6875rem);
-  opacity: 0.8;
   transition: opacity 0.3s ease;
 }
 .form__main .input-container {
@@ -1303,6 +1302,8 @@ textarea {
 }
 
 .input, .btn {
+  max-width: clamp(10.625rem, 5.2083333333rem + 22.2222222222vw, 31.875rem);
+  max-height: clamp(1.3125rem, 0.6433823529rem + 2.7450980392vw, 3.9375rem);
   width: clamp(10rem, 4.9019607843rem + 20.9150326797vw, 30rem);
   height: clamp(1.25rem, 0.612745098rem + 2.614379085vw, 3.75rem);
   margin: clamp(0.1875rem, 0.0919117647rem + 0.3921568627vw, 0.5625rem);
