@@ -30,7 +30,7 @@
       .prompt-input {
         width: 100%;
         padding: fluid(8,2.66);
-        margin: fluid(10, 3.3) 0;
+        margin: fluid(24, 8) 0;
         border: rem(1) solid #ccc;
         border-radius: fluid(4, 1.33);
       }
@@ -38,7 +38,8 @@
       .prompt-buttons {
         display: flex;
         justify-content: flex-end;
-        gap: fluid(10, 3.3);
+        gap: fluid(12, 4);
+        margin-top: fluid(24, 8);
   
         .prompt-button {
           padding: fluid(6, 2) fluid(12, 4);

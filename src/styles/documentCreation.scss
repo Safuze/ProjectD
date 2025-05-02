@@ -622,3 +622,10 @@
   .city-suggestions li:hover {
     background-color: var(--color-light);
   }
+
+  .profile-data-hint {
+    @include fluid-text(18, 6);
+    color: var(--color-grey);
+    margin-top: fluid(12, 4);
+    font-style: italic;
+}

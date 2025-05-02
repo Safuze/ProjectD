@@ -1301,6 +1301,13 @@ textarea {
   background-color: var(--color-light);
 }
 
+.profile-data-hint {
+  font-size: clamp(0.375rem, 0.1838235294rem + 0.7843137255vw, 1.125rem);
+  color: var(--color-grey);
+  margin-top: clamp(0.25rem, 0.1225490196rem + 0.522875817vw, 0.75rem);
+  font-style: italic;
+}
+
 .input, .btn {
   max-width: clamp(10.625rem, 5.2083333333rem + 22.2222222222vw, 31.875rem);
   max-height: clamp(1.3125rem, 0.6433823529rem + 2.7450980392vw, 3.9375rem);
@@ -1401,9 +1408,19 @@ input {
 #profile .main-content .tab-content .data-tab__item {
   margin: clamp(0.35625rem, 0.1284313725rem + 0.9346405229vw, 1.25rem) 0;
 }
-#profile .main-content .tab-content .data-tab__login, #profile .main-content .tab-content .data-tab__email, #profile .main-content .tab-content .data-tab__fio {
-  margin-right: clamp(1.425rem, 0.5137254902rem + 3.7385620915vw, 5rem);
+#profile .main-content .tab-content .data-tab__login, #profile .main-content .tab-content .data-tab__email, #profile .main-content .tab-content .data-tab__position, #profile .main-content .tab-content .data-tab__firm {
+  margin-right: clamp(1.875rem, 0.9191176471rem + 3.9215686275vw, 5.625rem);
   font-size: clamp(0.5625rem, 0.2757352941rem + 1.1764705882vw, 1.6875rem);
+}
+#profile .main-content .tab-content .data-tab__fio {
+  font-size: clamp(0.5625rem, 0.2757352941rem + 1.1764705882vw, 1.6875rem);
+  margin-right: clamp(2rem, 0.9803921569rem + 4.1830065359vw, 6rem) !important;
+}
+#profile .main-content .tab-content .data-tab__position {
+  margin-right: clamp(0.6875rem, 0.3370098039rem + 1.4379084967vw, 2.0625rem);
+}
+#profile .main-content .tab-content .data-tab__firm {
+  margin-right: clamp(0.875rem, 0.4289215686rem + 1.8300653595vw, 2.625rem);
 }
 #profile .main-content .tab-content__down {
   display: flex;
@@ -1416,7 +1433,7 @@ input {
   border-radius: clamp(0.625rem, 0.306372549rem + 1.3071895425vw, 1.875rem);
   font-size: clamp(0.56875rem, 0.2039215686rem + 1.4967320261vw, 2rem);
   position: relative;
-  top: clamp(-1.875rem, -2.3529411765rem + 1.9607843137vw, 0rem);
+  top: clamp(-13.125rem, -15.3553921569rem + 9.1503267974vw, -4.375rem);
 }
 #profile .main-content .tab-content .documents-tab__docs {
   justify-content: space-between;
@@ -1465,7 +1482,7 @@ input {
   width: clamp(3.625rem, 1.3149509804rem + 9.477124183vw, 12.6875rem);
   height: clamp(2.625rem, 0.9522058824rem + 6.862745098vw, 9.1875rem);
   left: 0;
-  top: clamp(-1.875rem, -2.3529411765rem + 1.9607843137vw, 0rem);
+  top: clamp(-13.125rem, -15.3553921569rem + 9.1503267974vw, -4.375rem);
   position: relative;
   transform: translate(0, 0);
 }
@@ -1729,14 +1746,15 @@ input {
 .prompt-overlay .prompt-modal .prompt-input {
   width: 100%;
   padding: clamp(0.16625rem, 0.0811764706rem + 0.3490196078vw, 0.5rem);
-  margin: clamp(0.20625rem, 0.0995098039rem + 0.4379084967vw, 0.625rem) 0;
+  margin: clamp(0.5rem, 0.2450980392rem + 1.045751634vw, 1.5rem) 0;
   border: 0.0625rem solid #ccc;
   border-radius: clamp(0.083125rem, 0.0405882353rem + 0.1745098039vw, 0.25rem);
 }
 .prompt-overlay .prompt-modal .prompt-buttons {
   display: flex;
   justify-content: flex-end;
-  gap: clamp(0.20625rem, 0.0995098039rem + 0.4379084967vw, 0.625rem);
+  gap: clamp(0.25rem, 0.1225490196rem + 0.522875817vw, 0.75rem);
+  margin-top: clamp(0.5rem, 0.2450980392rem + 1.045751634vw, 1.5rem);
 }
 .prompt-overlay .prompt-modal .prompt-buttons .prompt-button {
   padding: clamp(0.125rem, 0.0612745098rem + 0.2614379085vw, 0.375rem) clamp(0.25rem, 0.1225490196rem + 0.522875817vw, 0.75rem);

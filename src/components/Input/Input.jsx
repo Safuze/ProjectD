@@ -150,15 +150,15 @@ function Input({
         onChange={handleChange}
         onBlur={handleBlur}
         onPaste={handlePaste}
-        list={datalistId}
+        {...(suggestions.length > 0 ? { list: datalistId } : {})}
       />
-      {suggestions.length > 0 && (
-        <datalist id={datalistId}>
-          {suggestions.map((suggestion, index) => (
-            <option key={index} value={suggestion} />
-          ))}
-        </datalist>
-      )}
+        {suggestions.length > 0 && (
+          <datalist id={datalistId}>
+            {suggestions.map((suggestion, index) => (
+              <option key={index} value={suggestion} />
+            ))}
+          </datalist>
+        )}
       {error && <div className="error-message">{error}</div>}
     </div>
   );

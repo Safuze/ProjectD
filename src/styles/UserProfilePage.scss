@@ -61,10 +61,23 @@
                     margin: fluid(20, 5.7) 0;
                 }
 
-                &__login, &__email, &__fio {
-                    margin-right: fluid(80, 22.8);
+                &__login, &__email, &__position, &__firm{
+                    margin-right: fluid(90, 30);
                     @include fluid-text(27, 9);
                 }
+                &__fio {
+                    @include fluid-text(27, 9);
+
+                    margin-right: fluid(96, 32) !important;
+
+                }
+                &__position {
+                    margin-right: fluid(33, 11);
+                }
+                &__firm {
+                    margin-right: fluid(42, 14);
+                }
+                
             }
 
             &__down {
@@ -77,7 +90,7 @@
                     border-radius: fluid(30, 10);
                     @include fluid-text(32, 9.1);
                     position: relative;
-                    top: fluid(0, -30);
+                    top: fluid(-70, -210);
 
                 }
             }
@@ -140,7 +153,7 @@
     width: fluid(203, 58);
     height: fluid(147, 42);
     left: 0;
-    top: fluid(0, -30);
+    top: fluid(-70, -210);
     position: relative;
     transform:  translate(0, 0);
     }

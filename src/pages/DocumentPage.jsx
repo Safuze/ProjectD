@@ -104,10 +104,9 @@ const DocumentPage = ({ setIsCreatingDocument, documentReady, setDocumentReady }
                     </div>
                     <div className="download_and_print">
                         <Button 
-                            onClick={generateDocument}
-                            disabled={isGenerating}
+
                         >
-                            {isGenerating ? 'Генерация...' : 'Скачать'}
+                        Скачать
                         </Button>
                         <Button onClick={() => window.print()}>Печать</Button>
                     </div>

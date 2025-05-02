@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Background from "../components/Background";
 import Navbar from "../components/Navbar";
 import Button from "../components/Button/Button"
@@ -12,21 +12,74 @@ export default function UserProfilePage({ login, onLogout, email, setIsCreatingD
     const [showPrompt, setShowPrompt] = useState(false);
     const [activeTab, setActiveTab] = useState('data'); // Без типа
     const [isFIO, setIsFIO] = useState('');
-    const [newLogin, setNewLogin] = useState('');
-    const navigate = useNavigate(); // Хук для навигации
+    const [isPosition, setIsPosition] = useState('');
+    const [isFirm, setIsFirm] = useState('');
+    const navigate = useNavigate(); 
+
     // Функция для перехода на страницу всех документов
+    useEffect(() => {
+        const fetchUserData = async () => {
+          try {
+            const response = await fetch(`http://localhost:3001/get-user-profile?login=${login}`);
+            const data = await response.json();
+            
+            if (response.ok && data.user) {
+              setIsFIO(data.user.full_name || '');
+              setIsPosition(data.user.position || '');
+              setIsFirm(data.user.firm || '');
+            }
+          } catch (error) {
+            console.error('Ошибка при загрузке данных пользователя:', error);
+          }
+        };
+      
+        if (login) {
+          fetchUserData();
+        }
+      }, [login]);
+
     const handleShowMore = () => {
         navigate('/documents');
     };
 
-    const handleSave = (data) => {
-        setIsFIO(data.fio);
-        setNewLogin(data.login);
-        setShowPrompt(false);
-        // Отправляем запрос на сервер о изменениях в данных 
-        // Меняем поля 
-        console.log(data.fio) // Заглушка
-        console.log(data.login) // Заглушка
+    const handleSave = async(data) => {
+        console.log('Отправляемые данные:', { 
+            login: login, 
+            fullName: data.fio, 
+            firm: data.firm,
+            position: data.position 
+          });
+        try {
+            const response = await fetch('http://localhost:3001/update-user-profile', {
+              method: 'PUT',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                login: login,
+                fullName: data.fio,
+                firm: data.firm,
+                position: data.position
+              }),
+            });
+        
+            const result = await response.json();
+            console.log('Ответ сервера:', result);
+            
+            if (response.ok) {
+              setIsFIO(data.fio);
+              setIsPosition(data.position);
+              setIsFirm(data.firm);
+              setShowPrompt(false);
+              console.log('Данные успешно сохранены');
+            } else {
+              console.error('Ошибка при сохранении:', result);
+              alert(`Не удалось сохранить данные: ${result.message || 'Неизвестная ошибка'}\nДетали: ${result.errorDetails || 'нет'}`);
+            }
+          } catch (error) {
+            console.error('Ошибка сети:', error);
+            alert(`Ошибка сети: ${error.message}`);
+          }
     };
 
     const handleDocumentCreation = () => {
@@ -82,7 +135,7 @@ export default function UserProfilePage({ login, onLogout, email, setIsCreatingD
                                         <div className="data-tab__item">
                                             <span className="data-tab__login">Логин:</span>
                                             <span className="data-tab__login">
-                                                {newLogin ? newLogin : login}
+                                                {login}
                                             </span>
                                         </div>
                                         <div className="data-tab__item">
@@ -95,22 +148,39 @@ export default function UserProfilePage({ login, onLogout, email, setIsCreatingD
                                                 {(isFIO ? isFIO : "  Не указано")}
                                             </span>
                                         </div>
+                                        <div className="data-tab__item">
+                                            <span className="data-tab__firm">Компания:</span>
+                                            <span className="data-tab__firm"> 
+                                                {(isFirm ? isFirm : "  Не указано")}
+                                            </span>
+                                        </div>
+                                        <div className="data-tab__item">
+                                            <span className="data-tab__position">Должность:</span>
+                                            <span className="data-tab__position"> 
+                                                {(isPosition ? isPosition : "  Не указано")}
+                                            </span>
+                                        </div>
                                     </div>
                                     <div className='tab-content__down'>
                                         <div id="data-img"className='form__img-notebook'></div>
-                                        <Button id="edit" children="Редактировать" onClick={() => setShowPrompt(true)}/>
+                                        <Button id="edit" children="Исполнительное лицо" onClick={() => setShowPrompt(true)}/>
                                         {showPrompt && (
                                             <CustomPrompt
-                                            title="Редактирование профиля"
+                                            title="Исполнительное лицо"
                                             fields={[
                                                 {
                                                 placeholder: "ФИО",
                                                 valueKey: "fio"
                                                 },
                                                 {
-                                                placeholder: "Логин",
-                                                valueKey: "login"
+                                                placeholder: "Компания",
+                                                valueKey: "firm"
+                                                },
+                                                {
+                                                placeholder: "Должность",
+                                                valueKey: "position"
                                                 }
+                                                
                                             ]}
                                             onConfirm={handleSave} 
                                             onCancel={() => setShowPrompt(false)}

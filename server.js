@@ -66,7 +66,9 @@ const pool = mysql.createPool(dbConfig);
 
 app.use(cors({
   origin: process.env.FRONTEND_URL || 'http://localhost:5173',
-  credentials: true
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 app.use(express.json());
 
@@ -88,25 +90,94 @@ async function testDbConnection() {
   }
 }
 
+async function checkTableStructure() {
+  const conn = await pool.getConnection();
+  try {
+    // Проверяем существование таблицы
+    const [tables] = await conn.query(
+      `SELECT TABLE_NAME FROM information_schema.TABLES 
+       WHERE TABLE_SCHEMA = ? AND TABLE_NAME = 'user_data'`, 
+      [process.env.DB_DATABASE]
+    );
+    
+    if (tables.length === 0) {
+      console.log('❌ Таблица user_data не существует!');
+      return false;
+    }
+
+    // Проверяем существование столбцов
+    const [columns] = await conn.query(
+      `SELECT COLUMN_NAME FROM information_schema.COLUMNS 
+       WHERE TABLE_SCHEMA = ? AND TABLE_NAME = 'user_data'`,
+      [process.env.DB_DATABASE]
+    );
+    
+    const columnNames = columns.map(col => col.COLUMN_NAME);
+    console.log('Существующие столбцы:', columnNames);
+
+    const requiredColumns = ['full_name', 'firm', 'position'];
+    const missingColumns = requiredColumns.filter(col => !columnNames.includes(col));
+    
+    if (missingColumns.length > 0) {
+      console.log(`❌ Отсутствующие столбцы: ${missingColumns.join(', ')}`);
+      return false;
+    }
+
+    return true;
+  } catch (err) {
+    console.error('Ошибка при проверке структуры таблицы:', err);
+    return false;
+  } finally {
+    conn.release();
+  }
+}
+
 async function createTable() {
     const conn = await pool.getConnection();
     try {
+      // Сначала проверяем существование таблицы
+      const [tables] = await conn.query(
+        `SELECT TABLE_NAME FROM information_schema.TABLES 
+        WHERE TABLE_SCHEMA = ? AND TABLE_NAME = 'user_data'`, 
+        [process.env.DB_DATABASE]
+      );
+      if (tables.length === 0) {
+      // Таблицы нет - создаем заново
         await conn.query(`
           CREATE TABLE IF NOT EXISTS user_data (
             id INT AUTO_INCREMENT PRIMARY KEY,
             login VARCHAR(255) NOT NULL UNIQUE,
             email VARCHAR(255) UNIQUE,
             password_hash VARCHAR(255) NOT NULL,
+            full_name VARCHAR(255) NULL,
+            firm VARCHAR(255) NULL,
+            position VARCHAR(255) NULL,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             reset_token VARCHAR(255) NULL,
             reset_token_expires_at DATETIME NULL
           ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
         `);
         console.log('✅ Таблица user_data создана или уже существует.');
-
+        } else {
+          // Таблица существует - проверяем и добавляем недостающие столбцы
         const [columns] = await conn.query(`DESCRIBE user_data;`);
         const columnNames = columns.map(col => col.Field);
 
+        if (!columnNames.includes('full_name')) {
+          await conn.query(`ALTER TABLE user_data ADD COLUMN full_name VARCHAR(255) NULL;`);
+          console.log('✅ Столбец full_name добавлен.');
+        }
+
+        if (!columnNames.includes('firm')) {
+          await conn.query(`ALTER TABLE user_data ADD COLUMN firm VARCHAR(255) NULL;`);
+          console.log('✅ Столбец firm добавлен.');
+        }
+
+        if (!columnNames.includes('position')) {
+          await conn.query(`ALTER TABLE user_data ADD COLUMN position VARCHAR(255) NULL;`);
+          console.log('✅ Столбец position добавлен.');
+        }
+      
         if (!columnNames.includes('reset_token')) {
             await conn.query(`ALTER TABLE user_data ADD COLUMN reset_token VARCHAR(255) NULL;`);
             console.log('✅ Столбец reset_token добавлен.');
@@ -146,6 +217,7 @@ async function createTable() {
              }
         }
         console.log('✅ Таблица user_data полностью готова к работе.');
+      }
     } catch (err) {
         console.error('❌ Ошибка при настройке таблицы user_data:', err);
         throw err;
@@ -363,6 +435,93 @@ app.post('/reset-password', async (req, res) => {
     }
 });
 
+
+
+// GET /get-user-profile - Получение данных профиля пользователя
+app.get('/get-user-profile', async (req, res) => {
+  const { login } = req.query;
+
+  if (!login) return res.status(400).json({ message: 'Логин обязателен' });
+
+  let conn;
+  try {
+    conn = await pool.getConnection();
+    const [users] = await conn.query(
+      'SELECT login, email, full_name, firm, position FROM user_data WHERE login = ? LIMIT 1',
+      [login]
+    );
+
+    if (users.length === 0) {
+      return res.status(404).json({ message: 'Пользователь не найден' });
+    }
+
+    res.json({ success: true, user: users[0] });
+  } catch (err) {
+    console.error('Ошибка при получении профиля:', err);
+    res.status(500).json({ message: 'Ошибка сервера при получении профиля' });
+  } finally {
+    if (conn) conn.release();
+  }
+});
+
+// PUT /update-user-profile - Обновление профиля пользователя (ФИО и должность)
+app.put('/update-user-profile', async (req, res) => {
+  console.log('Получен запрос на обновление профиля:', req.body);
+
+  const { login, fullName, firm, position } = req.body;
+
+  if (!login) {
+    console.log('Ошибка: логин обязателен');
+    return res.status(400).json({ message: 'Логин обязателен' });
+  }
+
+  let conn;
+  try {
+    conn = await pool.getConnection();
+    console.log('Подключение к БД установлено');
+
+    // Добавьте проверку структуры таблицы перед выполнением запроса
+    const [columns] = await conn.query(`DESCRIBE user_data;`);
+    console.log('Столбцы таблицы:', columns.map(c => c.Field));
+
+    const [users] = await conn.query('SELECT id FROM user_data WHERE login = ? LIMIT 1', [login]);
+    if (users.length === 0) {
+      console.log('Пользователь не найден:', login);
+      return res.status(404).json({ message: 'Пользователь не найден' });
+    }
+
+    console.log('Обновляю данные для пользователя:', login, 'ФИО:', fullName, 'Компания:', firm, 'Должность:', position);
+    
+    await conn.query(
+      'UPDATE user_data SET full_name = ?, firm = ?, position = ? WHERE login = ?',
+      [fullName || null, firm || null, position || null, login]
+    );
+
+    console.log('Данные успешно обновлены');
+    res.json({ success: true, message: 'Данные профиля успешно обновлены' });
+  } catch (err) {
+    console.error('Ошибка при обновлении профиля:', err);
+    
+    // Добавьте дополнительную диагностику
+    if (err.code === 'ER_BAD_FIELD_ERROR') {
+      console.error('❌ ОШИБКА: Запрошенный столбец не существует в таблице!');
+      const [columns] = await conn.query(`DESCRIBE user_data;`);
+      console.error('Фактические столбцы таблицы:', columns);
+    }
+    
+    res.status(500).json({ 
+      message: 'Ошибка сервера при обновлении профиля',
+      errorDetails: err.message,
+      errorCode: err.code
+    });
+  } finally {
+    if (conn) {
+      console.log('Закрываю соединение с БД');
+      conn.release();
+    }
+  }
+});
+
 // --- Запуск сервера ---
 
 async function start() {
@@ -382,6 +541,20 @@ async function start() {
     app.listen(port, () => {
       console.log(`🚀 Сервер запущен: http://localhost:${port}`);
     });
+
+    await testDbConnection();
+        const structureValid = await checkTableStructure();
+    if (!structureValid) {
+      console.log('🔄 Пытаемся исправить структуру таблицы...');
+      await createTable();
+    }
+
+    await setupEmail();
+
+    app.listen(port, () => {
+      console.log(`🚀 Сервер запущен: http://localhost:${port}`);
+    });
+
   } catch (err) {
     console.error('❌ КРИТИЧЕСКАЯ ОШИБКА ЗАПУСКА СЕРВЕРА:', err.message || err);
     process.exit(1);

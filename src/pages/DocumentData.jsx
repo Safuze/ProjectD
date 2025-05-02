@@ -23,6 +23,11 @@ const DocumentData = ({ setIsCreatingDocument, userLogin, onLogin, setDocumentRe
     const [citySuggestions, setCitySuggestions] = useState([]);
     const [showSuggestions, setShowSuggestions] = useState(false);
     const cities = citiesData.map(city => city.name);
+    const [userProfileData, setUserProfileData] = useState({
+        fullName: '',
+        position: '',
+        firm: ''
+    });
 
     // В useEffect при получении location.state:
     useEffect(() => {
@@ -50,6 +55,43 @@ const DocumentData = ({ setIsCreatingDocument, userLogin, onLogin, setDocumentRe
         }
         setIsLoading(false);
     }, [location.state, navigate]);
+
+    // Загрузка данных пользователя при монтировании
+    useEffect(() => {
+        const fetchUserProfile = async () => {
+            try {
+                const response = await fetch(`http://localhost:3001/get-user-profile?login=${userLogin}`);
+                const data = await response.json();
+                
+                if (response.ok && data.user) {
+                    setUserProfileData({
+                        fullName: data.user.full_name || '',
+                        position: data.user.position || '',
+                        firm: data.user.firm || ''
+                    });
+                    
+                    // Автозаполнение полей исполнителя, если документ уже создан
+                    if (!currentDocument) {
+                        setCurrentDocument(prev => ({
+                            ...prev,
+                            contractor: {
+                                ...prev.contractor,
+                                personName: data.user.full_name || prev.contractor.personName,
+                                position: data.user.position || prev.contractor.position,
+                                firmName: data.user.firm || prev.contractor.firmName
+                            }
+                        }));
+                    }
+                }
+            } catch (error) {
+                console.error('Ошибка при загрузке профиля:', error);
+            }
+        };
+
+        if (userLogin) {
+            fetchUserProfile();
+        }
+    }, [userLogin]);
 
     // Функция для фильтрации городов:
     const handleCityInputChange = (value) => {
@@ -100,9 +142,9 @@ const DocumentData = ({ setIsCreatingDocument, userLogin, onLogin, setDocumentRe
         // Общие поля для всех шаблонов
         newDocument = {
             contractor: { // Исполнитель
-                firmName: '',
-                position: '',
-                personName: ''
+                firmName: userProfileData.firm || '',
+                position:  userProfileData.position || '',
+                personName: userProfileData.fullName || ''
             },
             customer: { // Заказчик
                 firmName: customerFirm || '',
@@ -373,6 +415,10 @@ const DocumentData = ({ setIsCreatingDocument, userLogin, onLogin, setDocumentRe
                           }}
                         title='ФИО Должностного лица'
                     />
+                </div>
+                <div className="profile-data-hint">
+                    {userProfileData.fullName && 
+                        `Данные взяты из вашего профиля. Чтобы изменить их постоянно, перейдите в Личный кабинет.`}
                 </div>
             </div>
     
