@@ -230,6 +230,7 @@ svg * {
   --color-dark-blue:#002A49;
   --font-family-base: "Cuprum", "sans-serif";
   --font-family-accent: "Forum", "sans-serif";
+  --font-family-doc: "Cambria", "sans-serif";
   --container-width: 87.5rem;
   --container-padding-x: 1rem ;
   --transition-duration: 0.2s;
@@ -1778,6 +1779,7 @@ input {
   flex-direction: row;
   justify-content: center;
   align-items: center;
+  overflow-y: scroll;
 }
 .documentPage__doc-content {
   display: flex;
@@ -1872,12 +1874,15 @@ input {
   display: flex;
   justify-content: center;
   padding: clamp(0.41625rem, 0.2037254902rem + 0.8718954248vw, 1.25rem);
+  width: clamp(16.58125rem, 8.1153186275rem + 34.7320261438vw, 49.79375rem);
+  height: clamp(23.46875rem, 11.5011029412rem + 49.0980392157vw, 70.41875rem);
 }
 
 .a4-page {
-  width: clamp(23.70625rem, 11.6191176471rem + 49.5882352941vw, 71.125rem);
-  min-height: clamp(23.46875rem, 11.5011029412rem + 49.0980392157vw, 70.41875rem);
-  padding: clamp(1.575rem, 0.7720588235rem + 3.2941176471vw, 4.725rem);
+  padding: clamp(0.9375rem, 0.4595588235rem + 1.9607843137vw, 2.8125rem);
+  font-size: clamp(0.25rem, 0.1384803922rem + 0.4575163399vw, 0.6875rem);
+  font-family: var(--font-family-doc);
+  color: black;
   background: white;
   box-shadow: 0 0 clamp(0.20625rem, 0.0995098039rem + 0.4379084967vw, 0.625rem) rgba(0, 0, 0, 0.1);
   margin: 0 auto;

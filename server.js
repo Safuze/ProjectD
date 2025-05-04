@@ -1,5 +1,4 @@
 /* eslint-disable no-undef */
-
 import express from 'express';
 import mysql from 'mysql2/promise';
 import bcrypt from 'bcrypt';
@@ -7,15 +6,19 @@ import cors from 'cors';
 import crypto from 'crypto'; // Для генерации токенов (остается нужным, если где-то еще используется)
 import nodemailer from 'nodemailer'; // Для отправки email
 import dotenv from 'dotenv'; // Для переменных окружения
+import multer from 'multer';
+import path from 'path';
+import fs from 'fs';
+import { exec } from 'child_process';
+import { promisify } from 'util';
 
+const execAsync = promisify(exec); // оборачиваем в промис для await
 // Загружаем переменные окружения из файла .env
 dotenv.config();
-
 const app = express();
-// Используем порт из переменных окружения или 3001 по умолчанию
+// Используем порт из переменных о
+// кружения или 3001 по умолчанию
 const port = process.env.PORT || 3001;
-
-// --- Конфигурация ---
 
 // Конфигурация базы данных MySQL (ИСПОЛЬЗУЙТЕ ПЕРЕМЕННЫЕ ОКРУЖЕНИЯ!)
 const dbConfig = {
@@ -31,6 +34,23 @@ const dbConfig = {
 
 // Конфигурация отправки почты
 let mailTransporter;
+
+// Папка для сохранения шаблонов
+const uploadDir = path.join(process.cwd(), 'uploads', 'templates');
+fs.mkdirSync(uploadDir, { recursive: true });
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, uploadDir);
+  },
+  filename: (req, file, cb  ) => {
+    // Префикс даты для уникальности
+    const uniqueName = Date.now() + '_' + file.originalname;
+    cb(null, uniqueName);
+  }
+});
+
+const upload = multer({ storage });
 
 async function setupEmail() {
   try {
@@ -71,6 +91,7 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 app.use(express.json());
+app.use('/uploads/templates', express.static(uploadDir));
 
 // --- Функции ---
 
@@ -218,6 +239,18 @@ async function createTable() {
         }
         console.log('✅ Таблица user_data полностью готова к работе.');
       }
+        // Внутри createTable() после user_data:
+        await conn.query(`
+          CREATE TABLE IF NOT EXISTS templates (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            firm VARCHAR(255) NOT NULL,
+            format VARCHAR(50) NOT NULL,
+            filename VARCHAR(255) NOT NULL,
+            file LONGBLOB NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+          ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+        `);
+        console.log('✅ Таблица templates готова');
     } catch (err) {
         console.error('❌ Ошибка при настройке таблицы user_data:', err);
         throw err;
@@ -522,6 +555,97 @@ app.put('/update-user-profile', async (req, res) => {
   }
 });
 
+
+app.post('/api/templates', upload.single('file'), async (req, res) => {
+  const { firm, format } = req.body;
+  const file = req.file;
+
+  if (!firm || !format || !file) {
+    return res.status(400).json({ error: 'Все поля (firm, format, file) обязательны' });
+  }
+
+  const docxPath = path.join(uploadDir, file.filename);
+  const pdfFilename = file.filename.replace(/\.docx$/i, '.pdf');
+  const pdfPath = path.join(uploadDir, pdfFilename);
+  const pdfUrl = `/uploads/templates/${pdfFilename}`;
+
+  try {
+    await execAsync(`libreoffice --headless --convert-to pdf "${docxPath}" --outdir "${uploadDir}"`);
+  } catch (err) {
+    console.error('Ошибка при конвертации в PDF:', err.stderr || err.message);
+    return res.status(500).json({ error: 'Ошибка при создании PDF' });
+  }
+
+  let fileBuffer;
+  try {
+    fileBuffer = fs.readFileSync(docxPath);
+  } catch (err) {
+    console.error('Ошибка чтения файла с диска:', err);
+    return res.status(500).json({ error: 'Ошибка чтения файла' });
+  }
+
+  const conn = await pool.getConnection();
+  try {
+    await conn.query(
+      'INSERT INTO templates (firm, format, filename, created_at, file) VALUES (?, ?, ?, NOW(), ?)',
+      [firm, format, file.filename, fileBuffer]
+    );
+
+    res.status(201).json({ message: 'Шаблон успешно сохранен', pdfUrl });
+  } catch (err) {
+    console.error('Ошибка сохранения шаблона в БД:', err);
+    res.status(500).json({ error: 'Ошибка сервера при сохранении шаблона' });
+  } finally {
+    conn.release();
+  }
+});
+
+
+app.get('/api/templates/:filename', (req, res) => {
+  const filename = req.params.filename;
+  const filePath = path.join(uploadDir, filename);
+
+  if (!fs.existsSync(filePath)) {
+    return res.status(404).json({ error: 'Файл не найден' });
+  }
+
+  res.download(filePath, filename); // Отправляем файл как есть
+});
+
+app.get('/api/templates', async (req, res) => {
+  const { firm, format } = req.query;
+  const conn = await pool.getConnection();
+  try {
+    let query = 'SELECT * FROM templates';
+    const params = [];
+    const conditions = [];
+
+    if (firm && firm.trim() !== '') {
+      conditions.push('firm = ?');
+      params.push(firm);
+    }
+
+    if (format && format.trim() !== '') {
+      conditions.push('format = ?');
+      params.push(format);
+    }
+
+    if (conditions.length > 0) {
+      query += ' WHERE ' + conditions.join(' AND ');
+    }
+
+    query += ' ORDER BY created_at ASC';
+
+    const [rows] = await conn.query(query, params);
+    res.json(rows);
+  } catch (err) {
+    console.error('Ошибка получения шаблонов:', err);
+    res.status(500).json({ error: 'Ошибка сервера' });
+  } finally {
+    conn.release();
+  }
+});
+
 // --- Запуск сервера ---
 
 async function start() {
@@ -536,11 +660,7 @@ async function start() {
 
     await testDbConnection();
     await createTable();
-    await setupEmail(); // Настраиваем и проверяем почту
-
-    app.listen(port, () => {
-      console.log(`🚀 Сервер запущен: http://localhost:${port}`);
-    });
+    await setupEmail(); // Настраиваем и проверяем почт
 
     await testDbConnection();
         const structureValid = await checkTableStructure();

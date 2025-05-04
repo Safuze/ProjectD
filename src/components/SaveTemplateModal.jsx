@@ -1,7 +1,8 @@
+
 import React, { useState } from 'react';
-import Input from '../components/Input/Input';
-import DropdownMenu from '../components/DropdownMenu';
-import Button from '../components/Button/Button';
+import Input from './Input/Input';
+import DropdownMenu from './DropdownMenu';
+import Button from './Button/Button';
 
 const SaveTemplateModal = ({ onClose, onSave }) => {
   const [firmName, setFirmName] = useState('');
@@ -15,8 +16,8 @@ const SaveTemplateModal = ({ onClose, onSave }) => {
 
   return (
     <div className="modal-overlay">
-      <div className="modal">
-        <h2>Сохранить шаблон</h2>
+      <div className="modal" role="dialog" aria-modal="true" aria-labelledby="save-template-title">
+      <h2 id="save-template-title">Сохранить шаблон</h2>
         <Input
           placeholder="Название фирмы шаблона"
           value={firmName}
@@ -27,13 +28,15 @@ const SaveTemplateModal = ({ onClose, onSave }) => {
           value={format}
           onChange={(e) => setFormat(e.target.value)}
           options={[
-            { value: '1', label: 'Акт' },
-            { value: '2', label: 'Заказ' },
-            { value: '3', label: 'Отчет' },
+            { value: 'Акт', label: 'Акт' },
+            { value: 'Заказ', label: 'Заказ' },
+            { value: 'Отчет', label: 'Отчет' },
           ]}
         />
         <div className="modal-buttons">
-          <Button onClick={handleSaveClick}>Сохранить</Button>
+        <Button onClick={handleSaveClick} disabled={!firmName || !format}>
+          Сохранить
+        </Button>
           <Button onClick={onClose}>Отмена</Button>
         </div>
       </div>

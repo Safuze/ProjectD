@@ -19,43 +19,61 @@ export default function DocumentCreation() {
   const [showCustomInput, setShowCustomInput] = useState(false); // Показывать ли Input
   const navigate = useNavigate();
   const setFile = useFileStore((state) => state.setFile);
-  
-
-  // Шаблоны документов
-  const shablon1 = { format: 'Акт', firm: 'Аниме' }; 
-  const shablon2 = { format: 'Акт', firm: 'Байт' }; 
-  const shablon3 = { format: 'Акт', firm: 'Жираф' }; 
-  const shablon4 = { format: 'Акт', firm: 'Мега' }; 
-  const shablon5 = { format: 'Акт', firm: 'Море' };          
-  const shablon6 = { format: 'Заказ', firm: 'Аниме' }; 
-  const shablon7 = { format: 'Заказ', firm: 'Байт' }; 
-  const shablon8 = { format: 'Заказ', firm: 'Мега' }; 
-  const shablon9 = { format: 'Отчет', firm: 'Жираф' }; 
-  const shablon10 = { format: 'Отчет', firm: 'Море' }; 
-
-  const acts = [shablon1, shablon2, shablon3, shablon4, shablon5];
-  const orders = [shablon6, shablon7, shablon8];
-  const reports = [shablon9, shablon10];
+  const [templates, setTemplates] = useState([]);
 
   // Получаем список фирм для выбранного формата 
   const getFirmsByFormat = (formatValue) => {
-    let firms = [];
-    switch(formatValue) {
-      case '1': firms = acts; break;
-      case '2': firms = orders; break;
-      case '3': firms = reports; break;
-    }
-    
-    return [...firms];
+    const formatMap = {
+      '1': 'Акт',
+      '2': 'Заказ',
+      '3': 'Отчет'
+    };
+  
+    const selectedFormatName = formatMap[formatValue];
+  
+    // Убираем дубликаты фирм
+    const uniqueFirms = new Set();
+    return templates
+      .filter(tpl => tpl.format === selectedFormatName)
+      .filter(tpl => {
+        if (uniqueFirms.has(tpl.firm)) return false;
+        uniqueFirms.add(tpl.firm);
+        return true;
+      }).reverse()
+      .map((tpl, index) => ({
+        value: tpl.firm,
+        label: `Шаблон ${index + 1} (${tpl.firm})`
+      }));
   };
 
+  useEffect(() => {
+    if (!selectedFormat) return; // Не загружаем, если формат не выбран
+  
+    const formatMap = {
+      '1': 'Акт',
+      '2': 'Заказ',
+      '3': 'Отчет'
+    };
+  
+    const formatName = formatMap[selectedFormat];
+  
+    fetch(`/api/templates?format=${formatName}`)
+      .then(res => res.json())
+      .then(data => {
+        console.log('Полученные шаблоны:', data);
+        setTemplates(data);
+      })
+      .catch(err => console.error('Ошибка загрузки шаблонов:', err));
+  }, [selectedFormat]);
+  
 
   useEffect(() => {
     setIsFormValid2(
-      selectedFormat && 
-      (selectedFirm && (showCustomInput && customFirm.trim() !== ''))
+      selectedFormat &&
+      (showCustomInput ? customFirm.trim() !== '' : selectedFirm !== '')
     );
   }, [selectedFormat, selectedFirm, showCustomInput, customFirm]);
+
 
   const handleFormatChange = (event) => {
     const value = event.target.value;
@@ -81,8 +99,7 @@ export default function DocumentCreation() {
   };
 
   const handleCustomFirmChange = (event) => {
-    if (customFirm === '') setIsFormValid2(false);
-    event.target.name === setCustomFirm(event.target.value);
+    setCustomFirm(event.target.value);
   };
 
   const handleCreateDocumentClick = () => {
@@ -126,11 +143,8 @@ export default function DocumentCreation() {
 
   const fileInputRef = useRef(null);
 
-  const handleFileSelect = (event) => {
+  const handleFileSelect = async (event) => {
     const selectedFile = event.target.files[0];
-    if (selectedFile) {
-      console.log("Выбран файл:", selectedFile);
-    }
     setFile(selectedFile);
     navigate('/document');
   };
@@ -171,12 +185,7 @@ export default function DocumentCreation() {
                         placeholder='Выберите подходящий шаблон'
                         onChange={handleFirmChange}
                         value={selectedFirm}
-                        options={getFirmsByFormat(selectedFormat).map((item, index) => {
-                          return {
-                            value: item.firm,
-                            label: `Шаблон ${index + 1} (${item.firm})`
-                          }
-                        })}
+                        options={getFirmsByFormat(selectedFormat)}
                       />
                     </div>
                     
@@ -219,7 +228,7 @@ export default function DocumentCreation() {
               onClick={handleCreateDocumentClick}
               className={isFormValid1 ? "form-valid" : undefined}
             >
-               <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="icon" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+               <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" className="icon" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
                 Создать документ
             </Button>
             <input
@@ -235,7 +244,7 @@ export default function DocumentCreation() {
               onClick={() => fileInputRef.current.click()}
               className={isFormValid1 ? "form-valid" : undefined}
             >
-              <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="icon" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+              <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" className="icon" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
 
               Загрузить шаблон
             </Button>

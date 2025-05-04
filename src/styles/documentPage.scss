@@ -5,8 +5,10 @@
     background-color: var(--color-dark-blue);
     opacity: 0.8    ;
     @include flex-center(false, false);
-    
+    overflow-y:scroll;
+
     &__doc-content {
+
         @include flex-center(false, true);
         .download_and_print {
             display: flex;
@@ -111,15 +113,19 @@
 // Страница редактирования 
 
 .a4-container {
+  
   display: flex;
   justify-content: center;
   padding: fluid(20, 6.66);
+  width: fluid(796.7, 265.3);
+  height: fluid(1126.7, 375.5);
 }
 
 .a4-page {
-  width: fluid(1138, 379.3);
-  min-height: fluid(1126.7, 375.5);
-  padding: fluid(75.6, 25.2);
+  padding: fluid(45,15);
+  @include fluid-text(11, 4);
+  font-family: var(--font-family-doc);
+  color: black;
   background: white;
   box-shadow: 0 0 fluid(10, 3.3) rgba(0,0,0,0.1);
   margin: 0 auto;
