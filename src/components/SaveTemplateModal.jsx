@@ -16,7 +16,7 @@ const SaveTemplateModal = ({ onClose, onSave }) => {
 
   return (
     <div className="modal-overlay">
-      <div className="modal" role="dialog" aria-modal="true" aria-labelledby="save-template-title">
+      <div className="modal save-temp" role="dialog" aria-modal="true" aria-labelledby="save-template-title">
       <h2 id="save-template-title">Сохранить шаблон</h2>
         <Input
           placeholder="Название фирмы шаблона"

@@ -18,7 +18,7 @@ export default function DocumentCreation() {
   const [error, setError] = useState(null);
   const [showCustomInput, setShowCustomInput] = useState(false); // Показывать ли Input
   const navigate = useNavigate();
-  const setFile = useFileStore((state) => state.setFile);
+  const setFile = useFileStore.getState().setFile;
   const [templates, setTemplates] = useState([]);
 
   // Получаем список фирм для выбранного формата 
@@ -39,7 +39,7 @@ export default function DocumentCreation() {
         if (uniqueFirms.has(tpl.firm)) return false;
         uniqueFirms.add(tpl.firm);
         return true;
-      }).reverse()
+      })
       .map((tpl, index) => ({
         value: tpl.firm,
         label: `Шаблон ${index + 1} (${tpl.firm})`
@@ -145,8 +145,40 @@ export default function DocumentCreation() {
 
   const handleFileSelect = async (event) => {
     const selectedFile = event.target.files[0];
-    setFile(selectedFile);
-    navigate('/document');
+    if (!selectedFile) return;
+  
+    const formData = new FormData();
+    formData.append('file', selectedFile);
+  
+    try {
+      const response = await fetch('/api/preview-template', {
+        method: 'POST',
+        body: formData,
+      });
+  
+      if (!response.ok) {
+        throw new Error('Ошибка загрузки и конвертации файла');
+      }
+  
+      const data = await response.json();
+      const { pdfUrl, docxFilename } = data;
+  
+      // ✅ Сохраняем файл в Zustand store
+      const setFile = useFileStore.getState().setFile;
+      setFile(selectedFile);
+  
+      navigate('/document', {
+        state: {
+          pdfUrl,
+          docxFilename,
+          originalFile: selectedFile,
+        },
+      });
+  
+    } catch (error) {
+      console.error('Ошибка при отправке файла:', error);
+      alert('Не удалось загрузить и конвертировать шаблон.');
+    }
   };
 
   return (

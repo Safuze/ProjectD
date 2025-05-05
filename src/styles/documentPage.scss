@@ -23,7 +23,13 @@
             
 
         }
-        
+        .btn-panel {
+          display: flex;
+          justify-content: space-evenly;
+          align-items: center;
+          background-color: var(--color-grey);
+          width: 100%;
+        }
     }
 
     &__doc {
@@ -113,14 +119,17 @@
 // Страница редактирования 
 
 .a4-container {
-  
+  border: fluid(3, 1) solid var(--color-grey);
+  margin-top: fluid(60, 20);
   display: flex;
   justify-content: center;
-  padding: fluid(20, 6.66);
-  width: fluid(796.7, 265.3);
-  height: fluid(1126.7, 375.5);
+  width: fluid(666, 222);
+  
 }
-
+.back-btn {
+  color: white;
+  background: none;
+}
 .a4-page {
   padding: fluid(45,15);
   @include fluid-text(11, 4);
@@ -139,4 +148,13 @@
   font-family: 'Cambria', serif;
   @include fluid-text(14, 4.6);
   line-height: 1.08;
+}
+
+.save-temp {
+  max-width: rem(600);
+  @include flex-center(false, true);
+  .input-container, .dropdown-container {
+    @include flex-center(false, true);
+
+  }
 }

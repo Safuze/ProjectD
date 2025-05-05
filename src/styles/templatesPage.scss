@@ -1,0 +1,212 @@
+@use 'helpers' as *;
+
+.templates-page {
+  max-width: rem(1300);
+  width: fluid(1300, 550);
+  box-shadow: 0 0 fluid(15, 5) var(--color-orange);
+  padding: 0 20px;
+  position: relative;
+  margin-top: rem(64);
+  top: 0;
+  height: 93vh;
+  background-color: #002b49d3;
+  @include mobile {
+    width: 95vw;
+  }
+  // Кастомный скроллбар (для WebKit: Chrome, Safari, Edge)
+  &::-webkit-scrollbar {
+    width: fluid(9, 3); // Ширина скроллбара
+    background-color: var(--color-light-1); // Цвет трека
+    border-radius: fluid(4, 2);
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: var(--color-blue); // Цвет ползунка
+    border-radius: fluid(4, 2);
+    transition: background-color 0.3s;
+
+    &:hover {
+      background-color: darken(#4a76a8, 10%); // Темнее при наведении
+    }
+  }
+
+  // Для Firefox (начиная с версии 64)
+  scrollbar-width: thin; // auto | thin | none
+  scrollbar-color: var(--color-blue) var(--color-light-1); // thumb track
+  hr {
+    border: none;         /* Убираем стандартную обводку */
+    height: fluid(2, 1);          /* Толщина линии */
+    background: var(--color-light-grey);  /* Цвет линии (голубой) */
+    margin: fluid(21, 7) 0;  
+    box-shadow: 0 0 fluid(12, 4) var(--color-blue);
+  }
+  h3 {
+    font-family: var(--font-family-base);
+    padding-left: fluid(30, 10);
+  }
+  &__nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    .nav-link {
+      color: white;
+      margin: fluid(30, 10);
+      text-decoration: none;
+      transition: all 0.3s ease-out;
+      &:hover {
+        color: var(--color-auqa);
+        text-decoration: underline;
+        &::after {
+          width: 100%;
+          opacity: 1;
+        }
+      }
+      &:focus {
+        color: var(--color-orange);
+        outline: 2px solid var(--color-aqua);
+        outline-offset: 3px;
+        border-radius: 3px;
+      }
+      
+      // Активное состояние (текущий раздел)
+      &.active {
+        color: var(--color-orange);
+        font-weight: 600;
+        
+        &::after {
+          width: 100%;
+          opacity: 1;
+          background: var(--color-aqua);
+        }
+      }
+      &::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        bottom: -3px;
+        width: 0;
+        height: 2px;
+        background: var(--color-aqua-light);
+        opacity: 0;
+        transition: width 0.3s ease-out, opacity 0.2s ease-out;
+      }
+    }
+  }
+  
+  h2 {
+    font-family: var(--font-family-base);
+  }
+    overflow-y:  auto;
+
+    &__grid {
+      
+      display: flex;
+      flex-wrap: wrap;
+      gap: fluid(30,10);
+    }
+    &__card {
+      width: fluid(160, 53.3);
+      height: fluid(220, 73.3);
+      border: 1px solid #ccc;
+      border-radius: fluid(6, 2);
+      margin: fluid(10, 3.3);
+      padding: fluid(9, 3);
+      cursor: pointer;
+      background: #fdfdfd;
+      box-shadow: 0 fluid(2, 1) fluid(6, 2) rgba(0, 0, 0, 0.1);
+      transition: transform 0.2s;
+
+      &:hover {
+        transform: scale(1.03);
+        box-shadow: 0 0 fluid(6, 2) var(--color-auqa);
+      }
+    }
+    &__group {
+      display: flex;
+      flex-direction: row;
+      h3 {
+        width: fluid(180, 60);
+        font-family: var(--font-family-base);
+
+      }
+      margin-bottom: fluid(60, 20);
+    }
+
+    &__card-preview {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    &__card-page-content {
+      @include flex-center(false, true);
+      position: relative;
+      z-index: 2;
+      padding: fluid(10, 3.3);
+      text-align: center;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: #333;
+      img {
+        text-align: center;
+        width: fluid(120, 40);
+        height: auto;
+      }
+      span {
+        display: inline-block;
+        max-width: fluid(160, 53.3);
+        word-wrap: break-word; /* Перенос длинных слов */
+        overflow-wrap: break-word; /* Альтернатива word-wrap */
+        white-space: normal; /* Разрешает перенос по словам */
+        @include fluid-text(18, 9);
+      }
+    }
+
+// PdfModal.css 
+
+    .pdf-modal-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+    }
+    
+    .pdf-modal-content {
+      background: var(--color-light-1);
+      padding: fluid(21, 7);
+      padding-top: 0;
+      border-radius: fluid(9, 3);
+      max-width: 90vw;
+      max-height: 90vh;
+      overflow: auto;
+      position: relative;
+
+      button {
+        background: none;
+      }
+    }
+    
+    .close-btn {
+      position: absolute;
+      top: fluid(10, 3.3);
+      right: fluid(15, 5);
+      background: transparent;
+      @include fluid-text(24, 8);
+      border: none;
+      cursor: pointer;
+    }
+
+  }
+
+
+  
+  

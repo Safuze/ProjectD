@@ -162,7 +162,6 @@ export default function UserProfilePage({ login, onLogout, email, setIsCreatingD
                                         </div>
                                     </div>
                                     <div className='tab-content__down'>
-                                        <div id="data-img"className='form__img-notebook'></div>
                                         <Button id="edit" children="Исполнительное лицо" onClick={() => setShowPrompt(true)}/>
                                         {showPrompt && (
                                             <CustomPrompt

@@ -5,6 +5,7 @@ import UserProfilePage from './pages/UserProfilePage';
 import DocumentData from './pages/DocumentData';
 import SavedDocuments from './pages/SavedDocuments';
 import DocumentPage from './pages/DocumentPage';
+import TemplatesPage from './pages/TemplatesPage';
 function App() {
     const [userLogin, setUserLogin] = useState(null);
     const [userEmail, setUserEmail] = useState(null);
@@ -85,6 +86,16 @@ function App() {
                         ) : (
                             <Navigate to="/" />
                         )
+                    } 
+                />
+                <Route 
+                    path="/templates" 
+                    element={
+                       <TemplatesPage
+                        userLogin={userLogin} 
+                        onLogin={handleLogin}
+                        setIsCreatingDocument={setIsCreatingDocument}
+                       />
                     } 
                 />
             </Routes>

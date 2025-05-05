@@ -93,6 +93,7 @@ app.use(cors({
 app.use(express.json());
 app.use('/uploads/templates', express.static(uploadDir));
 
+
 // --- Функции ---
 
 async function testDbConnection() {
@@ -555,8 +556,29 @@ app.put('/update-user-profile', async (req, res) => {
   }
 });
 
+app.post('/api/preview-template', upload.single('file'), async (req, res) => {
+  const file = req.file;
+  if (!file) {
+    return res.status(400).json({ error: 'Файл обязателен' });
+  }
+
+  const docxPath = path.join(uploadDir, file.filename);
+  const pdfFilename = file.filename.replace(/\.docx$/i, '.pdf');
+  const pdfPath = path.join(uploadDir, pdfFilename);
+  const pdfUrl = `/uploads/templates/${pdfFilename}`;
+
+  try {
+    await execAsync(`soffice --headless --convert-to pdf "${docxPath}" --outdir "${uploadDir}"`);
+    res.status(200).json({ pdfUrl, docxFilename: file.filename });
+  } catch (err) {
+    console.error('Ошибка при генерации PDF:', err.stderr || err.message);
+    res.status(500).json({ error: 'Ошибка при создании PDF' });
+  }
+});
 
 app.post('/api/templates', upload.single('file'), async (req, res) => {
+  console.log('req.body:', req.body);
+  console.log('req.file:', req.file);
   const { firm, format } = req.body;
   const file = req.file;
 
@@ -568,9 +590,17 @@ app.post('/api/templates', upload.single('file'), async (req, res) => {
   const pdfFilename = file.filename.replace(/\.docx$/i, '.pdf');
   const pdfPath = path.join(uploadDir, pdfFilename);
   const pdfUrl = `/uploads/templates/${pdfFilename}`;
+  console.log('Файл загружен:', file.filename);
 
   try {
-    await execAsync(`libreoffice --headless --convert-to pdf "${docxPath}" --outdir "${uploadDir}"`);
+    try {
+      const { stdout, stderr } = await execAsync(`soffice --headless --convert-to pdf "${docxPath}" --outdir "${uploadDir}"`);
+      console.log('LibreOffice STDOUT:', stdout);
+      console.error('LibreOffice STDERR:', stderr);
+    } catch (err) {
+      console.error('Ошибка при конвертации в PDF:', err.stderr || err.message);
+      return res.status(500).json({ error: 'Ошибка при создании PDF', details: err.stderr || err.message });
+    }
   } catch (err) {
     console.error('Ошибка при конвертации в PDF:', err.stderr || err.message);
     return res.status(500).json({ error: 'Ошибка при создании PDF' });
@@ -641,6 +671,30 @@ app.get('/api/templates', async (req, res) => {
   } catch (err) {
     console.error('Ошибка получения шаблонов:', err);
     res.status(500).json({ error: 'Ошибка сервера' });
+  } finally {
+    conn.release();
+  }
+});
+
+// Отдаем шаблоны на страницу шаблонов
+app.get('/api/templates', async (req, res) => {
+  const conn = await pool.getConnection();
+  try {
+    const rows = await conn.query(`
+      SELECT id, firm, format, filename, created_at
+      FROM templates
+      ORDER BY created_at DESC
+    `);
+
+    const withUrls = rows.map(row => ({
+      ...row,
+      pdfUrl: `/uploads/templates/${row.filename.replace(/\.docx$/i, '.pdf')}`
+    }));
+
+    res.json(withUrls);
+  } catch (err) {
+    console.error("Ошибка получения шаблонов:", err);
+    res.status(500).json({ error: "Ошибка при загрузке шаблонов" });
   } finally {
     conn.release();
   }

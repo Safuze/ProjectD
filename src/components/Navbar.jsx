@@ -24,7 +24,13 @@ export default function Navbar({ userLogin, onLogout, children }) {
             {children}
             {userLogin && (
               <>
-                <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                <button 
+                    className="templates-btn" 
+                    onClick={() => navigate('/templates')}
+                    >
+                    Шаблоны
+                </button>
+                <svg stroke="currentColor" fill="none" strokeWidth="2" viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                 <div className="select-wrapper">
                     <DropdownMenu
                         className="navbar__login-button"

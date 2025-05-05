@@ -9,47 +9,44 @@ import mammoth from 'mammoth';
 
 const DocumentPage = ({ setIsCreatingDocument, documentReady, setDocumentReady }) => {
     const [showShareModal, setShowShareModal] = useState(false);
-    const navigate = useNavigate();
-    const location = useLocation();
-    const currentUrl = window.location.href;
     const [showSaveModal, setShowSaveModal] = useState(false);
     const [pdfUrl, setPdfUrl] = useState(null);
     const [htmlContent, setHtmlContent] = useState('');
-
+    const navigate = useNavigate();
+    const location = useLocation();
     const file = useFileStore(state => state.file);
-    useEffect(() => {
-        if (!file) {
-            // Можно редиректить обратно или показать сообщение
-            navigate('/');
-            return;
-        }
-    
-        const reader = new FileReader();
-        reader.onload = async () => {
-            const result = await mammoth.convertToHtml({ arrayBuffer: reader.result });
-            setHtmlContent(result.value);
-        };
-        reader.readAsArrayBuffer(file);
-    }, [file, navigate]);
+
+    // Получаем из location.state, если пришли через "Загрузить шаблон"
+    const uploadedPdfUrl = location.state?.pdfUrl;
+    const uploadedDocxFilename = location.state?.docxFilename;
 
     useEffect(() => {
-        if (location.state?.documentData) {
-            setDocumentReady(true);
+        if (uploadedPdfUrl) {
+            setPdfUrl(uploadedPdfUrl);
+        } else if (file) {
+            const reader = new FileReader();
+            reader.onload = async () => {
+                const result = await mammoth.convertToHtml({ arrayBuffer: reader.result });
+                setHtmlContent(result.value);
+            };
+            reader.readAsArrayBuffer(file);
+        } else {
+            navigate('/');
         }
-    }, [location, setDocumentReady]);
+    }, [uploadedPdfUrl, file, navigate]);
   
-    const handleSaveTemplate = async ({ firm, format }) => {
+    const handleSaveTemplate = async ({ firm, format }) => {  
+        
         if (!file) {
             alert("Файл не найден. Пожалуйста, загрузите документ.");
             return;
         }
-    
         console.log("Сохраняем шаблон:", { firm, format, file });
-    
+
         const formData = new FormData();
         formData.append('firm', firm);
         formData.append('format', format);
-        formData.append('file', file);
+        formData.append('file', file); // ← именно file, не file.name
     
         try {
             const response = await fetch('/api/templates', {
@@ -58,24 +55,20 @@ const DocumentPage = ({ setIsCreatingDocument, documentReady, setDocumentReady }
             });
     
             if (!response.ok) {
-                const text = await response.text(); // вероятно, HTML-ошибка от сервера
+                const text = await response.text();
                 throw new Error(`Ошибка запроса: ${response.status} — ${text}`);
             }
     
             const data = await response.json();
-            console.log('Ответ от сервера:', data);
             alert('Шаблон успешно сохранён!');
-            console.log('Ответ от сервера:', data);
-
-            if (data.pdfUrl) {
-            setPdfUrl(data.pdfUrl); // Установим URL для <iframe>
-            }
+            if (data.pdfUrl) setPdfUrl(data.pdfUrl);
         } catch (err) {
             console.error('Ошибка при сохранении шаблона:', err);
             alert(`Ошибка при сохранении: ${err.message}`);
         }
     
         setShowSaveModal(false);
+        navigate('/');
     };
 
     const handleBackClick = () => {
@@ -99,19 +92,15 @@ const DocumentPage = ({ setIsCreatingDocument, documentReady, setDocumentReady }
                 <div className="documentPage">
                     <div className='documentPage__doc-content'>
                         <div className="a4-container">
-                            {pdfUrl ? (
-                                <iframe
+                            <iframe
                                     src={pdfUrl}
                                     width="100%"
                                     height="900px"
                                     style={{ border: 'none' }}
                                     title="Предпросмотр шаблона"
-                                />
-                                ) : (
-                                <p>PDF шаблон будет показан после сохранения.</p>
-                            )}                        
+                                />                       
                             </div>
-                        <div>
+                        <div className='btn-panel'>
                             <button onClick={handleBackClick} className="back-btn">Назад</button>
                             <Button onClick={() => setShowSaveModal(true)}>Сохранить шаблон</Button>
                         </div>

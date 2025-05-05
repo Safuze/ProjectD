@@ -37,7 +37,7 @@
                 background: none;
                 color: var(--color-ligth);
                 letter-spacing: fluid(4, 1.1);
-                @include fluid-text(36, 12);
+                @include fluid-text(40, 11.4);
                 padding: 0;
                 .line {
                     width: 100%;
@@ -56,41 +56,36 @@
             flex-direction: column;
             justify-content: space-between;
             .data-tab {
-                margin-bottom: fluid(150, 42.8);
+                margin-bottom: fluid(90, 10);
                 &__item {
                     margin: fluid(20, 5.7) 0;
                 }
 
-                &__login, &__email, &__position, &__firm{
-                    margin-right: fluid(90, 30);
-                    @include fluid-text(27, 9);
-                }
-                &__fio {
-                    @include fluid-text(27, 9);
-
-                    margin-right: fluid(96, 32) !important;
-
+                &__login, &__email, &__fio {
+                    margin-right: fluid(99, 33);
+                    @include fluid-text(32, 9.1);
                 }
                 &__position {
                     margin-right: fluid(33, 11);
                 }
                 &__firm {
-                    margin-right: fluid(42, 14);
+                    margin-right: fluid(45, 15);
                 }
-                
+                &__fio {
+                    margin-right: fluid(108, 36);
+                }
             }
 
             &__down {
                 display: flex;
-                justify-content: space-between;
+                justify-content: end;
                 align-items: end;
                 #edit {
                     width: fluid(360, 102.8);
                     height: fluid(64, 18.2);
-                    border-radius: fluid(30, 10);
+                    border-radius: fluid(40, 11.4);
                     @include fluid-text(32, 9.1);
                     position: relative;
-                    top: fluid(-70, -210);
 
                 }
             }
@@ -149,14 +144,7 @@
     }
 }
 
-#data-img {
-    width: fluid(203, 58);
-    height: fluid(147, 42);
-    left: 0;
-    top: fluid(-70, -210);
-    position: relative;
-    transform:  translate(0, 0);
-    }
+
 }
 
 #savedDocs {
@@ -219,34 +207,6 @@
         display: flex;
         flex-direction: row;
         align-items: center;
-        .back-button {
-            width: fluid(80, 40);
-            height: fluid(80, 40);
-            background-color: transparent;
-            border: none;
-            cursor: pointer;
-            position: relative;
-            
-            &::before {
-              content: '';
-              position: absolute;
-              left: 50%;
-              top: 50%;
-              width: fluid(24, 12);
-              height: fluid(24, 12);
-              border-left: fluid(4, 2) solid white;
-              border-bottom: fluid(4, 2) solid white;
-              transform: translate(-25%, -50%) rotate(45deg);
-            }
-            
-            &:hover {
-              opacity: 0.8;
-            }
-            
-            &:active {
-              opacity: 0.6;
-            }
-          }
         h4 {
             font-weight: 100;
             position: absolute;
