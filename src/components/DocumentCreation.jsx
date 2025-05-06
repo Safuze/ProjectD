@@ -20,6 +20,7 @@ export default function DocumentCreation() {
   const navigate = useNavigate();
   const setFile = useFileStore.getState().setFile;
   const [templates, setTemplates] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Получаем список фирм для выбранного формата 
   const getFirmsByFormat = (formatValue) => {
@@ -146,7 +147,7 @@ export default function DocumentCreation() {
   const handleFileSelect = async (event) => {
     const selectedFile = event.target.files[0];
     if (!selectedFile) return;
-  
+    setIsLoading(true); // Включаем индикатор загрузки
     const formData = new FormData();
     formData.append('file', selectedFile);
   
@@ -178,6 +179,9 @@ export default function DocumentCreation() {
     } catch (error) {
       console.error('Ошибка при отправке файла:', error);
       alert('Не удалось загрузить и конвертировать шаблон.');
+    }
+    finally {
+      setIsLoading(false); // Выключаем индикатор в любом случае
     }
   };
 
@@ -280,8 +284,16 @@ export default function DocumentCreation() {
 
               Загрузить шаблон
             </Button>
+            {isLoading && (
+              <div className="overlay">
+                  <div className="spinner"></div>
+                  <p>Обработка файла...</p>
+              </div>
+          )}
           </div>
+          
           <div className="form__decorative-image"></div>
+          
         </>
       )}
     </div>

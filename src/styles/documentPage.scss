@@ -29,6 +29,11 @@
           align-items: center;
           background-color: var(--color-grey);
           width: 100%;
+          .btn {
+            @include fluid-text(27, 9);
+            width: fluid(360, 120);
+            height: fluid(45, 15);
+          }
         }
     }
 
@@ -52,7 +57,7 @@
         background: none;
         border: none;
         cursor: pointer;
-        font-size: fluid-text(15, 5);
+        @include fluid-text(15, 5);
         color: #333;
         transition: all 0.3s ease;
       
@@ -120,17 +125,20 @@
 
 .a4-container {
   border: fluid(3, 1) solid var(--color-grey);
-  margin-top: fluid(60, 20);
+  margin-top: fluid(30, 10);
   display: flex;
   justify-content: center;
   width: fluid(666, 222);
-  
+  iframe { 
+    max-height: rem(800) !important;
+  }
 }
 .back-btn {
   color: white;
   background: none;
 }
 .a4-page {
+  max-height: rem(500);
   padding: fluid(45,15);
   @include fluid-text(11, 4);
   font-family: var(--font-family-doc);
@@ -138,6 +146,7 @@
   background: white;
   box-shadow: 0 0 fluid(10, 3.3) rgba(0,0,0,0.1);
   margin: 0 auto;
+  
 }
 
 .editable-doc {
@@ -151,10 +160,18 @@
 }
 
 .save-temp {
+  width: fluid(600, 250);
   max-width: rem(600);
   @include flex-center(false, true);
-  .input-container, .dropdown-container {
-    @include flex-center(false, true);
-
+  .dropdown-menu {
+    text-align: center;
+    width: fluid(450, 150);
+    height: fluid(56.25, 18.75);
+    border-radius: fluid(12, 4);
   }
+  .input-container, .dropdown-container, .modal-buttons {
+    @include flex-center(false, true);
+    margin: fluid(9, 3);
+  }
+                                  
 }
