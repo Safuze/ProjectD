@@ -132,7 +132,7 @@ const DocumentData = ({ setIsCreatingDocument, userLogin, onLogin, setDocumentRe
         if (format === '2' && firm === 'Мега') return 7; 
         if (format === '3' && firm === 'Жираф') return 8; 
         if (format === '3' && firm === 'Море') return 9; 
-        return 0; // fallback
+        return 10; // fallback
     };
 
     const initializeDocument = (format, firm, templateIndex, customerFirm) => {
@@ -266,7 +266,27 @@ const DocumentData = ({ setIsCreatingDocument, userLogin, onLogin, setDocumentRe
                     contractDate: '',
                     specialists: []    
                 }
-                break;   
+                break;
+            case 10: 
+                newDocument = {
+                    ...newDocument, 
+                    city: '',
+                    contractNumber: '',
+                    contractDate: '',
+                    nds: '',
+                    applicationNumber: '',
+                    completedWorks: '',
+                    resultsWork: '',
+                    workCost: '',
+                    transferAmount: '',
+                    reportNumber: '',
+                    percentAward: '',
+                    links: [],
+                    specialists: [],
+                    works: [],
+                    contractorsWork: [],   
+                    contractorsList: []             
+                }
         }
 
         return newDocument;
@@ -309,7 +329,7 @@ const DocumentData = ({ setIsCreatingDocument, userLogin, onLogin, setDocumentRe
             case 7: return ['contractor.firmName', 'contractor.position', 'contractor.personName', 'customer.firmName', 'customer.position','customer.personName', 'periodStartDate', 'periodEndDate'];
             case 8: return ['contractor.firmName', 'contractor.position', 'contractor.personName', 'customer.firmName', 'customer.position','customer.personName', 'periodStartDate', 'periodEndDate'];
             case 9: return ['contractor.firmName', 'contractor.position', 'contractor.personName', 'customer.firmName', 'customer.position','customer.personName', 'periodStartDate', 'periodEndDate'];
-
+            case 10: return ['contractor.firmName', 'contractor.position', 'contractor.personName', 'customer.firmName', 'customer.position','customer.personName', 'periodStartDate', 'periodEndDate'];
             default: return [];
         }
     };
@@ -1681,14 +1701,7 @@ const DocumentData = ({ setIsCreatingDocument, userLogin, onLogin, setDocumentRe
                                             <Input
                                                 type="date"
                                                 value={work.endDate || ''}
-                                                onChange={(e) => {
-                                                    handleArrayItemChange('works', index, 'endDate', e.target.value);
-                                                    const validation = validateEndDate(e.target.value, work.startDate, index);
-                                                    setDateErrors(prev => ({
-                                                    ...prev,
-                                                    [`endDate-${index}`]: !validation.isValid ? validation.message : null
-                                                    }));
-                                                }}                                        
+                                                onChange={(e) => handleArrayItemChange('works', index, 'endDate', e.target.value)}
                                                 placeholder="Конец работ"
                                                 validation={{ required: true, date: true }}
                                                 title="Дата окончания работ"
@@ -2010,6 +2023,210 @@ const DocumentData = ({ setIsCreatingDocument, userLogin, onLogin, setDocumentRe
                             ))}
                             <Button id='add-spec'onClick={() => addArrayItem('specialists', { fio: '', calendar: '', typeOfDay: '', date: '', absence: '', wh: '', comment: '' })}>
                                 Добавить специалиста
+                            </Button>
+                        </div>
+                    </div>
+                );
+            case 10: 
+                return (
+                    <div className="template-fields">
+                        {renderContractorCustomerFields()}
+                        <div className="form-section">
+                            <h4>Данные Документа</h4>
+                            <p>Введите только данные, на которых есть метки в шаблоне</p>       
+                            <div className='section-data'>
+                                <div className='section-data__input'>
+                                    <div className='date-input'>
+                                        <span>Договор создан:</span>
+                                        <Input
+                                            value={currentDocument.contractDate}
+                                            type='date'
+                                            onChange={(e) => handleFieldChange('contractDate', e.target.value)}
+                                            placeholder="Дата Заключения Договора"
+                                            style={{color: currentDocument.contractDate === '' ? 'grey' : 'black'}}
+                                            validation={{ required: true, date: true }}
+                                            title='Дата Заключения Договора'
+                                        />
+                                    </div>
+                                    <Input
+                                            value={currentDocument.contractNumber}
+                                            onChange={(e) => handleFieldChange('contractNumber', e.target.value)}
+                                            placeholder="Номер Договора"
+                                            validation={{ 
+                                                required: true,
+                                                pattern: /^[1-9]\d*$/,
+                                                message: "Введите целое число больше нуля (без пробелов)",
+                                                minLength: 1,
+                                                maxLength: 20,
+                                                validate: (value) => !/\s/.test(value)
+                                            }}
+                                            title='Номер Договора'
+
+                                        />
+                                    <Input
+                                        value={currentDocument.orderNumber}
+                                        onChange={(e) => handleFieldChange('orderNumber', e.target.value)}
+                                        placeholder="Номер Заказа"
+                                        validation={{ 
+                                            required: true,
+                                            pattern: /^[1-9]\d*$/,
+                                            message: "Введите целое число больше нуля (без пробелов)",
+                                            minLength: 1,
+                                            maxLength: 20,
+                                            validate: (value) => !/\s/.test(value)
+                                        }}
+                                        title='Номер Заказа'
+
+                                    />
+                                    <div className="city-input-container">
+                                    <Input
+                                        value={currentDocument.city}
+                                        onChange={(e) => handleCityInputChange(e.target.value)}
+                                        placeholder="Город"
+                                        validation={{
+                                        required: true,
+                                        pattern: /^[а-яА-ЯёЁ\s\-]+$/,
+                                        message: "Город должен содержать только буквы и дефисы",
+                                        maxLength: 50
+                                        }}
+                                        title='Укажите город'
+                                    />
+                                    {showSuggestions && citySuggestions.length > 0 && (
+                                        <ul className="city-suggestions">
+                                        {citySuggestions.map((city, index) => (
+                                            <li 
+                                            key={index} 
+                                            onClick={() => handleCitySelect(city)}
+                                            >
+                                            {city}
+                                            </li>
+                                        ))}
+                                        </ul>
+                                    )}
+                                    </div>       
+                                    <DropdownMenu
+                                        className="data-select"
+                                        placeholder="НДС (%)"
+                                        name={`nds`}
+                                        value={currentDocument.nds}
+                                        onChange={(e) => handleFieldChange('nds', e.target.value)}
+                                        options={[
+                                            { value: '5', label: '5%' },
+                                            { value: '7', label: '7%' },
+                                            { value: '10', label: '10%' },
+                                            { value: '20', label: '20%' },
+                                            ]}
+                                        validation={{ required: true }}
+                                        title='% НДС'
+
+                                    />
+                                </div>
+                                <div className='section-data__calendar'>
+                                    <h4>Выберите отчетный период:</h4>
+                                    <RangeDatePicker 
+                                        onDateRangeSelect={(range) => {
+                                            handleFieldChange('periodStartDate', range.startDate);
+                                            handleFieldChange('periodEndDate', range.endDate);
+                                        }}
+                                    />
+                                </div>
+                            </div>                  
+                        </div>
+                        <div className="form-section">
+                            <h4>Специалисты</h4>
+                            {currentDocument.specialists.map((specialist, index) => (
+                                <div key={index} className="array-item">
+                                    <div>
+                                        <Input
+                                            value={specialist.category}
+                                            onChange={(e) => handleArrayItemChange('specialists', index, 'category', e.target.value)}
+                                            placeholder="Категория специалиста"
+                                            validation={{
+                                                required: true,
+                                                pattern: /^[а-яА-ЯёЁ\s\-]+$/,
+                                                message: "Категория должна содержать только буквы и дефисы",
+                                                maxLength: 50
+                                            }}
+                                            title='Роль специалиста'
+                                        />
+                                        <Input
+                                            value={specialist.costRate}
+                                            onChange={(e) => handleArrayItemChange('specialists', index, 'costRate', e.target.value)}
+                                            placeholder="Стоимость ставки нормо-часа, в т.ч. НДС 5%"
+                                            validation={{ 
+                                                required: true,
+                                                pattern: /^\d+(\.\d{1,2})?$/,
+                                                message: 'Введите число (например: 1000 или 1000.50)',
+                                                validate: (value) => !/\s/.test(value)
+                                            }}
+                                            title='Введите стоимость в рублях, копейки укажите через точку'
+
+                                        />
+                                        <Input
+                                            value={specialist.resourcesSpent}
+                                            onChange={(e) => handleArrayItemChange('specialists', index, 'resourcesSpent', e.target.value)}
+                                            placeholder="Количество часов"
+                                            validation={{ 
+                                                required: true,
+                                                pattern: /^[1-9]\d*$/,
+                                                message: "Введите целое число больше нуля (без пробелов)",
+                                                validate: (value) => !/\s/.test(value), // Дополнительная проверка на пробелы
+                                                minLength: 1,
+                                                maxLength: 4 
+                                            }}
+                                            title="Количество часов (целое число)"
+                                            />
+                                    </div>
+                                    <button  onClick={() => removeArrayItem('specialists', index)}>×</button>
+
+                                </div>
+                            ))}
+                            <Button id='add-spec'onClick={() => addArrayItem('specialists', { category: '', rate: '', hours: '' })}>
+                                Добавить специалиста
+                            </Button>
+                        </div>
+                        <div className="form-section">
+                            <h4>Выполненные работы</h4>
+                            {currentDocument.works.map((work, index) => (
+                                <div key={index} className="array-item">
+                                    <div>
+                                        <Input
+                                            value={work.name}
+                                            onChange={(e) => handleArrayItemChange('works', index, 'name', e.target.value)}
+                                            placeholder="Название задачи"
+                                            validation={{required: true}}
+                                            title="Название задачи"
+                                            
+                                        />
+                                        <Input
+                                            value={work.cost}
+                                            onChange={(e) => handleArrayItemChange('works', index, 'cost', e.target.value)}
+                                            placeholder="Цена, руб, без НДС"
+                                            validation={{ 
+                                                required: true,
+                                                pattern: /^\d+(\.\d{1,2})?$/,
+                                                message: 'Введите число (например: 1000 или 1000.50)'
+                                            }}
+                                            title='Введите цену в рублях, копейки укажите через точку'
+                                        />
+                                        <Input
+                                            value={work.count}
+                                            onChange={(e) => handleArrayItemChange('works', index, 'count', e.target.value)}
+                                            placeholder="Количество"
+                                            validation={{ 
+                                                required: true,
+                                                pattern: /^\d+(\.\d{1,2})?$/,
+                                                message: 'Введите число'
+                                            }}
+                                            title="Количество"
+
+                                        />
+                                    </div>
+                                    <button onClick={() => removeArrayItem('works', index)}>×</button>
+                                </div>
+                            ))}
+                            <Button id='add-spec'onClick={() => addArrayItem('works', { name: '', cost: '', count: '' })}>
+                                Добавить работу
                             </Button>
                         </div>
                     </div>

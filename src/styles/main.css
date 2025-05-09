@@ -995,17 +995,17 @@ textarea {
   margin-left: clamp(0.325rem, 0.1848039216rem + 0.5751633987vw, 0.875rem);
 }
 #dataForm .array-item {
+  margin-left: clamp(0.625rem, 0.306372549rem + 1.3071895425vw, 1.875rem);
   margin-bottom: clamp(0.625rem, 0.306372549rem + 1.3071895425vw, 1.875rem);
   display: flex;
+  align-items: center;
 }
 #dataForm .array-item button {
   background: none;
   color: white;
   font-size: clamp(1.0375rem, 0.5053921569rem + 2.1830065359vw, 3.125rem);
   margin-left: 0;
-}
-#dataForm .array-item div {
-  margin-left: clamp(0.625rem, 0.306372549rem + 1.3071895425vw, 1.875rem);
+  height: clamp(1.875rem, 0.9191176471rem + 3.9215686275vw, 5.625rem);
 }
 #dataForm .array-ite {
   display: flex;
@@ -1182,6 +1182,11 @@ textarea {
   cursor: not-allowed;
 }
 
+.form-section p {
+  font-size: clamp(0.5rem, 0.2450980392rem + 1.045751634vw, 1.5rem);
+  color: var(--color-grey);
+}
+
 #two-form-section {
   display: flex;
   justify-content: space-around;
@@ -1229,10 +1234,6 @@ textarea {
   font-size: clamp(0.75rem, 0.5588235294rem + 0.7843137255vw, 1.5rem);
   height: clamp(0.625rem, 0.4656862745rem + 0.6535947712vw, 1.25rem);
   margin-left: 0;
-}
-
-.city-input-container {
-  position: relative;
 }
 
 .city-suggestions {
@@ -1335,6 +1336,29 @@ textarea {
     transform: rotate(360deg);
   }
 }
+.template-hint-popup {
+  position: absolute;
+  top: 110%; /* чуть ниже кнопки */
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  background-color: #ffffff;
+  color: #333;
+  border: 1px solid #ccc;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  width: 250px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  font-size: 0.9rem;
+  pointer-events: none;
+}
+
+.template-hint-popup code {
+  background-color: #eef;
+  padding: 0.1rem 0.3rem;
+  border-radius: 4px;
+}
+
 .input, .btn {
   max-width: clamp(10.625rem, 5.2083333333rem + 22.2222222222vw, 31.875rem);
   max-height: clamp(1.3125rem, 0.6433823529rem + 2.7450980392vw, 3.9375rem);

@@ -236,6 +236,7 @@
             display: flex !important;
             flex-direction: column;
             align-items: center;
+
         }
         .section-data {
             flex-direction: column;
@@ -275,16 +276,19 @@
         }
     }
     .array-item {
+        margin-left: fluid(30, 10);
         margin-bottom: fluid(30,10);
         display: flex;
+        align-items: center;
         button {
             background: none;
             color: white;
             @include fluid-text(50,16.6);
             margin-left: 0 ;
+            height: fluid(90, 30);
         }
         div {
-            margin-left: fluid(30, 10);
+        
         }
         
     }
@@ -503,7 +507,12 @@
         
     }
 }
-
+.form-section {
+    p {
+        @include fluid-text(24, 8);
+        color: var(--color-grey);
+    }
+}
 #two-form-section {
     display: flex;
     justify-content: space-around;
@@ -555,9 +564,6 @@
     margin-left: 0;
 }
 
-.city-input-container {
-  position: relative;
-}
 
 .city-suggestions {
   position: absolute;
@@ -658,3 +664,28 @@
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
+
+// Шпаргалка 
+.template-hint-popup {
+    position: absolute;
+    top: 110%; /* чуть ниже кнопки */
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999;
+    background-color: #ffffff;
+    color: #333;
+    border: 1px solid #ccc;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    width: 250px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    font-size: 0.9rem;
+    pointer-events: none;
+  }
+  
+  .template-hint-popup code {
+    background-color: #eef;
+    padding: 0.1rem 0.3rem;
+    border-radius: 4px;
+  }
+  

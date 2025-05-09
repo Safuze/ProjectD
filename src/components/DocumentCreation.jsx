@@ -21,6 +21,7 @@ export default function DocumentCreation() {
   const setFile = useFileStore.getState().setFile;
   const [templates, setTemplates] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [showHint, setShowHint] = useState(false);
 
   // Получаем список фирм для выбранного формата 
   const getFirmsByFormat = (formatValue) => {
@@ -275,15 +276,27 @@ export default function DocumentCreation() {
               ref={fileInputRef}
               accept=".doc,.docx"
             />
- 
-            <Button 
-              onClick={() => fileInputRef.current.click()}
-              className={isFormValid1 ? "form-valid" : undefined}
-            >
-              <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" className="icon" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+            <div className="upload-wrapper" style={{ position: 'relative', display: 'inline-block' }}>
+              <Button 
+                onClick={() => fileInputRef.current.click()}
+                className={isFormValid1 ? "form-valid" : undefined}
+                onMouseEnter={() => setShowHint(true)}
+                onMouseLeave={() => setShowHint(false)}
+              >
+                <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" className="icon" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                Загрузить шаблон
+              </Button>
 
-              Загрузить шаблон
-            </Button>
+              {showHint && (
+                <div className="template-hint-popup">
+                  <p><strong>Перед загрузкой шаблона расставьте метки:</strong></p>
+                  <ul>
+                    <li><code>{'{city}'}</code> — вместо города</li>
+                    <li><code>{'{date}'}</code> — вместо даты</li>
+                  </ul>
+                </div>
+              )}
+            </div>
             {isLoading && (
               <div className="overlay">
                   <div className="spinner"></div>
