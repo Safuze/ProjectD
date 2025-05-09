@@ -2120,6 +2120,73 @@ const DocumentData = ({ setIsCreatingDocument, userLogin, onLogin, setDocumentRe
                                         title='% НДС'
 
                                     />
+                                    <Input
+                                        value={currentDocument.workCost}
+                                        onChange={(e) => handleFieldChange('workCost', e.target.value)}
+                                        validation={{ 
+                                            required: true,
+                                            pattern: /^\d+(\.\d{1,2})?$/,
+                                            message: 'Введите число (например: 1000 или 1000.50)'
+                                        }}
+                                        placeholder="Cтоимость выполненных Работ (руб, коп.)"
+                                        title='Cтоимость выполненных Работ (руб, коп.)'
+                                    />
+                                    <Input
+                                        value={currentDocument.transferAmount}
+                                        onChange={(e) => handleFieldChange('transferAmount', e.target.value)}
+                                        placeholder="Сумма к перечислению (руб, коп.)"
+                                        validation={{ 
+                                            required: true,
+                                            pattern: /^\d+(\.\d{1,2})?$/,
+                                            message: 'Введите число (например: 1000 или 1000.50)'
+                                        }}
+                                        title='Введите сумму к перечислению в рублях, копейки укажите через точку'
+                                    />
+                                    <Input
+                                        value={currentDocument.links}
+                                        onChange={(e) => handleFieldChange('links', e.target.value)}
+                                        placeholder="Ссылки с результатами работ"
+                                        validation={{
+                                            validate: (value) => {
+                                              if (!value) return true;
+                                              const urls = value.split(/[\s,]+/);
+                                              return urls.every(url => 
+                                                /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/.test(url.trim())
+                                              );
+                                            },
+                                            message: "Одна или несколько ссылок имеют неверный формат"
+                                          }}
+                                        title='Ссылки с результатами работ'
+                                        />
+                                    <Input
+                                        value={currentDocument.reportNumber}
+                                        onChange={(e) => handleFieldChange('reportNumber', e.target.value)}
+                                        placeholder="Номер отчета к приложению"
+                                        validation={{ 
+                                            required: true,
+                                            pattern: /^[1-9]\d*$/,
+                                            message: "Введите целое число больше нуля (без пробелов)",
+                                            minLength: 1,
+                                            maxLength: 20,
+                                            validate: (value) => !/\s/.test(value)
+                                          }}
+                                        title='Номер отчета к приложению'
+
+                                    />
+                                    <Input
+                                        value={currentDocument.percentAward}
+                                        onChange={(e) => handleFieldChange('percentAward', e.target.value)}
+                                        validation={{
+                                            required: true,
+                                            numeric: true,
+                                            min: 0,
+                                            max: 100,
+                                            message: "Введите число от 0 до 100"
+                                          }}
+                                        placeholder="% вознагражд. за искл. право на результ."
+                                        title='% вознаграждения за исключительное право на результаты'
+
+                                    /> 
                                 </div>
                                 <div className='section-data__calendar'>
                                     <h4>Выберите отчетный период:</h4>
@@ -2129,14 +2196,110 @@ const DocumentData = ({ setIsCreatingDocument, userLogin, onLogin, setDocumentRe
                                             handleFieldChange('periodEndDate', range.endDate);
                                         }}
                                     />
+                                        <textarea 
+                                                name="Выполненные работы"
+                                                value={currentDocument.completedWorks}
+                                                onChange={(e) => handleFieldChange('completedWorks', e.target.value)}
+                                                validation={{required: true}}
+                                                placeholder='Выполненные работы'
+                                                title='Выполненные работы'
+
+                                            ></textarea>
+                                            <textarea 
+                                                name="Выполненные работы"
+                                                value={currentDocument.resultsWork}
+                                                onChange={(e) => handleFieldChange('resultsWork', e.target.value)}
+                                                validation={{required: true}}
+                                                placeholder='Результаты работ, предаставляемые заказчику'
+                                                title='Результаты работ, предаставляемые заказчику'
+                                            ></textarea>
                                 </div>
                             </div>                  
-                        </div>
+                        </div>      
                         <div className="form-section">
+                            <h4>Выполненные работы</h4>
+                            {currentDocument.works.map((work, index) => (
+                                <div key={index} className="array-ite">
+                                    <div className='array-ite__item'>
+                                        <div>
+                                            <Input
+                                                value={work.name}
+                                                onChange={(e) => handleArrayItemChange('works', index, 'name', e.target.value)}
+                                                placeholder="Название задачи"
+                                                validation={{required: true}}
+                                                title="Название задачи"
+                                            />                                       
+                                        <Input
+                                            value={work.count}
+                                            onChange={(e) => handleArrayItemChange('works', index, 'count', e.target.value)}
+                                            placeholder="Количество"
+                                            validation={{ 
+                                                required: true,
+                                                pattern: /^\d+(\.\d{1,2})?$/,
+                                                message: 'Введите число'
+                                            }}
+                                            title="Количество"
+                                        />
+                                        <span>Начало работ:</span>
+                                            <Input
+                                                type="date"
+                                                value={work.startDate || ''}
+                                                onChange={(e) => handleArrayItemChange('works', index, 'startDate', e.target.value)}
+                                                placeholder="Начало работ"
+                                                validation={{ required: true, date: true }}
+                                                title='Начало работ'
+                                                style={{color: currentDocument.contractDate === '' ? 'grey' : 'black'}}
+                                            />
+                                        </div>
+                                        <div>
+                                            <Input
+                                            value={work.cost}
+                                            onChange={(e) => handleArrayItemChange('works', index, 'cost', e.target.value)}
+                                            placeholder="Предельная стоимость по Заказу (руб., коп.)"
+                                            validation={{ 
+                                                required: true,
+                                                pattern: /^\d+(\.\d{1,2})?$/,
+                                                message: 'Введите число (например: 1000 или 1000.50)',
+                                                validate: (value) => !/\s/.test(value)
+                                            }}
+                                            title='Введите стоимость по заказу в рублях, копейки укажите через точку'
+                                            />
+                                            <Input
+                                            value={work.cost}
+                                            onChange={(e) => handleArrayItemChange('works', index, 'cost', e.target.value)}
+                                            placeholder="Цена, руб, без НДС"
+                                            validation={{ 
+                                                required: true,
+                                                pattern: /^\d+(\.\d{1,2})?$/,
+                                                message: 'Введите число (например: 1000 или 1000.50)'
+                                            }}
+                                            title='Введите цену в рублях, копейки укажите через точку'
+                                            />
+                                            <span> Конец работ:</span>
+                                            <Input
+                                                type="date"
+                                                value={work.endDate || ''}
+                                                onChange={(e) => handleArrayItemChange('works', index, 'endDate', e.target.value)}
+                                                placeholder="Конец работ"
+                                                validation={{ required: true, date: true }}
+                                                title='Конец работ'
+                                                style={{color: currentDocument.contractDate === '' ? 'grey' : 'black'}}
+                                            />
+                                        </div>
+                                    </div>
+                                    <button onClick={() => removeArrayItem('works', index)}>×</button>
+                                </div>
+                            ))}
+                            <Button id='add-spec'onClick={() => addArrayItem('works', { name: '', startWork: '', endWork: '', cost: '' })}>
+                                Добавить работу
+                            </Button>
+                        </div>    
+                            <div className="form-section">
                             <h4>Специалисты</h4>
                             {currentDocument.specialists.map((specialist, index) => (
-                                <div key={index} className="array-item">
-                                    <div>
+                                <div key={index} className="array-ite">
+                                    <div className='array-ite__item'>
+                                        <div>
                                         <Input
                                             value={specialist.category}
                                             onChange={(e) => handleArrayItemChange('specialists', index, 'category', e.target.value)}
@@ -2176,57 +2339,107 @@ const DocumentData = ({ setIsCreatingDocument, userLogin, onLogin, setDocumentRe
                                             }}
                                             title="Количество часов (целое число)"
                                             />
-                                    </div>
-                                    <button  onClick={() => removeArrayItem('specialists', index)}>×</button>
-
-                                </div>
-                            ))}
-                            <Button id='add-spec'onClick={() => addArrayItem('specialists', { category: '', rate: '', hours: '' })}>
-                                Добавить специалиста
-                            </Button>
-                        </div>
-                        <div className="form-section">
-                            <h4>Выполненные работы</h4>
-                            {currentDocument.works.map((work, index) => (
-                                <div key={index} className="array-item">
-                                    <div>
-                                        <Input
-                                            value={work.name}
-                                            onChange={(e) => handleArrayItemChange('works', index, 'name', e.target.value)}
-                                            placeholder="Название задачи"
-                                            validation={{required: true}}
-                                            title="Название задачи"
+                                            <Input
+                                                value={specialist.fio}
+                                                onChange={(e) => handleArrayItemChange('specialists', index, 'fio', e.target.value)}
+                                                placeholder="ФИО"
+                                                validation={{ 
+                                                    required: true,
+                                                    alpha: true,
+                                                    minLength: 5,
+                                                    maxLength: 100,
+                                                    pattern: /^[а-яА-ЯёЁ\s\-]+$/,
+                                                    minWords: 2,
+                                                    message: 'Допустимы только русские буквы, пробелы и дефисы'
+                                                }}
+                                                title='ФИО Специалиста'
+                                            />
+                                            <Input
+                                                value={specialist.inn}
+                                                onChange={(e) => handleArrayItemChange('specialists', index, 'inn', e.target.value)}
+                                                placeholder="ИНН"
+                                                validation={{ 
+                                                    required: true,
+                                                    pattern: /^(?:\d{10}|\d{12})$/, // Только 10 ИЛИ 12 цифр
+                                                    message: "Введите 10 или 12 цифр (без пробелов)",
+                                                    validate: (value) => !/\s/.test(value) && (value.length === 10 || value.length === 12)
+                                                }}
+                                                title="ИНН исполнителя"
+                                            />
+                                            <Input
+                                                value={specialist.calendar}
+                                                onChange={(e) => handleArrayItemChange('specialists', index, 'calendar', e.target.value)}
+                                                placeholder="Календарь (РФ)"
+                                                validation={{ 
+                                                    required: true,
+                                                    alpha: true,
+                                                    minLength: 1,
+                                                    maxLength: 4,
+                                                    pattern: /^[а-яА-ЯёЁ\s\-]+$/,
+                                                    message: 'Допустимы только русские буквы, пробелы и дефисы'
+                                                }}
+                                                title='Календарь'
+                                            />
                                             
-                                        />
-                                        <Input
-                                            value={work.cost}
-                                            onChange={(e) => handleArrayItemChange('works', index, 'cost', e.target.value)}
-                                            placeholder="Цена, руб, без НДС"
-                                            validation={{ 
-                                                required: true,
-                                                pattern: /^\d+(\.\d{1,2})?$/,
-                                                message: 'Введите число (например: 1000 или 1000.50)'
-                                            }}
-                                            title='Введите цену в рублях, копейки укажите через точку'
-                                        />
-                                        <Input
-                                            value={work.count}
-                                            onChange={(e) => handleArrayItemChange('works', index, 'count', e.target.value)}
-                                            placeholder="Количество"
-                                            validation={{ 
-                                                required: true,
-                                                pattern: /^\d+(\.\d{1,2})?$/,
-                                                message: 'Введите число'
-                                            }}
-                                            title="Количество"
-
-                                        />
+                                        </div>                   
+                                        <div>
+                                        <div className='array-ite__inside-item'>
+                                                <span>Дата:</span>
+                                                <Input
+                                                    type="date"
+                                                    value={specialist.date || ''}
+                                                    onChange={(e) => handleArrayItemChange('specialists', index, 'date', e.target.value)}
+                                                    placeholder="Дата"
+                                                    style={{ color: currentDocument.contractDate === '' ? 'grey' : 'black'}}
+                                                    validation={{ required: true, date: true }}
+                                                    title='Дата'
+                                                />
+                                            </div>
+                                            <div className='array-ite__inside-item'>
+                                                <DropdownMenu
+                                                    placeholder="Тип дня"
+                                                    className="data-select"
+                                                    name={`specialists-${index}-typeOfDay`}
+                                                    value={specialist.typeOfDay}
+                                                    onChange={(e) => handleArrayItemChange('specialists', index, 'typeOfDay', e.target.value)}
+                                                    options={[
+                                                        { value: 'раб', label: 'Рабочий' },
+                                                        { value: 'не раб', label: 'Не рабочий' }
+                                                    ]}
+                                                    title='Тип дня'
+                                                    validation={{ required: true }}
+                                                />
+                                                <DropdownMenu
+                                                    placeholder="Отсутствие"
+                                                    className="data-select"
+                                                    name={`specialists-${index}-absence`}
+                                                    value={specialist.absence}
+                                                    onChange={(e) => handleArrayItemChange('specialists', index, 'absence', e.target.value)}
+                                                    options={[
+                                                        { value: '+', label: '+' },
+                                                        { value: '-', label: '-' }
+                                                    ]}
+                                                    validation={{ required: true, date: true }}
+                                                    title='Отсутствие'
+                                                />
+                                            </div>
+                                            <textarea 
+                                                name="Комментарий"
+                                                value={specialist.comment}
+                                                onChange={(e) => handleArrayItemChange('specialists', index, 'comment', e.target.value)}
+                                                placeholder='Комментарий (задачи)'
+                                                title='Комментарии'
+                                            ></textarea>
+                                        </div>
                                     </div>
-                                    <button onClick={() => removeArrayItem('works', index)}>×</button>
+                                    
+                    
+                                
+                                    <button onClick={() => removeArrayItem('specialists', index)}>×</button>
                                 </div>
                             ))}
-                            <Button id='add-spec'onClick={() => addArrayItem('works', { name: '', cost: '', count: '' })}>
-                                Добавить работу
+                            <Button id='add-spec'onClick={() => addArrayItem('specialists', { fio: '', calendar: '', typeOfDay: '', date: '', absence: '', wh: '', comment: '' })}>
+                                Добавить специалиста
                             </Button>
                         </div>
                     </div>
