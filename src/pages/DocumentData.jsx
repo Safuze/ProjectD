@@ -309,8 +309,7 @@ const DocumentData = ({ setIsCreatingDocument, userLogin, onLogin, setDocumentRe
         updatedTemplates[template.index].push(currentDocument);
         setTemplates(updatedTemplates);
         console.log(currentDocument);
-        // Сохраняем все шаблоны в localStorage или отправляем на сервер
-        localStorage.setItem('documentTemplates', JSON.stringify(updatedTemplates));
+   
 
         setDocumentReady(true);
         navigate('/document');

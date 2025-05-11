@@ -21,17 +21,19 @@ const DocumentPage = ({ setIsCreatingDocument, documentReady, setDocumentReady }
     const uploadedDocxFilename = location.state?.docxFilename;
 
     useEffect(() => {
-        if (uploadedPdfUrl) {
-            setPdfUrl(uploadedPdfUrl);
-        } else if (file) {
-            const reader = new FileReader();
-            reader.onload = async () => {
-                const result = await mammoth.convertToHtml({ arrayBuffer: reader.result });
-                setHtmlContent(result.value);
-            };
-            reader.readAsArrayBuffer(file);
-        } else {
-            navigate('/');
+        if (!documentReady) {
+            if (uploadedPdfUrl) {
+                setPdfUrl(uploadedPdfUrl);
+            } else if (file) {
+                const reader = new FileReader();
+                reader.onload = async () => {
+                    const result = await mammoth.convertToHtml({ arrayBuffer: reader.result });
+                    setHtmlContent(result.value);
+                };
+                reader.readAsArrayBuffer(file);
+            } else {
+                navigate('/');
+            }
         }
     }, [uploadedPdfUrl, file, navigate]);
   
